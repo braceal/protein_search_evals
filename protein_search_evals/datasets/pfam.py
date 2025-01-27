@@ -97,4 +97,4 @@ def download_pfam(output_dir: str | Path) -> None:
 # families, to provide those splits with logic encapsulated in this module.
 
 if __name__ == '__main__':
-    download_pfam('data')
+    download_pfam('data/pfam')
