@@ -36,7 +36,6 @@ dev = [
     "tox",
     "virtualenv",
     "types-PyYAML",
-    "types-requests",
 ]
 docs = [
     "black",

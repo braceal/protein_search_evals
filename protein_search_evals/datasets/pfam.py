@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import gzip
+import subprocess
 from pathlib import Path
-
-import requests  # type: ignore[import-untyped]
 
 
 def download_and_unzip(url: str, output_dir: str | Path) -> Path:
@@ -36,17 +34,16 @@ def download_and_unzip(url: str, output_dir: str | Path) -> Path:
     if output_file_path.exists():
         return output_file_path
 
-    # Download the file
-    response = requests.get(url)
-    response.raise_for_status()
-    gz_file_path.write_bytes(response.content)
+    # Download the file using curl with resume support
+    command = f'curl -C - -O {url}'
+    subprocess.run(command.split(), cwd=output_dir_path, check=True)
 
-    # Unzip the file
-    with gzip.open(gz_file_path, 'rb') as f:
-        output_file_path.write_bytes(f.read())
+    # Unzip the file using gunzip
+    command = f'gunzip {gz_file_path}'
+    subprocess.run(command.split(), cwd=output_dir_path, check=True)
 
     # Clean up gz file
-    gz_file_path.unlink()
+    # gz_file_path.unlink()
 
     return output_file_path
 
