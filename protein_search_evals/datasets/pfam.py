@@ -47,7 +47,30 @@ def download_and_unzip(url: str, output_dir: str | Path) -> Path:
 
 def download_pfam(output_dir: str | Path) -> None:
     """
-    Download the Pfam dataset.
+    Download the Pfam37.0 dataset.
+
+    The Pfam37.0 dataset is used because it is the latest version
+    containing the pfaamseq file. Later versions do not contain this file.
+
+    The following files will be downloaded and unzipped:
+    - Pfam.version.gz
+        - Contains the Pfam version. The file contents are:
+            TODO
+
+    - Pfam-A.fasta.gz
+        - Contains the Pfam domains with format:
+            >{uniprot_id}/{start}-{end} {uniprot_id} {pfam_id};{pfam_name};
+            {sequence}
+
+            Where start and end are the sequence residue positions of the
+            domain in the UniProt sequence with id `uniprot_id`.
+
+            Example:
+            >A0A7L1FGH7_SYLBO/154-189 A0A7L1FGH7.1 PF10417.14;1-cysPrx_C;
+            AFQYTDKHGEVCPAGWKPGSETIIPDPAGKLKYFDK
+
+    - pfamseq.gz
+        TODO
 
     Parameters
     ----------
@@ -55,21 +78,17 @@ def download_pfam(output_dir: str | Path) -> None:
         The directory where the downloaded and unzipped files will be stored.
     """
     # Define the URLs for the Pfam version and sequences
-    version_url = 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.2/Pfam.version.gz'
-    domains_url = 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.2/Pfam-A.fasta.gz'
-    sequence_url = 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam33.1/Pfam-A.full.gz'
+    urls = [
+        'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.0/Pfam.version.gz',
+        'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.0/Pfam-A.fasta.gz',
+        'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.0/pfamseq.gz',
+    ]
 
-    # Download and unzip the version file
-    version_file = download_and_unzip(version_url, output_dir)
-    print(f'Version file downloaded and unzipped to: {version_file}')
-
-    # Download and unzip the domains file
-    domains_file = download_and_unzip(domains_url, output_dir)
-    print(f'Domains file downloaded and unzipped to: {domains_file}')
-
-    # Download and unzip the sequence file
-    sequence_file = download_and_unzip(sequence_url, output_dir)
-    print(f'pfamseq.gz file downloaded and unzipped to: {sequence_file}')
+    # Download and unzip the files
+    for url in urls:
+        print(f'Downloading and unzipping: {url}')
+        output_file = download_and_unzip(url, output_dir)
+        print(f'Downloaded and unzipped: {output_file}')
 
 
 # TODO: Make function or class to download the version and relevant files
