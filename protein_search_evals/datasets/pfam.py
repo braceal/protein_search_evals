@@ -40,7 +40,7 @@ def download_and_unzip(url: str, output_dir: str | Path) -> Path:
 
     # Unzip the file using gunzip
     command = f'gunzip {gz_file_path}'
-    subprocess.run(command.split(), cwd=output_dir_path, check=True)
+    subprocess.run(command.split(), check=True)
 
     # Clean up gz file
     # gz_file_path.unlink()
