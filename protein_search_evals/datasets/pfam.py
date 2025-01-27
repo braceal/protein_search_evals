@@ -61,8 +61,8 @@ def download_pfam(output_dir: str | Path) -> None:
         The directory where the downloaded and unzipped files will be stored.
     """
     # Define the URLs for the Pfam version and sequences
-    version_url = 'https://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.2/Pfam.version.gz'
-    sequences_url = 'https://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.2/Pfam-A.fasta.gz'
+    version_url = 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.2/Pfam.version.gz'
+    sequences_url = 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.2/Pfam-A.fasta.gz'
 
     # Download and unzip the version file
     version_file = download_and_unzip(version_url, output_dir)
