@@ -42,9 +42,6 @@ def download_and_unzip(url: str, output_dir: str | Path) -> Path:
     command = f'gunzip {gz_file_path}'
     subprocess.run(command.split(), check=True)
 
-    # Clean up gz file
-    # gz_file_path.unlink()
-
     return output_file_path
 
 
@@ -59,15 +56,20 @@ def download_pfam(output_dir: str | Path) -> None:
     """
     # Define the URLs for the Pfam version and sequences
     version_url = 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.2/Pfam.version.gz'
-    sequences_url = 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.2/Pfam-A.fasta.gz'
+    domains_url = 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.2/Pfam-A.fasta.gz'
+    sequence_url = 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam33.1/Pfam-A.full.gz'
 
     # Download and unzip the version file
     version_file = download_and_unzip(version_url, output_dir)
     print(f'Version file downloaded and unzipped to: {version_file}')
 
-    # Download and unzip the sequences file
-    sequences_file = download_and_unzip(sequences_url, output_dir)
-    print(f'Sequences file downloaded and unzipped to: {sequences_file}')
+    # Download and unzip the domains file
+    domains_file = download_and_unzip(domains_url, output_dir)
+    print(f'Domains file downloaded and unzipped to: {domains_file}')
+
+    # Download and unzip the sequence file
+    sequence_file = download_and_unzip(sequence_url, output_dir)
+    print(f'pfamseq.gz file downloaded and unzipped to: {sequence_file}')
 
 
 # TODO: Make function or class to download the version and relevant files
