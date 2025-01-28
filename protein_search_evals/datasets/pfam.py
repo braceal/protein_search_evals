@@ -48,7 +48,7 @@ def download_pfam(output_dir: str | Path) -> None:
     """Download the Pfam37.0 dataset.
 
     The Pfam37.0 dataset is used because it is the latest version
-    containing the pfaamseq file. Later versions do not contain this file.
+    containing the pfamseq file. Later versions do not contain this file.
 
     The following files will be downloaded and unzipped:
     - Pfam.version.gz
