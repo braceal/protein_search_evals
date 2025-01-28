@@ -5,7 +5,9 @@ from __future__ import annotations
 import json
 import random
 import subprocess
+from collections import Counter
 from collections import defaultdict
+from itertools import chain
 from pathlib import Path
 
 from distllm.embed.datasets.fasta import read_fasta
@@ -207,6 +209,69 @@ class Pfam20Dataset(PfamDataset):
         super().__init__(data_dir)
         self.seed = seed
 
+    def _filter_by_uniprot_ids(
+        self,
+        families: dict[str, list[str]],
+    ) -> dict[str, list[str]]:
+        print('Removing uniprot IDs that appear in more than one family...')
+        # Count the number of occurrences of each uniprot ID across families
+        # A dictionary with the form {uniprot_id: count across families}
+        uniprot_counts = Counter(chain.from_iterable(families.values()))
+        # A set of unique uniprot IDs that appear in only one family
+        unique_uniprot_ids = {k for k, v in uniprot_counts.items() if v == 1}
+        print(f'\tNum. IDs before filtering: {len(uniprot_counts)}')
+        print(f'\tNum. unique IDs after filtering: {len(unique_uniprot_ids)}')
+
+        # Remove uniprot IDs that appear in more than one family
+        print(f'\tNum. families before filtering: {len(families)}')
+        families = {
+            pfam_id: [x for x in uniprot_ids if x in unique_uniprot_ids]
+            for pfam_id, uniprot_ids in families.items()
+        }
+        print(f'\tNum. families after filtering: {len(families)}')
+
+        return families
+
+    def _filter_by_family_size(
+        self,
+        families: dict[str, list[str]],
+    ) -> dict[str, list[str]]:
+        print('Removing families with less than 20 members...')
+        print(f'\tNum. families before size filtering: {len(families)}')
+        families = {k: v for k, v in families.items() if len(v) >= 20}
+        print(f'\tNum. families after size filtering: {len(families)}')
+        return families
+
+    def _filter_by_random_subset(
+        self,
+        families: dict[str, list[str]],
+    ) -> dict[str, list[str]]:
+        print(
+            'Randomly selecting 20 domains (Uniprot IDs) from each family '
+            f'to balance the dataset using random seed: {self.seed}...',
+        )
+
+        # Count the number of uniprot IDs in the Pfam families
+        num_uniprot_ids = sum(len(v) for v in families.values())
+        print(f'\tNum. Uniprot IDs before filtering: {num_uniprot_ids}')
+
+        # Set the random seed for reproducibility
+        rng = random.Random(self.seed)
+
+        # Randomly select 20 domains from each family
+        families20 = {}
+        for pfam_id, uniprot_ids in families.items():
+            # Shuffle the uniprot IDs in the family
+            rng.shuffle(uniprot_ids)
+            # Add the selection to the Pfam20 families
+            families20[pfam_id] = uniprot_ids[:20]
+
+        # Count the number of uniprot IDs in the Pfam20 families
+        num_uniprot_ids = sum(len(v) for v in families20.values())
+        print(f'\tNum. Uniprot IDs after filtering: {num_uniprot_ids}')
+
+        return families20
+
     def load_families(self) -> dict[str, list[str]]:
         """Load the Pfam20 families metadata.
 
@@ -236,49 +301,22 @@ class Pfam20Dataset(PfamDataset):
         # Load the underlying Pfam families metadata from families.json
         families = super().load_families()
 
+        # Filter the families by uniprot IDs to avoid multiple correct answers
+        families = self._filter_by_uniprot_ids(families)
+
         # Remove families with less than 20 members
-        print(f'Number of families before length filtering: {len(families)}')
-        families = {k: v for k, v in families.items() if len(v) >= 20}
-        print(f'Number of families after length filtering: {len(families)}')
+        families = self._filter_by_family_size(families)
 
-        # Log the setting for the Pfam20 dataset
-        print(
-            'Randomly selecting 20 domains from each family '
-            f'to balance the dataset using random seed: {self.seed}',
-        )
-
-        # Set the random seed for reproducibility
-        rng = random.Random(self.seed)
-
-        # Keep track of the uniprot IDs that have been seen so there
-        # are no duplicates in the Pfam20 dataset (i.e., no uniprot
-        # ID should appear in more than one family)
-        seen = set()
-
-        # First sort the families by the number of members to ensure
-        # that smaller families are selected first, since larger families
-        # are more likely to have enough members to select 20 unique ones
-        families = dict(sorted(families.items(), key=lambda x: len(x[1])))
-
-        # Randomly select 20 domains from each family
-        families20 = {}
-        for pfam_id, uniprot_ids in families.items():
-            # Shuffle the uniprot IDs in the family
-            rng.shuffle(uniprot_ids)
-            # Select the first 20 uniprot IDs that haven't been seen
-            selection = [x for x in uniprot_ids if x not in seen][:20]
-            # Add the selection to the Pfam20 families
-            families20[pfam_id] = selection
-            # Update the seen set
-            seen.update(selection)
+        # Randomly select 20 domains (uniprot IDs) from each family
+        families = self._filter_by_random_subset(families)
 
         # Save the Pfam20 families metadata to disk
         print(f'Saving Pfam20 families metadata to {families_path}')
         data_dir.mkdir(parents=True, exist_ok=True)
         with open(families_path, 'w') as f:
-            json.dump(families20, f)
+            json.dump(families, f)
 
-        return families20
+        return families
 
 
 # TODO: Make function or class to download the version and relevant files
