@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import random
 import subprocess
 from collections import defaultdict
 from pathlib import Path
@@ -145,6 +146,7 @@ class PfamDataset:
         # if it exists
         families_path = self.data_dir / 'families.json'
         if families_path.exists():
+            print(f'Loading Pfam families metadata from {families_path}')
             with open(families_path) as f:
                 return json.load(f)
 
@@ -166,10 +168,91 @@ class PfamDataset:
             families[pfam_id].append(uniprot_id)
 
         # Save the families metadata to disk
+        print(f'Saving Pfam families metadata to {families_path}')
         with open(families_path, 'w') as f:
             json.dump(families, f)
 
         return dict(families)
+
+
+class Pfam20Dataset(PfamDataset):
+    """Pfam20 dataset.
+
+    This dataset follows the recipe outlined in the paper:
+    "Nearest neighbor search on embeddings rapidly identifies
+    distant protein relations", by Schutze et al. (2022).
+    Full text:
+    https://www.frontiersin.org/journals/bioinformatics/articles/10.3389/fbinf.2022.1033775/full
+
+    To avoid over-representing large families, the authors picked 20
+    domains from each Pfam family with at least 20 members. This
+    dataset is referred to as Pfam20.
+    """
+
+    def __init__(self, data_dir: str | Path, seed: int = 42):
+        """Initialize the Pfam20 dataset.
+
+        Parameters
+        ----------
+        data_dir : str or Path
+            The directory where the Pfam20 dataset directory will be stored.
+        seed : int, optional
+            The random seed used to randomly pick the 20 domains from
+            each family, by default 42.
+        """
+        super().__init__(data_dir)
+        self.seed = seed
+
+    def load_families(self) -> dict[str, list[str]]:
+        """Load the Pfam20 families metadata.
+
+        Create the Pfam20 dataset by randomly selecting 20 domains
+        from each family with at least 20 members.
+
+        Will cache the families metadata in the {data_dir}/pfam20_seed-{seed}
+        directory to avoid parsing the underlying Pfam-A.fasta file multiple
+        times.
+
+        Returns
+        -------
+        dict[str | list[str]]
+            A dictionary where each key is a Pfam family ID
+            (e.g., 'PF10417.14') and the value is a list of
+            UniProt IDs (e.g., ['A0A7L1FGH7.1', ...]) that
+            belong to the family.
+        """
+        # If the Pfam20 families metadata has already been parsed, load it
+        data_dir = self.data_dir / f'pfam20_seed-{self.seed}'
+        families_path = data_dir / 'families.json'
+        if families_path.exists():
+            print(f'Loading Pfam20 families metadata from {families_path}')
+            with open(families_path) as f:
+                return json.load(f)
+
+        # Load the underlying Pfam families metadata from families.json
+        families = super().load_families()
+
+        # Remove families with less than 20 members
+        print(f'Number of families before length filtering: {len(families)}')
+        families = {k: v for k, v in families.items() if len(v) >= 20}
+        print(f'Number of families after length filtering: {len(families)}')
+
+        # Randomly select 20 domains from each family
+        print('Selecting 20 domains from each family to balance the dataset')
+        families20 = {}
+        for pfam_id, uniprot_ids in families.items():
+            # Set the random seed for reproducibility
+            rng = random.Random(self.seed)
+            rng.shuffle(uniprot_ids)
+            families20[pfam_id] = uniprot_ids[:20]
+
+        # Save the Pfam20 families metadata to disk
+        print(f'Saving Pfam20 families metadata to {families_path}')
+        data_dir.mkdir(parents=True, exist_ok=True)
+        with open(families_path, 'w') as f:
+            json.dump(families20, f)
+
+        return families20
 
 
 # TODO: Make function or class to download the version and relevant files
