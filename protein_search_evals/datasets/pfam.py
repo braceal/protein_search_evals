@@ -178,7 +178,7 @@ class PfamDataset:
 class Pfam20Dataset(PfamDataset):
     """Pfam20 dataset.
 
-    This dataset follows the recipe outlined in the paper:
+    This dataset roughly follows the recipe outlined in the paper:
     "Nearest neighbor search on embeddings rapidly identifies
     distant protein relations", by Schutze et al. (2022).
     Full text:
@@ -187,6 +187,10 @@ class Pfam20Dataset(PfamDataset):
     To avoid over-representing large families, the authors picked 20
     sequences from each Pfam family with at least 20 members. This
     dataset is referred to as Pfam20.
+
+    We ensure the additional constraint that no selected sequence appears
+    in more than one family, to avoid multiple "correct" answers during
+    evaluation.
     """
 
     def __init__(self, data_dir: str | Path, seed: int = 42):
@@ -250,6 +254,11 @@ class Pfam20Dataset(PfamDataset):
         # are no duplicates in the Pfam20 dataset (i.e., no uniprot
         # ID should appear in more than one family)
         seen = set()
+
+        # First sort the families by the number of members to ensure
+        # that smaller families are selected first, since larger families
+        # are more likely to have enough members to select 20 unique ones
+        families = dict(sorted(families.items(), key=lambda x: len(x[1])))
 
         # Randomly select 20 domains from each family
         families20 = {}
