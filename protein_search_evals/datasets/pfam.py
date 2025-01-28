@@ -7,8 +7,7 @@ from pathlib import Path
 
 
 def download_and_unzip(url: str, output_dir: str | Path) -> Path:
-    """
-    Download and unzip a gzipped file from the specified URL.
+    """Download and unzip a gzipped file from the specified URL.
 
     Parameters
     ----------
@@ -46,8 +45,7 @@ def download_and_unzip(url: str, output_dir: str | Path) -> Path:
 
 
 def download_pfam(output_dir: str | Path) -> None:
-    """
-    Download the Pfam37.0 dataset.
+    """Download the Pfam37.0 dataset.
 
     The Pfam37.0 dataset is used because it is the latest version
     containing the pfaamseq file. Later versions do not contain this file.
@@ -55,7 +53,10 @@ def download_pfam(output_dir: str | Path) -> None:
     The following files will be downloaded and unzipped:
     - Pfam.version.gz
         - Contains the Pfam version. The file contents are:
-            TODO
+            Pfam release       : 37.0
+            Pfam-A families    : 21979
+            Date               : 2024-03
+            Based on UniProtKB : 2023_05
 
     - Pfam-A.fasta.gz
         - Contains the Pfam domains with format:
@@ -70,7 +71,13 @@ def download_pfam(output_dir: str | Path) -> None:
             AFQYTDKHGEVCPAGWKPGSETIIPDPAGKLKYFDK
 
     - pfamseq.gz
-        TODO
+        Contains the sequences of the Pfam families. The format is:
+        >{uniprot_id} {uniprot_name} {description}
+        {sequence}
+
+        Example:
+        >A0A8J7XB61.1 A0A8J7XB61_9EURY lipoate--protein ligase ...
+        MEWRLLTLDQKDGYYIQSVYEAVAKA...
 
     Parameters
     ----------
