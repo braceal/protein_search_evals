@@ -52,23 +52,23 @@ def download_pfam(output_dir: str | Path) -> None:
 
     The following files will be downloaded and unzipped:
     - Pfam.version.gz
-        - Contains the Pfam version. The file contents are:
+        Contains the Pfam version. The file contents are:
             Pfam release       : 37.0
             Pfam-A families    : 21979
             Date               : 2024-03
             Based on UniProtKB : 2023_05
 
     - Pfam-A.fasta.gz
-        - Contains the Pfam domains with format:
+        Contains the Pfam domains with format:
             >{uniprot_id}/{start}-{end} {uniprot_id} {pfam_id};{pfam_name};
             {sequence}
 
             Where start and end are the sequence residue positions of the
             domain in the UniProt sequence with id `uniprot_id`.
 
-            Example:
-            >A0A7L1FGH7_SYLBO/154-189 A0A7L1FGH7.1 PF10417.14;1-cysPrx_C;
-            AFQYTDKHGEVCPAGWKPGSETIIPDPAGKLKYFDK
+        Example:
+        >A0A7L1FGH7_SYLBO/154-189 A0A7L1FGH7.1 PF10417.14;1-cysPrx_C;
+        AFQYTDKHGEVCPAGWKPGSETIIPDPAGKLKYFDK
 
     - pfamseq.gz
         Contains the sequences of the Pfam families. The format is:
