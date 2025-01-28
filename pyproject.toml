@@ -17,6 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
+    "distllm"
 ]
 
 [project.urls]
