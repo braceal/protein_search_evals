@@ -238,7 +238,10 @@ class Pfam20Dataset(PfamDataset):
         print(f'Number of families after length filtering: {len(families)}')
 
         # Randomly select 20 domains from each family
-        print('Selecting 20 domains from each family to balance the dataset')
+        print(
+            'Randomly selecting 20 domains from each family '
+            f'to balance the dataset using random seed: {self.seed}',
+        )
         families20 = {}
         for pfam_id, uniprot_ids in families.items():
             # Set the random seed for reproducibility
