@@ -185,7 +185,7 @@ class Pfam20Dataset(PfamDataset):
     https://www.frontiersin.org/journals/bioinformatics/articles/10.3389/fbinf.2022.1033775/full
 
     To avoid over-representing large families, the authors picked 20
-    domains from each Pfam family with at least 20 members. This
+    sequences from each Pfam family with at least 20 members. This
     dataset is referred to as Pfam20.
     """
 
@@ -237,17 +237,31 @@ class Pfam20Dataset(PfamDataset):
         families = {k: v for k, v in families.items() if len(v) >= 20}
         print(f'Number of families after length filtering: {len(families)}')
 
-        # Randomly select 20 domains from each family
+        # Log the setting for the Pfam20 dataset
         print(
             'Randomly selecting 20 domains from each family '
             f'to balance the dataset using random seed: {self.seed}',
         )
+
+        # Set the random seed for reproducibility
+        rng = random.Random(self.seed)
+
+        # Keep track of the uniprot IDs that have been seen so there
+        # are no duplicates in the Pfam20 dataset (i.e., no uniprot
+        # ID should appear in more than one family)
+        seen = set()
+
+        # Randomly select 20 domains from each family
         families20 = {}
         for pfam_id, uniprot_ids in families.items():
-            # Set the random seed for reproducibility
-            rng = random.Random(self.seed)
+            # Shuffle the uniprot IDs in the family
             rng.shuffle(uniprot_ids)
-            families20[pfam_id] = uniprot_ids[:20]
+            # Select the first 20 uniprot IDs that haven't been seen
+            selection = [x for x in uniprot_ids if x not in seen][:20]
+            # Add the selection to the Pfam20 families
+            families20[pfam_id] = selection
+            # Update the seen set
+            seen.update(selection)
 
         # Save the Pfam20 families metadata to disk
         print(f'Saving Pfam20 families metadata to {families_path}')
