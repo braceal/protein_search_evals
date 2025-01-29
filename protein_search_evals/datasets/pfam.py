@@ -11,6 +11,8 @@ from itertools import chain
 from pathlib import Path
 
 from distllm.embed.datasets.fasta import read_fasta
+from distllm.embed.datasets.fasta import Sequence
+from distllm.embed.datasets.fasta import write_fasta
 from tqdm import tqdm
 
 
@@ -69,7 +71,7 @@ class PfamDataset:
         data_dir : str or Path
             The directory where the Pfam dataset files will be stored.
         """
-        self.data_dir = Path(data_dir)
+        self._data_dir = Path(data_dir)
 
     def download(self) -> None:
         """Download the Pfam37.0 dataset.
@@ -124,7 +126,7 @@ class PfamDataset:
 
         # Download and unzip the files
         for url in urls:
-            download_and_unzip(url, self.data_dir)
+            download_and_unzip(url, self._data_dir)
 
     def load_families(self) -> dict[str, list[str]]:
         """Load the Pfam families metadata.
@@ -146,7 +148,7 @@ class PfamDataset:
 
         # Load the Pfam families metadata from the families.json file
         # if it exists
-        families_path = self.data_dir / 'families.json'
+        families_path = self._data_dir / 'families.json'
         if families_path.exists():
             print(f'Loading Pfam families metadata from {families_path}')
             with open(families_path) as f:
@@ -154,7 +156,7 @@ class PfamDataset:
 
         # Load the Pfam families from the Pfam-A.fasta file
         print('Parsing Pfam families from Pfam-A.fasta...')
-        domains = read_fasta(self.data_dir / 'Pfam-A.fasta')
+        domains = read_fasta(self._data_dir / 'Pfam-A.fasta')
 
         # Parse the Pfam families from the domain descriptions
         families = defaultdict(list)
@@ -223,6 +225,11 @@ class PfamSubsetDataset(PfamDataset):
         super().__init__(data_dir)
         self.seed = seed
         self.subset_size = subset_size
+
+    @property
+    def data_dir(self) -> Path:
+        """The directory where the Pfam{subset_size} dataset will be stored."""
+        return self._data_dir / f'pfam{self.subset_size}_seed-{self.seed}'
 
     def _filter_by_uniprot_ids(
         self,
@@ -311,8 +318,7 @@ class PfamSubsetDataset(PfamDataset):
             belong to the family.
         """
         # Load the Pfam{subset_size} families metadata if it's already cached
-        data_dir = self.data_dir / f'pfam{self.subset_size}_seed-{self.seed}'
-        families_path = data_dir / 'families.json'
+        families_path = self.data_dir / 'families.json'
         if families_path.exists():
             print(
                 f'Loading Pfam{self.subset_size} families metadata '
@@ -338,40 +344,65 @@ class PfamSubsetDataset(PfamDataset):
             f'Saving Pfam{self.subset_size} families metadata '
             f'to {families_path}',
         )
-        data_dir.mkdir(parents=True, exist_ok=True)
+        self.data_dir.mkdir(parents=True, exist_ok=True)
         with open(families_path, 'w') as f:
             json.dump(families, f)
 
         return families
 
+    def load_sequences(self) -> list[Sequence]:
+        """Load the Pfam{subset_size} sequences.
 
-#    def _create_pfam20_sequences(self, families: dict[str, list[str]]) -> None: # noqa
-#         """Create the Pfam20 sequence file.
+        Returns
+        -------
+        list[Sequence]
+            A list of Sequence objects containing the Pfam{subset_size}
+            sequences.
+        """
+        # Load the Pfam{subset_size} sequences if already cached
+        sequences_path = self.data_dir / 'sequences.fasta'
+        if sequences_path.exists():
+            print(
+                f'Loading Pfam{self.subset_size} families metadata '
+                f'from {sequences_path}',
+            )
+            return read_fasta(sequences_path)
 
-#         Parameters
-#         ----------
-#         families : dict[str | list[str]]
-#             A dictionary where each key is a Pfam family ID
-#             (e.g., 'PF10417.14') and the value is a list of
-#             UniProt IDs (e.g., ['A0A7L1FGH7.1', ...]) that
-#             belong to the family.
-#         """
-#         # Load the Pfam sequences from the pfamseq file
-#         pfamseq = read_fasta(self.data_dir / 'pfamseq')
+        # Load the Pfam families metadata
+        families = self.load_families()
 
-#         # Build a set of the uniprot IDs in the Pfam20 families
-#         uniprot_ids = {x for y in families.values() for x in y}
+        # Load the Pfam sequences from the pfamseq file
+        # The headers have format: >{uniprot_id} {uniprot_name} {description}
+        print('Loading Pfam sequences from...')
+        pfamseq = read_fasta(self.data_dir / 'pfamseq')
 
-#         # Parse the uniprot IDs from the Pfam sequences
-#         # the format is >{uniprot_id} {uniprot_name} {description}
-#         uniprot_ids = {seq.tag.split()[0] for seq in pfamseq}
+        # Build a dictionary mapping the uniport IDs to the sequences
+        print('Building a dictionary mapping uniprot IDs to sequences...')
+        uid_to_sequnce = {seq.tag.split()[0]: seq.sequence for seq in pfamseq}
 
-#         # Save the Pfam20 sequences to disk
-#         pfam20_path = self.data_dir / 'pfam20.fasta'
-#         print(f'Saving Pfam20 sequences to {pfam20_path}')
-#         with open(pfam20_path, 'w') as f:
-#             for seq in pfam20:
-#                 f.write(f'>{seq.tag}\n{seq.sequence}\n')
+        # Build a set of the uniprot IDs in the Pfam{subset_size} families
+        print(
+            f'Building a set of the uniprot IDs in the '
+            f'Pfam{self.subset_size} families...',
+        )
+        uniprot_ids = {uid for uids in families.values() for uid in uids}
+
+        # Collect the Pfam{subset_size} sequences from the Pfam sequences
+        # The header tag in the fasta will be the uniprot ID
+        print(f'Collecting Pfam{self.subset_size} sequences...')
+        sequences = [
+            Sequence(tag=uid, sequence=uid_to_sequnce[uid])
+            for uid in uniprot_ids
+        ]
+
+        # Save the Pfam{subset_size} sequences to disk
+        print(
+            f'Saving Pfam{self.subset_size} with {len(sequences)} '
+            f'sequences to {sequences_path}',
+        )
+        write_fasta(sequences, sequences_path)
+
+        return sequences
 
 
 class Pfam20Dataset(PfamSubsetDataset):
