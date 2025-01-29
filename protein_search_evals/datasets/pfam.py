@@ -153,6 +153,7 @@ class PfamDataset:
                 return json.load(f)
 
         # Load the Pfam families from the Pfam-A.fasta file
+        print('Parsing Pfam families from Pfam-A.fasta...')
         domains = read_fasta(self.data_dir / 'Pfam-A.fasta')
 
         # Parse the Pfam families from the domain descriptions
