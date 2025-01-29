@@ -179,20 +179,54 @@ class PfamDataset:
 
         return dict(families)
 
-    def load_sequences(self) -> list[Sequence]:
-        """Load the Pfam sequences.
+    def load_sequences_by_ids(self, query_ids: set[str]) -> list[Sequence]:
+        """Retrieve sequences for a set of UniProt IDs from the Pfam dataset.
+
+        Parameters
+        ----------
+        query_ids : set[str]
+            Set of valid UniProt IDs to match.
 
         Returns
         -------
         list[Sequence]
-            A list of Sequence objects containing the Pfam sequences.
+            List of Sequence objects containing the Pfam sequences that
+            match the query IDs.
         """
-        # Load the Pfam sequences from the pfamseq file
-        # The headers have format: >{uniprot_id} {uniprot_name} {description}
-        print('Loading Pfam sequences...')
-        pfamseq = read_fasta(self._data_dir / 'pfamseq')
+        seqs = []
+        with open(self._data_dir / 'pfamseq') as file:
+            # Initialize the sequence buffer and the current UniProt ID
+            uid: str | None = None
+            seq: list[str] = []
 
-        return pfamseq
+            for line in tqdm(file, desc='Parsing Pfam sequences'):
+                # Remove leading/trailing whitespace
+                contents = line.strip()
+
+                # If we are starting a new entry, check if the previous entry
+                # was a match, if so collect it, and reset the sequence buffer
+                if contents.startswith('>'):
+                    if uid in query_ids:
+                        seqs.append(Sequence(tag=uid, sequence=''.join(seq)))
+
+                    # Extract UniProt ID from the header
+                    # (assuming format ">uniprot_id uniprot_name description")
+                    parts = contents.split(' ')
+
+                    # Remove '>' from the first part
+                    uid = parts[0][1:] if parts else None
+
+                    # Reset sequence buffer
+                    seq = []
+                else:
+                    # Append the sequence contents
+                    seq.append(contents)
+
+            # Capture last entry if it was a match
+            if uid in query_ids:
+                seqs.append(Sequence(tag=uid, sequence=''.join(seq)))
+
+        return seqs
 
 
 class PfamSubsetDataset(PfamDataset):
@@ -386,14 +420,6 @@ class PfamSubsetDataset(PfamDataset):
         # Load the Pfam families metadata
         families = self.load_families()
 
-        # Load the Pfam sequences from the pfamseq file
-        # The headers have format: >{uniprot_id} {uniprot_name} {description}
-        pfamseq = super().load_sequences()
-
-        # Build a dictionary mapping the uniport IDs to the sequences
-        print('Building a dictionary mapping uniprot IDs to sequences...')
-        uid_to_sequnce = {seq.tag.split()[0]: seq.sequence for seq in pfamseq}
-
         # Build a set of the uniprot IDs in the Pfam{subset_size} families
         print(
             f'Building a set of the uniprot IDs in the '
@@ -401,13 +427,10 @@ class PfamSubsetDataset(PfamDataset):
         )
         uniprot_ids = {uid for uids in families.values() for uid in uids}
 
-        # Collect the Pfam{subset_size} sequences from the Pfam sequences
-        # The header tag in the fasta will be the uniprot ID
+        # Load the Pfam sequences from the pfamseq associated with the
+        # uniprot IDs.
         print(f'Collecting Pfam{self.subset_size} sequences...')
-        sequences = [
-            Sequence(tag=uid, sequence=uid_to_sequnce[uid])
-            for uid in uniprot_ids
-        ]
+        sequences = self.load_sequences_by_ids(query_ids=uniprot_ids)
 
         # Save the Pfam{subset_size} sequences to disk
         print(
