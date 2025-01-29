@@ -177,10 +177,10 @@ class PfamDataset:
         return dict(families)
 
 
-class Pfam20Dataset(PfamDataset):
-    """Pfam20 dataset.
+class PfamSubsetDataset(PfamDataset):
+    """PfamSubset dataset.
 
-    This dataset roughly follows the recipe outlined in the paper:
+    This dataset generalizes the recipe outlined in the paper:
     "Nearest neighbor search on embeddings rapidly identifies
     distant protein relations", by Schutze et al. (2022).
     Full text:
@@ -190,24 +190,38 @@ class Pfam20Dataset(PfamDataset):
     sequences from each Pfam family with at least 20 members. This
     dataset is referred to as Pfam20.
 
-    We ensure the additional constraint that no selected sequence appears
+    We generalize this recipe by allowing the user to specify the
+    number of sequences to select from each family `subset_size`.
+    This allows for the creation of datasets with different sizes
+    and properties, such as Pfam20, Pfam50, etc.
+
+    We ensure an additional constraint that no selected sequence appears
     in more than one family, to avoid multiple "correct" answers during
     evaluation.
     """
 
-    def __init__(self, data_dir: str | Path, seed: int = 42):
+    def __init__(
+        self,
+        data_dir: str | Path,
+        seed: int = 42,
+        subset_size: int = 20,
+    ):
         """Initialize the Pfam20 dataset.
 
         Parameters
         ----------
         data_dir : str or Path
-            The directory where the Pfam20 dataset directory will be stored.
+            The directory where the Pfam{subset_size} dataset directory
+            will be stored.
         seed : int, optional
-            The random seed used to randomly pick the 20 domains from
-            each family, by default 42.
+            The random seed used to randomly pick the `subset_size` domains
+            from each family, by default 42.
+        subset_size : int, optional
+            The number of sequences to select from each family, by default 20.
         """
         super().__init__(data_dir)
         self.seed = seed
+        self.subset_size = subset_size
 
     def _filter_by_uniprot_ids(
         self,
@@ -220,35 +234,37 @@ class Pfam20Dataset(PfamDataset):
         # A set of unique uniprot IDs that appear in only one family
         unique_uniprot_ids = {k for k, v in uniprot_counts.items() if v == 1}
         print(f'\tNum. IDs before filtering: {len(uniprot_counts)}')
-        print(f'\tNum. unique IDs after filtering: {len(unique_uniprot_ids)}')
 
         # Remove uniprot IDs that appear in more than one family
-        print(f'\tNum. families before filtering: {len(families)}')
         families = {
             pfam_id: [x for x in uniprot_ids if x in unique_uniprot_ids]
             for pfam_id, uniprot_ids in families.items()
         }
-        print(f'\tNum. families after filtering: {len(families)}')
+
+        print(f'\tNum. unique IDs after filtering: {len(unique_uniprot_ids)}')
 
         return families
 
     def _filter_by_family_size(
         self,
         families: dict[str, list[str]],
+        subset_size: int,
     ) -> dict[str, list[str]]:
-        print('Removing families with less than 20 members...')
+        print(f'Removing families with less than {subset_size} members...')
         print(f'\tNum. families before size filtering: {len(families)}')
-        families = {k: v for k, v in families.items() if len(v) >= 20}
+        families = {k: v for k, v in families.items() if len(v) >= subset_size}
         print(f'\tNum. families after size filtering: {len(families)}')
         return families
 
     def _filter_by_random_subset(
         self,
         families: dict[str, list[str]],
+        subset_size: int,
     ) -> dict[str, list[str]]:
         print(
-            'Randomly selecting 20 domains (Uniprot IDs) from each family '
-            f'to balance the dataset using random seed: {self.seed}...',
+            f'Randomly selecting {subset_size} domains (Uniprot IDs) '
+            f'from each family to balance the dataset using random seed: '
+            f'{self.seed}...',
         )
 
         # Count the number of uniprot IDs in the Pfam families
@@ -258,29 +274,32 @@ class Pfam20Dataset(PfamDataset):
         # Set the random seed for reproducibility
         rng = random.Random(self.seed)
 
-        # Randomly select 20 domains from each family
-        families20 = {}
+        # Randomly select `subset_size` domains from each family
+        families_subset = {}
         for pfam_id, uniprot_ids in families.items():
             # Shuffle the uniprot IDs in the family
             rng.shuffle(uniprot_ids)
-            # Add the selection to the Pfam20 families
-            families20[pfam_id] = uniprot_ids[:20]
+            # Add the selection to the Pfam{subset_size} families
+            families_subset[pfam_id] = uniprot_ids[:subset_size]
 
-        # Count the number of uniprot IDs in the Pfam20 families
-        num_uniprot_ids = sum(len(v) for v in families20.values())
+        # Count the number of uniprot IDs in the Pfam{subset_size} families
+        num_uniprot_ids = sum(len(v) for v in families_subset.values())
         print(f'\tNum. Uniprot IDs after filtering: {num_uniprot_ids}')
 
-        return families20
+        return families_subset
 
     def load_families(self) -> dict[str, list[str]]:
-        """Load the Pfam20 families metadata.
+        """Load the Pfam`subset_size` families metadata.
 
-        Create the Pfam20 dataset by randomly selecting 20 domains
-        from each family with at least 20 members.
+        Create the Pfam{subset_size} dataset by randomly selecting
+        `subset_size` domains from each family with at least `subset_size`
+        members. Selected domains (UniProt IDs) are guaranteed to not appear
+        in more than one family, preventing multiple "correct" answers during
+        evaluation.
 
-        Will cache the families metadata in the {data_dir}/pfam20_seed-{seed}
-        directory to avoid parsing the underlying Pfam-A.fasta file multiple
-        times.
+        Will cache the families metadata in the
+        {data_dir}/pfam{subset_size}_seed-{seed} directory to avoid parsing
+        the underlying Pfam-A.fasta file multiple times.
 
         Returns
         -------
@@ -290,11 +309,14 @@ class Pfam20Dataset(PfamDataset):
             UniProt IDs (e.g., ['A0A7L1FGH7.1', ...]) that
             belong to the family.
         """
-        # If the Pfam20 families metadata has already been parsed, load it
-        data_dir = self.data_dir / f'pfam20_seed-{self.seed}'
+        # Load the Pfam{subset_size} families metadata if it's already cached
+        data_dir = self.data_dir / f'pfam{self.subset_size}_seed-{self.seed}'
         families_path = data_dir / 'families.json'
         if families_path.exists():
-            print(f'Loading Pfam20 families metadata from {families_path}')
+            print(
+                f'Loading Pfam{self.subset_size} families metadata '
+                f'from {families_path}',
+            )
             with open(families_path) as f:
                 return json.load(f)
 
@@ -304,19 +326,83 @@ class Pfam20Dataset(PfamDataset):
         # Filter the families by uniprot IDs to avoid multiple correct answers
         families = self._filter_by_uniprot_ids(families)
 
-        # Remove families with less than 20 members
-        families = self._filter_by_family_size(families)
+        # Remove families with less than subset_size members
+        families = self._filter_by_family_size(families, self.subset_size)
 
-        # Randomly select 20 domains (uniprot IDs) from each family
-        families = self._filter_by_random_subset(families)
+        # Randomly select subset_size domains (uniprot IDs) from each family
+        families = self._filter_by_random_subset(families, self.subset_size)
 
-        # Save the Pfam20 families metadata to disk
-        print(f'Saving Pfam20 families metadata to {families_path}')
+        # Save the Pfam{subset_size} families metadata to disk
+        print(
+            f'Saving Pfam{self.subset_size} families metadata '
+            f'to {families_path}',
+        )
         data_dir.mkdir(parents=True, exist_ok=True)
         with open(families_path, 'w') as f:
             json.dump(families, f)
 
         return families
+
+
+#    def _create_pfam20_sequences(self, families: dict[str, list[str]]) -> None: # noqa
+#         """Create the Pfam20 sequence file.
+
+#         Parameters
+#         ----------
+#         families : dict[str | list[str]]
+#             A dictionary where each key is a Pfam family ID
+#             (e.g., 'PF10417.14') and the value is a list of
+#             UniProt IDs (e.g., ['A0A7L1FGH7.1', ...]) that
+#             belong to the family.
+#         """
+#         # Load the Pfam sequences from the pfamseq file
+#         pfamseq = read_fasta(self.data_dir / 'pfamseq')
+
+#         # Build a set of the uniprot IDs in the Pfam20 families
+#         uniprot_ids = {x for y in families.values() for x in y}
+
+#         # Parse the uniprot IDs from the Pfam sequences
+#         # the format is >{uniprot_id} {uniprot_name} {description}
+#         uniprot_ids = {seq.tag.split()[0] for seq in pfamseq}
+
+#         # Save the Pfam20 sequences to disk
+#         pfam20_path = self.data_dir / 'pfam20.fasta'
+#         print(f'Saving Pfam20 sequences to {pfam20_path}')
+#         with open(pfam20_path, 'w') as f:
+#             for seq in pfam20:
+#                 f.write(f'>{seq.tag}\n{seq.sequence}\n')
+
+
+class Pfam20Dataset(PfamSubsetDataset):
+    """Pfam20 dataset.
+
+    This dataset roughly follows the recipe outlined in the paper:
+    "Nearest neighbor search on embeddings rapidly identifies
+    distant protein relations", by Schutze et al. (2022).
+    Full text:
+    https://www.frontiersin.org/journals/bioinformatics/articles/10.3389/fbinf.2022.1033775/full
+
+    To avoid over-representing large families, the authors picked 20
+    sequences from each Pfam family with at least 20 members. This
+    dataset is referred to as Pfam20.
+
+    We ensure an additional constraint that no selected sequence appears
+    in more than one family, to avoid multiple "correct" answers during
+    evaluation.
+    """
+
+    def __init__(self, data_dir: str | Path, seed: int = 42) -> None:
+        """Initialize the Pfam20 dataset.
+
+        Parameters
+        ----------
+        data_dir : str or Path
+            The directory where the Pfam20 dataset directory will be stored.
+        seed : int, optional
+            The random seed used to randomly pick the 20 domains from
+            each family, by default 42.
+        """
+        super().__init__(data_dir, seed, subset_size=20)
 
 
 # TODO: Make function or class to download the version and relevant files
