@@ -179,6 +179,21 @@ class PfamDataset:
 
         return dict(families)
 
+    def load_sequences(self) -> list[Sequence]:
+        """Load the Pfam sequences.
+
+        Returns
+        -------
+        list[Sequence]
+            A list of Sequence objects containing the Pfam sequences.
+        """
+        # Load the Pfam sequences from the pfamseq file
+        # The headers have format: >{uniprot_id} {uniprot_name} {description}
+        print('Loading Pfam sequences...')
+        pfamseq = read_fasta(self._data_dir / 'pfamseq')
+
+        return pfamseq
+
 
 class PfamSubsetDataset(PfamDataset):
     """PfamSubset dataset.
@@ -373,8 +388,7 @@ class PfamSubsetDataset(PfamDataset):
 
         # Load the Pfam sequences from the pfamseq file
         # The headers have format: >{uniprot_id} {uniprot_name} {description}
-        print('Loading Pfam sequences from...')
-        pfamseq = read_fasta(self.data_dir / 'pfamseq')
+        pfamseq = super().load_sequences()
 
         # Build a dictionary mapping the uniport IDs to the sequences
         print('Building a dictionary mapping uniprot IDs to sequences...')
