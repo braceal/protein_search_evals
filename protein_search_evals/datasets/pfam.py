@@ -179,6 +179,58 @@ class PfamDataset:
 
         return dict(families)
 
+    def load_uniprot_ids_by_length(self, length_cutoff: int) -> set[str]:
+        """Load the UniProt IDs for sequences that meet the length cutoff.
+
+        Parameters
+        ----------
+        length_cutoff : int
+            The maximum length of the sequences to include in the dataset.
+
+        Returns
+        -------
+        set[str]
+            A set of UniProt IDs for the sequences that meet the length cutoff.
+        """
+        # The file is a bit large to load all the sequences at once
+        # so we iterate over the file and collect the UniProt IDs
+        # that meet the length cutoff
+        uniprot_ids = []
+        with open(self._data_dir / 'pfamseq') as file:
+            # Initialize the sequence buffer and the current UniProt ID
+            uid: str | None = None
+            seq: list[str] = []
+
+            for line in tqdm(file, desc='Parsing Pfam sequence lengths'):
+                # Remove leading/trailing whitespace
+                contents = line.strip()
+
+                # If we are starting a new entry, collect the previous entry
+                # and reset the sequence buffer
+                if contents.startswith('>'):
+                    # Collect the previous entry
+                    if uid is not None and len(''.join(seq)) <= length_cutoff:
+                        uniprot_ids.append(uid)
+
+                    # Extract UniProt ID from the header
+                    # (assuming format ">uniprot_id uniprot_name description")
+                    parts = contents.split(' ')
+
+                    # Remove '>' from the first part
+                    uid = parts[0][1:] if parts else None
+
+                    # Reset sequence buffer
+                    seq = []
+                else:
+                    # Append the sequence contents
+                    seq.append(contents)
+
+            # Capture last entry
+            if uid is not None and len(''.join(seq)) <= length_cutoff:
+                uniprot_ids.append(uid)
+
+        return set(uniprot_ids)
+
     def load_sequences_by_ids(self, query_ids: set[str]) -> list[Sequence]:
         """Retrieve sequences for a set of UniProt IDs from the Pfam dataset.
 
@@ -249,7 +301,8 @@ class PfamSubsetDataset(PfamDataset):
 
     We ensure an additional constraint that no selected sequence appears
     in more than one family, to avoid multiple "correct" answers during
-    evaluation.
+    evaluation. We also filter out sequences longer than `length_cutoff`
+    residues to avoid very long sequences in the benchmark.
     """
 
     def __init__(
@@ -257,6 +310,7 @@ class PfamSubsetDataset(PfamDataset):
         data_dir: str | Path,
         seed: int = 42,
         subset_size: int = 20,
+        length_cutoff: int = 1022,
     ):
         """Initialize the Pfam20 dataset.
 
@@ -270,10 +324,14 @@ class PfamSubsetDataset(PfamDataset):
             from each family, by default 42.
         subset_size : int, optional
             The number of sequences to select from each family, by default 20.
+        length_cutoff : int, optional
+            The maximum length of the sequences to include in the dataset,
+            by default 1022.
         """
         super().__init__(data_dir)
         self.seed = seed
         self.subset_size = subset_size
+        self.length_cutoff = length_cutoff
 
     @property
     def data_dir(self) -> Path:
@@ -290,17 +348,45 @@ class PfamSubsetDataset(PfamDataset):
         """The path to the sequences file."""
         return self.data_dir / 'sequences.fasta'
 
+    def _filter_by_seq_length(
+        self,
+        families: dict[str, list[str]],
+        length_cutoff: int,
+    ) -> dict[str, list[str]]:
+        print(f'Removing sequences longer than {length_cutoff} residues...')
+
+        # Compute the number of sequences before size filtering
+        num_sequences = sum(len(v) for v in families.values())
+        print(f'\tNum. sequences before size filtering: {num_sequences}')
+
+        # Load the sequence lengths for the Pfam sequences (this takes ~3 mins)
+        valid_uids = self.load_uniprot_ids_by_length(length_cutoff)
+
+        # Filter the families by the sequence lengths
+        families = {
+            pfam_id: [x for x in uniprot_ids if x in valid_uids]
+            for pfam_id, uniprot_ids in families.items()
+        }
+
+        # Compute the number of sequences after size filtering
+        num_sequences = sum(len(v) for v in families.values())
+        print(f'\tNum. families after size filtering: {num_sequences}')
+
+        return families
+
     def _filter_by_uniprot_ids(
         self,
         families: dict[str, list[str]],
     ) -> dict[str, list[str]]:
         print('Removing uniprot IDs that appear in more than one family...')
+
         # Count the number of occurrences of each uniprot ID across families
         # A dictionary with the form {uniprot_id: count across families}
         uniprot_counts = Counter(chain.from_iterable(families.values()))
+        print(f'\tNum. IDs before filtering: {len(uniprot_counts)}')
+
         # A set of unique uniprot IDs that appear in only one family
         unique_uniprot_ids = {k for k, v in uniprot_counts.items() if v == 1}
-        print(f'\tNum. IDs before filtering: {len(uniprot_counts)}')
 
         # Remove uniprot IDs that appear in more than one family
         families = {
@@ -391,6 +477,10 @@ class PfamSubsetDataset(PfamDataset):
         # Filter the families by uniprot IDs to avoid multiple correct answers
         families = self._filter_by_uniprot_ids(families)
 
+        # Filter the families by the sequence lengths (we don't want very long
+        # sequences in the benchmark)
+        families = self._filter_by_seq_length(families, self.length_cutoff)
+
         # Remove families with less than subset_size members
         families = self._filter_by_family_size(families, self.subset_size)
 
@@ -465,7 +555,8 @@ class Pfam20Dataset(PfamSubsetDataset):
 
     We ensure an additional constraint that no selected sequence appears
     in more than one family, to avoid multiple "correct" answers during
-    evaluation.
+    evaluation. We also filter out sequences longer than 1022 residues
+    to avoid very long sequences in the benchmark.
 
     Examples
     --------
