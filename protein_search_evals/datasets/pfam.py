@@ -280,6 +280,16 @@ class PfamSubsetDataset(PfamDataset):
         """The directory where the Pfam{subset_size} dataset will be stored."""
         return self._data_dir / f'pfam{self.subset_size}_seed-{self.seed}'
 
+    @property
+    def families_path(self) -> Path:
+        """The path to the families metadata file."""
+        return self.data_dir / 'families.json'
+
+    @property
+    def sequences_path(self) -> Path:
+        """The path to the sequences file."""
+        return self.data_dir / 'sequences.fasta'
+
     def _filter_by_uniprot_ids(
         self,
         families: dict[str, list[str]],
@@ -367,13 +377,12 @@ class PfamSubsetDataset(PfamDataset):
             belong to the family.
         """
         # Load the Pfam{subset_size} families metadata if it's already cached
-        families_path = self.data_dir / 'families.json'
-        if families_path.exists():
+        if self.families_path.exists():
             print(
                 f'Loading Pfam{self.subset_size} families metadata '
-                f'from {families_path}',
+                f'from {self.families_path}',
             )
-            with open(families_path) as f:
+            with open(self.families_path) as f:
                 return json.load(f)
 
         # Load the underlying Pfam families metadata from families.json
@@ -391,10 +400,10 @@ class PfamSubsetDataset(PfamDataset):
         # Save the Pfam{subset_size} families metadata to disk
         print(
             f'Saving Pfam{self.subset_size} families metadata '
-            f'to {families_path}',
+            f'to {self.families_path}',
         )
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        with open(families_path, 'w') as f:
+        with open(self.families_path, 'w') as f:
             json.dump(families, f)
 
         return families
@@ -409,21 +418,20 @@ class PfamSubsetDataset(PfamDataset):
             sequences.
         """
         # Load the Pfam{subset_size} sequences if already cached
-        sequences_path = self.data_dir / 'sequences.fasta'
-        if sequences_path.exists():
+        if self.sequences_path.exists():
             print(
                 f'Loading Pfam{self.subset_size} families metadata '
-                f'from {sequences_path}',
+                f'from {self.sequences_path}',
             )
-            return read_fasta(sequences_path)
+            return read_fasta(self.sequences_path)
 
         # Load the Pfam families metadata
         families = self.load_families()
 
         # Build a set of the uniprot IDs in the Pfam{subset_size} families
         print(
-            f'Building a set of the uniprot IDs in the '
-            f'Pfam{self.subset_size} families...',
+            f'Building a set of the uniprot IDs for the '
+            f'selected Pfam{self.subset_size} families...',
         )
         uniprot_ids = {uid for uids in families.values() for uid in uids}
 
@@ -435,9 +443,9 @@ class PfamSubsetDataset(PfamDataset):
         # Save the Pfam{subset_size} sequences to disk
         print(
             f'Saving Pfam{self.subset_size} with {len(sequences)} '
-            f'sequences to {sequences_path}',
+            f'sequences to {self.sequences_path}',
         )
-        write_fasta(sequences, sequences_path)
+        write_fasta(sequences, self.sequences_path)
 
         return sequences
 
@@ -458,6 +466,17 @@ class Pfam20Dataset(PfamSubsetDataset):
     We ensure an additional constraint that no selected sequence appears
     in more than one family, to avoid multiple "correct" answers during
     evaluation.
+
+    Examples
+    --------
+    >>> # Set the Pfam dataset path to the data directory
+    >>> dataset = Pfam20Dataset('data/pfam')
+
+    >>> # Load the Pfam families metadata
+    >>> families = dataset.load_families()
+
+    >>> # Load the Pfam sequences
+    >>> sequences = dataset.load_sequences()
     """
 
     def __init__(self, data_dir: str | Path, seed: int = 42) -> None:
@@ -472,19 +491,3 @@ class Pfam20Dataset(PfamSubsetDataset):
             each family, by default 42.
         """
         super().__init__(data_dir, seed, subset_size=20)
-
-
-# TODO: Make function or class to download the version and relevant files
-# (give option for current version). The function can return the
-# Sequence objects. Maybe it's a good idea to also organize the data by
-# families, to provide those splits with logic encapsulated in this module.
-
-if __name__ == '__main__':
-    # Set the Pfam dataset path to the data directory
-    dataset = PfamDataset('data/pfam')
-
-    # Download the Pfam dataset
-    dataset.download()
-
-    # Load the Pfam families metadata
-    families = dataset.load_families()
