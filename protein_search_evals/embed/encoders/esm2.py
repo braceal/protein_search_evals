@@ -40,7 +40,7 @@ class Esm2EncoderConfig(EncoderConfig):
 
 
 class Esm2Encoder(Encoder):
-    """Encoder for the ESM2 model."""
+    """Encoder for the ESM-2 model."""
 
     def __init__(
         self,
@@ -49,7 +49,7 @@ class Esm2Encoder(Encoder):
         half_precision: bool = True,
         enable_faesm: bool = False,
     ):
-        """Initialize the ESM2 encoder.
+        """Initialize the ESM-2 encoder.
 
         Parameters
         ----------
