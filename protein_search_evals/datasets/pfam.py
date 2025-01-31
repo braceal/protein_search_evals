@@ -10,10 +10,11 @@ from collections import defaultdict
 from itertools import chain
 from pathlib import Path
 
-from distllm.embed.datasets.fasta import read_fasta
-from distllm.embed.datasets.fasta import Sequence
-from distllm.embed.datasets.fasta import write_fasta
 from tqdm import tqdm
+
+from protein_search_evals.utils import read_fasta
+from protein_search_evals.utils import Sequence
+from protein_search_evals.utils import write_fasta
 
 
 def download_and_unzip(url: str, output_dir: str | Path) -> Path:

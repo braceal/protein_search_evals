@@ -17,7 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "distllm"
+    "parsl-object-registry @ git+https://github.com/braceal/parsl_object_registry.git",
 ]
 
 [project.urls]
