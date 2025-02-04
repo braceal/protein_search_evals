@@ -6,7 +6,6 @@ import functools
 import time
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
-from typing import Any
 
 import faiss
 import numpy as np
@@ -373,7 +372,7 @@ class FaissIndex:
             total_scores=new_total_scores,
         )
 
-    def get(self, indices: list[int], key: str) -> list[Any]:
+    def get(self, indices: list[int], key: str) -> np.ndarray:
         """Get the values of a key from the dataset for the given indices.
 
         Parameters
@@ -385,10 +384,9 @@ class FaissIndex:
 
         Returns
         -------
-        Dataset
+        np.ndarray
             The dataset for the given indices.
         """
-        # return [self.dataset[i][key] for i in indices]
         return self.dataset[key][indices]
 
 
@@ -530,7 +528,7 @@ class Retriever:
 
         return pool_embeds
 
-    def get(self, indices: list[int], key: str) -> list[Any]:
+    def get(self, indices: list[int], key: str) -> np.ndarray:
         """Get the values of a key from the dataset for the given indices.
 
         Parameters
@@ -542,7 +540,7 @@ class Retriever:
 
         Returns
         -------
-        list[Any]
+        np.ndarray
             The values for the given indices.
         """
         return self.faiss_index.get(indices, key)
@@ -560,9 +558,9 @@ class Retriever:
         np.ndarray
             Array of embeddings (shape: [num_indices, embed_size])
         """
-        return np.array(self.get(indices, 'embeddings'))
+        return self.faiss_index.get(indices, 'embeddings')
 
-    def get_sequences(self, indices: list[int]) -> list[str]:
+    def get_sequences(self, indices: list[int]) -> np.ndarray:
         """Get the sequences for the given indices.
 
         Parameters
@@ -572,7 +570,7 @@ class Retriever:
 
         Returns
         -------
-        list[str]
-            List of sequences for the given indices.
+        np.ndarray
+            List of sequences strings for the given indices.
         """
-        return self.get(indices, 'sequences')
+        return self.faiss_index.get(indices, 'sequences')
