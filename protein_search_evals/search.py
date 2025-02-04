@@ -372,12 +372,12 @@ class FaissIndex:
             total_scores=new_total_scores,
         )
 
-    def get(self, indices: list[int], key: str) -> np.ndarray:
+    def get(self, indices: list[int] | np.ndarray, key: str) -> np.ndarray:
         """Get the values of a key from the dataset for the given indices.
 
         Parameters
         ----------
-        indices : list[int]
+        indices : list[int] | np.ndarray
             The list of indices to get.
         key : str
             The key to get from the dataset.
@@ -528,12 +528,12 @@ class Retriever:
 
         return pool_embeds
 
-    def get(self, indices: list[int], key: str) -> np.ndarray:
+    def get(self, indices: list[int] | np.ndarray, key: str) -> np.ndarray:
         """Get the values of a key from the dataset for the given indices.
 
         Parameters
         ----------
-        indices : list[int]
+        indices : list[int] | np.ndarray
             The list of indices to get.
         key : str
             The key to get from the dataset.
@@ -545,12 +545,12 @@ class Retriever:
         """
         return self.faiss_index.get(indices, key)
 
-    def get_embeddings(self, indices: list[int]) -> np.ndarray:
+    def get_embeddings(self, indices: list[int] | np.ndarray) -> np.ndarray:
         """Get the embeddings for the given indices.
 
         Parameters
         ----------
-        indices : list[int]
+        indices : list[int] | np.ndarray
             The list of indices returned from the search.
 
         Returns
@@ -560,12 +560,12 @@ class Retriever:
         """
         return self.faiss_index.get(indices, 'embeddings')
 
-    def get_sequences(self, indices: list[int]) -> np.ndarray:
+    def get_sequences(self, indices: list[int] | np.ndarray) -> np.ndarray:
         """Get the sequences for the given indices.
 
         Parameters
         ----------
-        indices : list[int]
+        indices : list[int] | np.ndarray
             The list of indices returned from the search.
 
         Returns
