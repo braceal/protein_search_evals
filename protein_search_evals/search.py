@@ -388,7 +388,8 @@ class FaissIndex:
         Dataset
             The dataset for the given indices.
         """
-        return [self.dataset[i][key] for i in indices]
+        # return [self.dataset[i][key] for i in indices]
+        return self.dataset[key][indices]
 
 
 class RetrieverConfig(BaseModel):
