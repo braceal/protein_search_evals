@@ -13,7 +13,7 @@ encoder_config:
   # The model name or path to the pretrained model.
   pretrained_model_name_or_path: facebook/esm2_t6_8M_UR50D
   # Whether to use the faesm implementation (faster).
-  enable_faesm: false
+  enable_faesm: true
   # Whether to normalize the embeddings
   normalize_embeddings: true
 

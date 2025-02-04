@@ -11,6 +11,20 @@ pip install -U pip setuptools wheel
 pip install -e .
 ```
 
+For ESMC, you can install the following package:
+```bash
+pip install esm
+```
+
+For ESM2 with faesm, you can install the following package:
+```bash
+pip install flash-attn --no-build-isolation
+pip install faesm[flash_attn]
+```
+Or, if you want to forego flash attention and just use SDPA
+```bash
+pip install faesm
+```
 
 ## Contributing
 
