@@ -32,6 +32,9 @@ homepage = "https://github.com/braceal/protein_search_evals"
 documentation = "https://github.com/braceal/protein_search_evals"
 repository = "https://github.com/braceal/protein_search_evals"
 
+[project.scripts]
+protein_search_evals = "protein_search_evals.cli:main"
+
 [project.optional-dependencies]
 dev = [
     "covdefaults>=2.2",
