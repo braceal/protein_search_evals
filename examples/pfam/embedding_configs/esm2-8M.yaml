@@ -19,7 +19,7 @@ encoder_config:
 # The `name` field specifies what type of system to run on and the subsequent
 # arguments are conditional on the name field (e.g., a cluster may have different
 # configuration than a workstation).
-compute_settings:
+compute_config:
   # Specify we want the workstation parsl configuration
   name: workstation
   # Identify which GPUs to assign tasks to. It's generally recommended to first check
