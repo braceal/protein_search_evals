@@ -2,7 +2,7 @@
 input_dir: data/pfam/pfam20_seed-42
 
 # Directory to save the embeddings.
-output_dir: examples/pfam/embeddings/esm2-8M_pfam20_seed-42
+output_dir: examples/pfam/embeddings/esm2-8M_faesm_pfam20_seed-42
 
 # Glob patterns to match the input files.
 glob_patterns:
