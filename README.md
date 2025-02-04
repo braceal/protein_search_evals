@@ -21,6 +21,8 @@ For ESM2 with faesm, you can install the following package:
 pip install flash-attn --no-build-isolation
 pip install faesm[flash_attn]
 ```
+Note: requires CUDA 11.7 or later.
+
 Or, if you want to forego flash attention and just use SDPA
 ```bash
 pip install faesm
