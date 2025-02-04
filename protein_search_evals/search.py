@@ -83,6 +83,10 @@ class FaissIndexConfig(BaseModel):
         default=1,
         description='The number of quantization process workers.',
     )
+    search_gpus: int | list[int] | None = Field(
+        default=None,
+        description='The list of GPUs to use for searching.',
+    )
 
 
 class FaissIndex:
@@ -118,6 +122,7 @@ class FaissIndex:
         search_algorithm: str = 'exact',
         rescore_multiplier: int = 2,
         num_quantization_workers: int = 1,
+        search_gpus: int | list[int] | None = None,
     ) -> None:
         """Initialize the FAISS index.
 
@@ -150,6 +155,9 @@ class FaissIndex:
             keep `top_k`, by default 2.
         num_quantization_workers : int, optional
             The number of quantization process workers, by default 1.
+        search_gpus : int | list[int], optional
+            The list of GPUs to use for searching, by default None
+            (uses CPU by default).
         """
         self.dataset_dir = dataset_dir
         self.faiss_index_path = faiss_index_path
@@ -181,6 +189,18 @@ class FaissIndex:
         else:
             print(f'Creating FAISS index at {self.faiss_index_path}')
             self.faiss_index = self._create_index()
+
+        # Move the index to the GPU if available
+        if search_gpus is not None:
+            # Handle single GPU
+            if isinstance(search_gpus, int):
+                search_gpus = [search_gpus]
+
+            # Move the index to the specified GPUs
+            self.faiss_index = faiss.index_cpu_to_gpus_list(
+                self.faiss_index,
+                gpus=search_gpus,
+            )
 
     def _load_index_from_disk(self) -> faiss.Index:
         """Load the FAISS index from disk."""
