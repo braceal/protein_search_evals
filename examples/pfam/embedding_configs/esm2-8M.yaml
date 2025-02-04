@@ -4,6 +4,10 @@ input_dir:
 # Directory to save the embeddings.
 output_dir:
 
+# Glob patterns to match the input files.
+glob_patterns:
+  - "*.fasta"
+
 # Configuration for the encoder.
 encoder_config:
   # The model name or path to the pretrained model.
