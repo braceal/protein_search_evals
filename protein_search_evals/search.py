@@ -179,8 +179,9 @@ class FaissIndex:
                 'Options: ["exact" and "hnsw"]',
             )
 
-        # Load the  from disk
+        # Load the dataset from disk and set format to numpy
         self.dataset = Dataset.load_from_disk(str(dataset_dir))
+        self.dataset.set_format('numpy')
 
         # Initialize the FAISS index
         if self.faiss_index_path.exists():
