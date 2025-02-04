@@ -1,0 +1,24 @@
+# Directory containing the input files to embed.
+input_dir:
+
+# Directory to save the embeddings.
+output_dir:
+
+# Configuration for the encoder.
+encoder_config:
+  # The model name or path to the pretrained model.
+  pretrained_model_name_or_path: facebook/esm2_t6_8M_UR50D
+  # Whether to use the faesm implementation (faster).
+  enable_faesm: false
+
+# Compute settings can be configured by referring to protein_search_evals/parsl.py
+# The `name` field specifies what type of system to run on and the subsequent
+# arguments are conditional on the name field (e.g., a cluster may have different
+# configuration than a workstation).
+compute_settings:
+  # Specify we want the workstation parsl configuration
+  name: workstation
+  # Identify which GPUs to assign tasks to. It's generally recommended to first check
+  # nvidia-smi to see which GPUs are available. The numbers below are analogous to
+  # setting CUDA_VISIBLE_DEVICES=0,1,2,3
+  available_accelerators: ["0", "1", "2", "3"]
