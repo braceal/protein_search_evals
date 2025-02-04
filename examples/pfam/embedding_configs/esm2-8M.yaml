@@ -14,6 +14,8 @@ encoder_config:
   pretrained_model_name_or_path: facebook/esm2_t6_8M_UR50D
   # Whether to use the faesm implementation (faster).
   enable_faesm: false
+  # Whether to normalize the embeddings
+  normalize_embeddings: true
 
 # Compute settings can be configured by referring to protein_search_evals/parsl.py
 # The `name` field specifies what type of system to run on and the subsequent

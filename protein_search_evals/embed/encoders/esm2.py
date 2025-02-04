@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import warnings
+from typing import Any
 from typing import Literal
 
 import torch
@@ -48,6 +49,7 @@ class Esm2Encoder(Encoder):
         tokenizer_path: str | None = None,
         half_precision: bool = True,
         enable_faesm: bool = False,
+        **kwargs: Any,
     ):
         """Initialize the ESM-2 encoder.
 
@@ -62,7 +64,12 @@ class Esm2Encoder(Encoder):
             Whether to use half precision for the model, by default True.
         enable_faesm : bool, optional
             Whether to use the faesm implementation (faster), by default False.
+        **kwargs : Any
+            Additional base arguments, see `Encoder`.
         """
+        # Initialize the base encoder
+        super().__init__(**kwargs)
+
         # Check if faesm is enabled
         if enable_faesm:
             try:

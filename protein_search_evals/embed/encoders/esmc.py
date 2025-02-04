@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Any
 from typing import Literal
 
 import torch
@@ -87,6 +88,7 @@ class EsmCambrianEncoder(Encoder):
         self,
         pretrained_model_name_or_path: str = 'EvolutionaryScale/esmc-600m-2024-12',  # noqa E501
         embedding_size: int | None = None,
+        **kwargs: Any,
     ) -> None:
         """Initialize the ESM-Cambrian encoder.
 
@@ -99,7 +101,12 @@ class EsmCambrianEncoder(Encoder):
         embedding_size : int, optional
             The model embedding size. If you are using a fine-tuned model you
             should explicitly set this value, by default None.
+        **kwargs : Any
+            Additional base arguments, see `Encoder`.
         """
+        # Initialize the base encoder
+        super().__init__(**kwargs)
+
         from esm.models.esmc import ESMC
         from esm.tokenization import EsmSequenceTokenizer
 
