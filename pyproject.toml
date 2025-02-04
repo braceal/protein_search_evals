@@ -17,6 +17,12 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
+    "tqdm",
+    "parsl",
+    "pydantic",
+    "transformers",
+    "torch",
+    "datasets",
     "parsl-object-registry @ git+https://github.com/braceal/parsl_object_registry.git",
 ]
 
