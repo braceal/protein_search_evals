@@ -7,42 +7,11 @@ from typing import Literal
 
 import torch
 from pydantic import Field
-from pydantic import model_validator
 from transformers import BatchEncoding
 from transformers import PreTrainedTokenizer
-from typing_extensions import Self
 
 from protein_search_evals.embed.encoders.base import Encoder
 from protein_search_evals.embed.encoders.base import EncoderConfig
-
-
-# ESM-Cambrian doesn't provide the embedding size in the config
-# so we need to set it manually based on the model name
-def _validate_embedding_size(
-    pretrained_model_name_or_path: str,
-    embedding_size: int | None,
-) -> int:
-    # If the embedding size is explicitly set, return the value
-    if isinstance(embedding_size, int):
-        return embedding_size
-
-    # Assert that the embedding size is None
-    assert embedding_size is None
-
-    # The embedding size based on the model name
-    embedding_sizes = {'esmc_300m': 960, 'esmc_600m': 1152}
-
-    # If the embedding size is not found, raise an error
-    if pretrained_model_name_or_path not in embedding_sizes:
-        raise ValueError(
-            f'Invalid model name for ESMC: '
-            f'{pretrained_model_name_or_path} '
-            f'Valid model names are: {", ".join(embedding_sizes.keys())}.',
-            'Or you can set the embedding_size parameter explicitly ',
-            'if you are using a fine-tuned model.',
-        )
-
-    return embedding_sizes[pretrained_model_name_or_path]
 
 
 class EsmCambrianEncoderConfig(EncoderConfig):
@@ -55,21 +24,6 @@ class EsmCambrianEncoderConfig(EncoderConfig):
         default='esmc_600m',
         description='The model id, options [esmc_300m, esmc_600m]',
     )
-    embedding_size: int | None = Field(
-        default=None,
-        description='The model embedding size. If you are using a '
-        'fine-tuned model you should explicitly set this value.',
-    )
-
-    @model_validator(mode='after')
-    def set_embedding_size(self) -> Self:
-        """Set the embedding size based on the model name."""
-        self.embedding_size = _validate_embedding_size(
-            self.pretrained_model_name_or_path,
-            self.embedding_size,
-        )
-
-        return self
 
 
 class EsmCambrianEncoder(Encoder):
@@ -92,9 +46,6 @@ class EsmCambrianEncoder(Encoder):
         pretrained_model_name_or_path : str
             The model id, options ['esmc_300m', 'esmc_600m'],
             by default 'esmc_600m'.
-        embedding_size : int, optional
-            The model embedding size. If you are using a fine-tuned model you
-            should explicitly set this value, by default None.
         **kwargs : Any
             Additional base arguments, see `Encoder`.
         """
@@ -116,11 +67,9 @@ class EsmCambrianEncoder(Encoder):
         # Set the model max length for proper truncation
         tokenizer.model_max_length = 2048
 
-        # Get the embedding size based on the model name
-        # embedding_size = _validate_embedding_size(
-        #     pretrained_model_name_or_path,
-        #     embedding_size,
-        # )
+        # Get the embedding size from the model
+        # ESM-Cambrian doesn't provide the embedding size in the config
+        # so we need to set it manually based on the model
         embedding_size = int(model.raw_model.embed.weight.shape[1])
 
         # Set persistent attributes
