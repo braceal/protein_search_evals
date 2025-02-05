@@ -22,6 +22,7 @@ dependencies = [
     "parsl",
     "pydantic",
     "transformers",
+    "sentence-transformers",
     "torch",
     "datasets",
     "parsl-object-registry @ git+https://github.com/braceal/parsl_object_registry.git",
