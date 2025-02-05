@@ -30,10 +30,7 @@ def _validate_embedding_size(
     assert embedding_size is None
 
     # The embedding size based on the model name
-    embedding_sizes = {
-        'EvolutionaryScale/esmc-300m-2024-12': 960,
-        'EvolutionaryScale/esmc-600m-2024-12': 1152,
-    }
+    embedding_sizes = {'esmc_300m': 960, 'esmc_600m': 1152}
 
     # If the embedding size is not found, raise an error
     if pretrained_model_name_or_path not in embedding_sizes:
@@ -55,10 +52,8 @@ class EsmCambrianEncoderConfig(EncoderConfig):
     name: Literal['esmc'] = 'esmc'
 
     pretrained_model_name_or_path: str = Field(
-        default='EvolutionaryScale/esmc-300m-2024-12',
-        description='The model id, options '
-        '[EvolutionaryScale/esmc-300m-2024-12, '
-        'EvolutionaryScale/esmc-600m-2024-12]',
+        default='esmc_600m',
+        description='The model id, options [esmc_300m, esmc_600m]',
     )
     embedding_size: int | None = Field(
         default=None,
@@ -86,7 +81,7 @@ class EsmCambrianEncoder(Encoder):
 
     def __init__(
         self,
-        pretrained_model_name_or_path: str = 'EvolutionaryScale/esmc-600m-2024-12',  # noqa E501
+        pretrained_model_name_or_path: str = 'esmc_600m',
         embedding_size: int | None = None,
         **kwargs: Any,
     ) -> None:
@@ -95,9 +90,8 @@ class EsmCambrianEncoder(Encoder):
         Parameters
         ----------
         pretrained_model_name_or_path : str
-            The model id, options ['EvolutionaryScale/esmc-300m-2024-12',
-            'EvolutionaryScale/esmc-600m-2024-12'], by default
-            'EvolutionaryScale/esmc-600m-2024-12'.
+            The model id, options ['esmc_300m', 'esmc_600m'],
+            by default 'esmc_600m'.
         embedding_size : int, optional
             The model embedding size. If you are using a fine-tuned model you
             should explicitly set this value, by default None.
@@ -123,10 +117,11 @@ class EsmCambrianEncoder(Encoder):
         tokenizer.model_max_length = 2048
 
         # Get the embedding size based on the model name
-        embedding_size = _validate_embedding_size(
-            pretrained_model_name_or_path,
-            embedding_size,
-        )
+        # embedding_size = _validate_embedding_size(
+        #     pretrained_model_name_or_path,
+        #     embedding_size,
+        # )
+        embedding_size = int(model.raw_model.embed.shape[1])
 
         # Set persistent attributes
         self.model = model

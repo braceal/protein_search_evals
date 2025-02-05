@@ -13,7 +13,7 @@ encoder_config:
   # The encoder name
   name: esmc
   # The model name or path to the pretrained model.
-  pretrained_model_name_or_path: EvolutionaryScale/esmc-300m-2024-12
+  pretrained_model_name_or_path: esmc_300m
   # Whether to normalize the embeddings
   normalize_embeddings: true
   # The batch size to use for embedding
