@@ -11,9 +11,11 @@ import numpy as np
 from protein_search_evals.datasets.pfam import Pfam20Dataset
 from protein_search_evals.embed.encoders import EncoderConfigs
 from protein_search_evals.embed.encoders import Esm2EncoderConfig
+from protein_search_evals.embed.encoders import EsmCambrianEncoderConfig
 from protein_search_evals.search import FaissIndexConfig
 from protein_search_evals.search import Retriever
 from protein_search_evals.search import RetrieverConfig
+from protein_search_evals.utils import Sequence
 
 
 def get_encoder_config(model_name: str) -> EncoderConfigs:
@@ -36,9 +38,70 @@ def get_encoder_config(model_name: str) -> EncoderConfigs:
             pretrained_model_name_or_path=model_name,
         )
         return encoder_config
+    elif 'esmc' in model_name:
+        # Initialize encoder configuration
+        encoder_config = EsmCambrianEncoderConfig(
+            normalize_embeddings=True,
+            pretrained_model_name_or_path=model_name,
+        )
+        return encoder_config
 
     else:
         raise ValueError(f'Unknown encoder: {model_name}')
+
+
+def compute_sequence_level_accuracy(
+    sequences: list[Sequence],
+    predicted_indices: list[list[int]],
+    query_tags: np.ndarray,
+    uid_to_family: dict[str, str],
+) -> float:
+    """Compute the sequence level accuracy.
+
+    Parameters
+    ----------
+    sequences : list[Sequence]
+        The list of query sequences.
+    predicted_indices : list[list[int]]
+        The list of predicted indices.
+    query_tags : np.ndarray
+        The query tags (correct string labels).
+    uid_to_family : dict[str, str]
+        The mapping from uid to family.
+
+    Returns
+    -------
+    float
+        The accuracy of the model on the Pfam benchmark
+        at the sequence level.
+    """
+    # Check whether the top hit is the correct family
+    correctness = []
+    for query_sequence, indices in zip(sequences, predicted_indices):
+        # Get the query uniprot id and correct family
+        query_uid = query_sequence.tag
+        correct_family = uid_to_family[query_uid]
+
+        # Get predicted uids
+        uids = query_tags[indices]
+
+        # Exclude self-hit from predicted uniprot ids
+        predicted_uids = [uid for uid in uids if uid != query_uid]
+
+        # Get the predicted families
+        predicted_families = [uid_to_family[uid] for uid in predicted_uids]
+
+        # Get the correct family
+        correct_family = uid_to_family[query_sequence.tag]
+
+        # Correct if the top hit is the same pfam
+        correct = predicted_families[0] == correct_family
+        correctness.append(correct)
+
+    # Compute the accuracy
+    accuracy = float(np.mean(correctness))
+
+    return accuracy
 
 
 def run_evaluation(retriever: Retriever, dataset: Pfam20Dataset) -> float:
@@ -76,33 +139,18 @@ def run_evaluation(retriever: Retriever, dataset: Pfam20Dataset) -> float:
     # We are only interested in the top hit (excluding self-hit)
     results = retriever.search(query_embedding=query_embeddings, top_k=2)
 
+    # Get the predicted sequence indices (labels)
+    predicted_indices = results[0].total_indices
+
     # Check whether the top hit is the correct family
-    correctness = []
-    for query_sequence, indices in zip(sequences, results[0].total_indices):
-        # Get the query uniprot id and correct family
-        query_uid = query_sequence.tag
-        correct_family = uid_to_family[query_uid]
+    sequence_level_accuracy = compute_sequence_level_accuracy(
+        sequences=sequences,
+        predicted_indices=predicted_indices,
+        query_tags=query_tags,
+        uid_to_family=uid_to_family,
+    )
 
-        # Get predicted uids
-        uids = query_tags[indices]
-
-        # Exclude self-hit from predicted uniprot ids
-        predicted_uids = [uid for uid in uids if uid != query_uid]
-
-        # Get the predicted families
-        predicted_families = [uid_to_family[uid] for uid in predicted_uids]
-
-        # Get the correct family
-        correct_family = uid_to_family[query_sequence.tag]
-
-        # Correct if the top hit is the same pfam
-        correct = predicted_families[0] == correct_family
-        correctness.append(correct)
-
-    # Compute the accuracy
-    accuracy = float(np.mean(correctness))
-
-    return accuracy
+    return sequence_level_accuracy
 
 
 if __name__ == '__main__':
