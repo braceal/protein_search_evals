@@ -121,7 +121,7 @@ class EsmCambrianEncoder(Encoder):
         #     pretrained_model_name_or_path,
         #     embedding_size,
         # )
-        embedding_size = int(model.raw_model.embed.shape[1])
+        embedding_size = int(model.raw_model.embed.weight.shape[1])
 
         # Set persistent attributes
         self.model = model
