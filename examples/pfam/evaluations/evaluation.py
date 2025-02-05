@@ -83,7 +83,7 @@ class EvaluationMetadata(BaseConfig):
         description='The path to the faiss index.',
     )
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         """Return the string representation of the metadata."""
         return (
             f'EvaluationMetadata(\n'
