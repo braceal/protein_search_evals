@@ -17,7 +17,7 @@ encoder_config:
   # Whether to normalize the embeddings
   normalize_embeddings: true
   # The batch size to use for embedding
-  dataloader_batch_size: 64
+  dataloader_batch_size: 8
 
 # Compute settings can be configured by referring to protein_search_evals/parsl.py
 # The `name` field specifies what type of system to run on and the subsequent
