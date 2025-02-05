@@ -381,9 +381,9 @@ if __name__ == '__main__':
     print(evaluation_metadata)
 
     # Save the metadata to a file
-    metadata_file = args.report_name.with_suffix('_metadata.json')
+    metadata_file = f'{args.report_name.with_suffix}_metadata.json'
     evaluation_metadata.write_json(metadata_file)
 
     # Save the output to a file
-    output_file = args.report_name.with_suffix('_output.json')
+    output_file = f'{args.report_name.with_suffix}_output.json'
     output.write_json(output_file)
