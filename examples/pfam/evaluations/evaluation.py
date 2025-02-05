@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
 
 import numpy as np
+from pydantic import Field
 
 from protein_search_evals.datasets.pfam import Pfam20Dataset
 from protein_search_evals.embed.encoders import EncoderConfigs
@@ -15,7 +15,7 @@ from protein_search_evals.embed.encoders import EsmCambrianEncoderConfig
 from protein_search_evals.search import FaissIndexConfig
 from protein_search_evals.search import Retriever
 from protein_search_evals.search import RetrieverConfig
-from protein_search_evals.utils import Sequence
+from protein_search_evals.utils import BaseConfig
 
 
 def get_encoder_config(model_name: str) -> EncoderConfigs:
@@ -50,107 +50,245 @@ def get_encoder_config(model_name: str) -> EncoderConfigs:
         raise ValueError(f'Unknown encoder: {model_name}')
 
 
-def compute_sequence_level_accuracy(
-    sequences: list[Sequence],
-    predicted_indices: list[list[int]],
-    query_tags: np.ndarray,
-    uid_to_family: dict[str, str],
-) -> float:
-    """Compute the sequence level accuracy.
+class EvaluationMetadata(BaseConfig):
+    """Evaluation metadata dataclass."""
 
-    Parameters
-    ----------
-    sequences : list[Sequence]
-        The list of query sequences.
-    predicted_indices : list[list[int]]
-        The list of predicted indices.
-    query_tags : np.ndarray
-        The query tags (correct string labels).
-    uid_to_family : dict[str, str]
-        The mapping from uid to family.
-
-    Returns
-    -------
-    float
-        The accuracy of the model on the Pfam benchmark
-        at the sequence level.
-    """
-    # Check whether the top hit is the correct family
-    correctness = []
-    for query_sequence, indices in zip(sequences, predicted_indices):
-        # Get the query uniprot id and correct family
-        query_uid = query_sequence.tag
-        correct_family = uid_to_family[query_uid]
-
-        # Get predicted uids
-        uids = query_tags[indices]
-
-        # Exclude self-hit from predicted uniprot ids
-        predicted_uids = [uid for uid in uids if uid != query_uid]
-
-        # Get the predicted families
-        predicted_families = [uid_to_family[uid] for uid in predicted_uids]
-
-        # Get the correct family
-        correct_family = uid_to_family[query_sequence.tag]
-
-        # Correct if the top hit is the same pfam
-        correct = predicted_families[0] == correct_family
-        correctness.append(correct)
-
-    # Compute the accuracy
-    accuracy = float(np.mean(correctness))
-
-    return accuracy
-
-
-def run_evaluation(retriever: Retriever, dataset: Pfam20Dataset) -> float:
-    """Run the evaluation on the Pfam dataset.
-
-    Parameters
-    ----------
-    retriever : Retriever
-        The retriever to use for searching the index.
-
-    dataset : Pfam20Dataset
-        The dataset to evaluate on.
-
-    Returns
-    -------
-    float
-        The accuracy of the model on the Pfam benchmark.
-    """
-    # Load the sequences
-    sequences = dataset.load_sequences()
-
-    # Get the mapping from uid to family
-    uid_to_family = dataset.uniprot_to_family
-
-    # The evaluation is over all sequences
-    query_keys = np.arange(len(sequences))
-
-    # Get all the sequence tags (Uniprot IDs)
-    query_tags = retriever.get(query_keys, key='tags')
-
-    # Get all query embeddings from the index
-    query_embeddings = retriever.get(query_keys, key='embeddings')
-
-    # Search the index for the nearest neighbors
-    # We are only interested in the top hit (excluding self-hit)
-    results = retriever.search(query_embedding=query_embeddings, top_k=2)
-
-    # Get the predicted sequence indices (labels)
-    predicted_indices = results[0].total_indices
-
-    # Check whether the top hit is the correct family
-    sequence_level_accuracy = compute_sequence_level_accuracy(
-        sequences=sequences,
-        predicted_indices=predicted_indices,
-        query_tags=query_tags,
-        uid_to_family=uid_to_family,
+    sequence_level_accuracy: float = Field(
+        ...,
+        description='The sequence level accuracy of the model.',
+    )
+    family_level_accuracy: float = Field(
+        ...,
+        description='The family level accuracy of the model.',
+    )
+    precision: str = Field(
+        ...,
+        description='The precision of the faiss index [float32, ubinary].',
+    )
+    model: str = Field(
+        ...,
+        description='The model name to use for the encoder.',
+    )
+    model_directory: str = Field(
+        ...,
+        description='The model output directory containing the '
+        'embeddings subdir.',
+    )
+    dataset: str = Field(
+        ...,
+        description='The directory containing the Pfam dataset.',
+    )
+    index_path: str = Field(
+        ...,
+        description='The path to the faiss index.',
     )
 
-    return sequence_level_accuracy
+    def __repr__(self) -> str:
+        """Return the string representation of the metadata."""
+        return (
+            f'EvaluationMetadata(\n'
+            f'\tSequence-level Accuracy: {self.sequence_level_accuracy * 100:.2f}%\n'  # noqa E501
+            f'\tFamily-level Accuracy: {self.family_level_accuracy * 100:.2f}%\n'  # noqa E501
+            f'\tPrecision: {self.precision}\n'
+            f'\tModel: {self.model}\n'
+            f'\tModel Directory: {self.model_directory}\n'
+            f'\tDataset: {self.dataset}\n'
+            f'\tIndex Path: {self.index_path}\n'
+            f')'
+        )
+
+
+class EvaluatorOutput(BaseConfig):
+    """Evaluator output dataclass."""
+
+    sequence_level_accuracy: float = Field(
+        ...,
+        description='The sequence level accuracy of the model.',
+    )
+    family_level_accuracy: float = Field(
+        ...,
+        description='The family level accuracy of the model.',
+    )
+    accuracy_by_seq: dict[str, float] = Field(
+        ...,
+        description='The accuracy of the model for each sequence.',
+    )
+    family_accuracies: dict[str, float] = Field(
+        ...,
+        description='The accuracy of the model for each family.',
+    )
+
+
+class Evaluator:
+    """Evaluator for the Pfam benchmark."""
+
+    def __init__(
+        self,
+        dataset: Pfam20Dataset,
+        retriever: Retriever,
+        top_k: int,
+    ) -> None:
+        """Initialize the evaluator.
+
+        Parameters
+        ----------
+        dataset : Pfam20Dataset
+            The Pfam dataset.
+        retriever : Retriever
+            The retriever to use for searching the index.
+        top_k : int
+            The number of hits to retrieve.
+        """
+        self.dataset = dataset
+        self.retriever = retriever
+        self.top_k = top_k
+
+    def _compute_accuracy_by_seq(
+        self,
+        query_tags: np.ndarray,
+        predicted_indices: list[list[int]],
+    ) -> dict[str, float]:
+        """Compute the accuracy for each sequence (Uniprot ID).
+
+        For each query sequence, we check whether the top hit
+        is the correct family. We exclude self-hits from the
+        predicted uniprot ids.
+
+        Parameters
+        ----------
+        query_tags : np.ndarray
+            The query tags (Uniprot IDs).
+        predicted_indices : list[list[int]]
+            The predicted indices.
+
+        Returns
+        -------
+        dict[str, float]
+            A mapping from Uniprot ID of the sequence to accuracy (0 or 1).
+        """
+        # Load the sequences
+        sequences = self.dataset.load_sequences()
+
+        # Get the mapping from uid to family
+        uid_to_family = self.dataset.uniprot_to_family
+
+        # Store a mapping from uid to accuracy
+        accuracy_by_seq = {}
+        for query_sequence, indices in zip(sequences, predicted_indices):
+            # Get the query uniprot id and correct family
+            query_uid = query_sequence.tag
+            correct_family = uid_to_family[query_uid]
+
+            # Get predicted uids
+            uids = query_tags[indices]
+
+            # Exclude self-hit from predicted uniprot ids
+            predicted_uids = [uid for uid in uids if uid != query_uid]
+
+            # Get the predicted families
+            predicted_families = [uid_to_family[uid] for uid in predicted_uids]
+
+            # Get the correct family
+            correct_family = uid_to_family[query_sequence.tag]
+
+            # Correct if the top hit is the same pfam
+            correct = float(predicted_families[0] == correct_family)
+            accuracy_by_seq[query_uid] = correct
+
+        return accuracy_by_seq
+
+    def compute_family_level_accuracy(
+        self,
+        accuracy_by_seq: dict[str, float],
+    ) -> dict[str, float]:
+        """Compute the average accuracy within each family.
+
+        Returns
+        -------
+        dict[str, float]
+            The accuracy of the model on the Pfam benchmark
+            for each family.
+        """
+        # Get the mapping from family to list of Uniprot IDs
+        families = self.dataset.load_families()
+
+        # Create a dictionary mapping the family name to the accuracy
+        family_accuracies = {
+            family: float(np.mean([accuracy_by_seq[uid] for uid in uids]))
+            for family, uids in families.items()
+        }
+
+        return family_accuracies
+
+    def _compute_avg_accuracy(self, accuracies: dict[str, float]) -> float:
+        """Compute the average accuracy.
+
+        Parameters
+        ----------
+        accuracies : dict[str, float]
+            The accuracy of the model for each sequence or family.
+
+        Returns
+        -------
+        float
+            The average accuracy.
+        """
+        return float(np.mean(list(accuracies.values())))
+
+    def run(self) -> EvaluatorOutput:
+        """Run the evaluation on the Pfam dataset.
+
+        Returns
+        -------
+        EvaluatorOutput
+            The evaluation output.
+        """
+        # Number of sequences in the full dataset
+        num_sequences = len(self.retriever.faiss_index.dataset)
+
+        # The evaluation is over all sequences
+        query_keys = np.arange(num_sequences)
+
+        # Get all the sequence tags (Uniprot IDs)
+        query_tags = self.retriever.get(query_keys, key='tags')
+
+        # Get all query embeddings from the index
+        query_embeddings = self.retriever.get(query_keys, key='embeddings')
+
+        # Search the index for the nearest neighbors
+        # We are only interested in the top hit (excluding self-hit)
+        results = self.retriever.search(
+            query_embedding=query_embeddings,
+            top_k=self.top_k,
+        )
+
+        # Get the predicted sequence indices (labels)
+        predicted_indices = results[0].total_indices
+
+        # Compute the accuracy by Uniprot ID
+        accuracy_by_seq = self._compute_accuracy_by_seq(
+            query_tags=query_tags,
+            predicted_indices=predicted_indices,
+        )
+
+        # Compute the family level accuracy
+        accuracy_by_family = self.compute_family_level_accuracy(
+            accuracy_by_seq=accuracy_by_seq,
+        )
+
+        # Compute the average sequence level accuracy.
+        sequence_level_accuracy = self._compute_avg_accuracy(accuracy_by_seq)
+
+        # Compute the average family level accuracy.
+        family_level_accuracy = self._compute_avg_accuracy(accuracy_by_family)
+
+        # Create the evaluation output
+        return EvaluatorOutput(
+            sequence_level_accuracy=sequence_level_accuracy,
+            family_level_accuracy=family_level_accuracy,
+            accuracy_by_seq=accuracy_by_seq,
+            family_accuracies=accuracy_by_family,
+        )
 
 
 if __name__ == '__main__':
@@ -159,10 +297,10 @@ if __name__ == '__main__':
         description='Evaluate a model on the Pfam benchmark.',
     )
     parser.add_argument(
-        '--report_file',
+        '--report_name',
         type=Path,
         required=True,
-        help='The file to save the evaluation report to.',
+        help='The name prefix of the report files to save.',
     )
     parser.add_argument(
         '--dataset_dir',
@@ -221,24 +359,31 @@ if __name__ == '__main__':
     # Load the query sequences
     dataset = Pfam20Dataset(args.dataset_dir)
 
-    # Run the evaluation
-    accuracy = run_evaluation(retriever, dataset)
+    # Create the evaluator
+    evaluator = Evaluator(dataset, retriever, top_k=2)
 
-    # Create an accuracy report
-    report = {
-        'Accuracy': f'{accuracy * 100:.2f}%',
-        'Precision': args.precision,
-        'Model': args.model_name,
-        'Model Directory': str(args.model_dir),
-        'Dataset': str(args.dataset_dir),
-        'Index Path': str(faiss_index_path),
-    }
+    # Run the evaluation
+    output = evaluator.run()
+
+    # Create the evaluation metadata
+    evaluation_metadata = EvaluationMetadata(
+        sequence_level_accuracy=output.sequence_level_accuracy,
+        family_level_accuracy=output.family_level_accuracy,
+        precision=args.precision,
+        model=args.model_name,
+        model_directory=str(args.model_dir),
+        dataset=str(args.dataset_dir),
+        index_path=str(faiss_index_path),
+    )
 
     # Print the evaluation summary
     print('Evaluation Summary:')
-    for key, value in report.items():
-        print(f'\t{key}: {value}')
+    print(evaluation_metadata)
 
-    # Save the report to a file
-    with open(args.report_file, 'w') as f:
-        json.dump(report, f)
+    # Save the metadata to a file
+    metadata_file = args.report_name.with_suffix('_metadata.json')
+    evaluation_metadata.write_json(metadata_file)
+
+    # Save the output to a file
+    output_file = args.report_name.with_suffix('_output.json')
+    output.write_json(output_file)

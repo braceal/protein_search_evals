@@ -30,10 +30,10 @@ for i in "${!MODELS[@]}"; do
     MODEL_NAME="${MODELS[i]}"
     MODEL_DIR="${MODEL_DIRS[i]}"
     for PRECISION in "${PRECISIONS[@]}"; do
-        REPORT_FILE="$REPORTS_DIR/report_$(basename "$MODEL_NAME")_${PRECISION}.txt"
+        REPORT_NAME="$REPORTS_DIR/report_$(basename "$MODEL_NAME")_${PRECISION}"
         echo "Running evaluation with model: $MODEL_NAME, model_dir: $MODEL_DIR, precision: $PRECISION"
         python "$SCRIPT_PATH" \
-            --report_file "$REPORT_FILE" \
+            --report_name "$REPORT_NAME" \
             --dataset_dir "$DATASET_DIR" \
             --model_dir "$MODEL_DIR" \
             --model_name "$MODEL_NAME" \
