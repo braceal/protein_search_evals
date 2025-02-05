@@ -2,7 +2,7 @@
 input_dir: data/pfam/pfam20_seed-42
 
 # Directory to save the embeddings.
-output_dir: examples/pfam/embeddings/esmc-600M_pfam20_seed-42
+output_dir: examples/pfam/embeddings/esm2-3B_pfam20_seed-42
 
 # Glob patterns to match the input files.
 glob_patterns:
@@ -11,13 +11,15 @@ glob_patterns:
 # Configuration for the encoder.
 encoder_config:
   # The encoder name
-  name: esmc
+  name: esm2
   # The model name or path to the pretrained model.
-  pretrained_model_name_or_path: esmc_600m
+  pretrained_model_name_or_path: facebook/esm2_t36_3B_UR50D
+  # Whether to use the faesm implementation (faster).
+  enable_faesm: false
   # Whether to normalize the embeddings
   normalize_embeddings: true
   # The batch size to use for embedding
-  dataloader_batch_size: 64
+  dataloader_batch_size: 16
 
 # Compute settings can be configured by referring to protein_search_evals/parsl.py
 # The `name` field specifies what type of system to run on and the subsequent
@@ -28,5 +30,5 @@ compute_config:
   name: workstation
   # Identify which GPUs to assign tasks to. It's generally recommended to first check
   # nvidia-smi to see which GPUs are available. The numbers below are analogous to
-  # setting CUDA_VISIBLE_DEVICES=4
-  available_accelerators: ["4"]
+  # setting CUDA_VISIBLE_DEVICES=3
+  available_accelerators: ["3"]
