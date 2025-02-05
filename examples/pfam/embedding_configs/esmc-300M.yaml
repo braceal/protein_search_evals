@@ -2,7 +2,7 @@
 input_dir: data/pfam/pfam20_seed-42
 
 # Directory to save the embeddings.
-output_dir: examples/pfam/embeddings/esm2-150M_pfam20_seed-42
+output_dir: examples/pfam/embeddings/esmc-300M_pfam20_seed-42
 
 # Glob patterns to match the input files.
 glob_patterns:
@@ -11,9 +11,9 @@ glob_patterns:
 # Configuration for the encoder.
 encoder_config:
   # The encoder name
-  name: esm2
+  name: esmc
   # The model name or path to the pretrained model.
-  pretrained_model_name_or_path: facebook/esm2_t30_150M_UR50D
+  pretrained_model_name_or_path: EvolutionaryScale/esmc-300m-2024-12
   # Whether to use the faesm implementation (faster).
   enable_faesm: false
   # Whether to normalize the embeddings

@@ -10,6 +10,8 @@ glob_patterns:
 
 # Configuration for the encoder.
 encoder_config:
+  # The encoder name
+  name: esm2
   # The model name or path to the pretrained model.
   pretrained_model_name_or_path: facebook/esm2_t33_650M_UR50D
   # Whether to use the faesm implementation (faster).
