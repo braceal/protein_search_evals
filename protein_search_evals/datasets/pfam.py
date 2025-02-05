@@ -7,6 +7,7 @@ import random
 import subprocess
 from collections import Counter
 from collections import defaultdict
+from functools import cached_property
 from itertools import chain
 from pathlib import Path
 
@@ -539,6 +540,32 @@ class PfamSubsetDataset(PfamDataset):
         write_fasta(sequences, self.sequences_path)
 
         return sequences
+
+    @cached_property
+    def uniprot_to_family(self) -> dict[str, str]:
+        """Map Uniprot IDs to Pfam families.
+
+        Parameters
+        ----------
+        families : dict[str, list[str]]
+            The Pfam families to Uniprot IDs mapping.
+
+        Returns
+        -------
+        dict[str, str]
+            The Uniprot ID to Pfam family mapping.
+        """
+        # Load the Pfam families metadata
+        families = self.load_families()
+
+        # Make a uniprot_id to family mapping
+        uid_to_family = {}
+        for family, uids in families.items():
+            for uid in uids:
+                assert uid not in uid_to_family
+                uid_to_family[uid] = family
+
+        return uid_to_family
 
 
 class Pfam20Dataset(PfamSubsetDataset):
