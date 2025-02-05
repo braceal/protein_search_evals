@@ -11,9 +11,12 @@ pip install -U pip setuptools wheel
 pip install -e .
 ```
 
-For ESMC, you can install the following package:
+For ESMC, you can install the following packages and model weights:
 ```bash
 pip install esm
+pip install "huggingface_hub[hf_transfer]"
+HF_HUB_ENABLE_HF_TRANSFER=1 huggingface-cli download EvolutionaryScale/esmc-300m-2024-12
+HF_HUB_ENABLE_HF_TRANSFER=1 huggingface-cli download EvolutionaryScale/esmc-600m-2024-12
 ```
 
 For ESM2 with faesm, you can install the following package:
