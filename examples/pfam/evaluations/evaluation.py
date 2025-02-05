@@ -298,7 +298,7 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '--report_name',
-        type=Path,
+        type=str,
         required=True,
         help='The name prefix of the report files to save.',
     )
