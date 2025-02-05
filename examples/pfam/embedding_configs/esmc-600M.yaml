@@ -30,5 +30,5 @@ compute_config:
   name: workstation
   # Identify which GPUs to assign tasks to. It's generally recommended to first check
   # nvidia-smi to see which GPUs are available. The numbers below are analogous to
-  # setting CUDA_VISIBLE_DEVICES=1
-  available_accelerators: ["1"]
+  # setting CUDA_VISIBLE_DEVICES=4
+  available_accelerators: ["4"]
