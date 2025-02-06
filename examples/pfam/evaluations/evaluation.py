@@ -366,7 +366,7 @@ if __name__ == '__main__':
     output = evaluator.run()
 
     # Create the evaluation metadata
-    evaluation_metadata = EvaluationMetadata(
+    metadata = EvaluationMetadata(
         sequence_level_accuracy=output.sequence_level_accuracy,
         family_level_accuracy=output.family_level_accuracy,
         precision=args.precision,
@@ -378,12 +378,10 @@ if __name__ == '__main__':
 
     # Print the evaluation summary
     print('Evaluation Summary:')
-    print(evaluation_metadata)
+    print(metadata)
 
     # Save the metadata to a file
-    metadata_file = f'{args.report_name.with_suffix}_metadata.json'
-    evaluation_metadata.write_json(metadata_file)
+    metadata.write_json(f'{args.report_name}_metadata.json')
 
     # Save the output to a file
-    output_file = f'{args.report_name.with_suffix}_output.json'
-    output.write_json(output_file)
+    output.write_json(f'{args.report_name}_output.json')
