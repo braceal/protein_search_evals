@@ -36,7 +36,6 @@ class EsmCambrianEncoder(Encoder):
     def __init__(
         self,
         pretrained_model_name_or_path: str = 'esmc_600m',
-        embedding_size: int | None = None,
         **kwargs: Any,
     ) -> None:
         """Initialize the ESM-Cambrian encoder.
