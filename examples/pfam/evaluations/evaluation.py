@@ -113,7 +113,7 @@ class EvaluatorOutput(BaseConfig):
         ...,
         description='The accuracy of the model for each sequence.',
     )
-    family_accuracies: dict[str, float] = Field(
+    accuracy_by_family: dict[str, float] = Field(
         ...,
         description='The accuracy of the model for each family.',
     )
@@ -213,12 +213,12 @@ class Evaluator:
         families = self.dataset.load_families()
 
         # Create a dictionary mapping the family name to the accuracy
-        family_accuracies = {
+        accuracy_by_family = {
             family: float(np.mean([accuracy_by_seq[uid] for uid in uids]))
             for family, uids in families.items()
         }
 
-        return family_accuracies
+        return accuracy_by_family
 
     def _compute_avg_accuracy(self, accuracies: dict[str, float]) -> float:
         """Compute the average accuracy.
@@ -287,7 +287,7 @@ class Evaluator:
             sequence_level_accuracy=sequence_level_accuracy,
             family_level_accuracy=family_level_accuracy,
             accuracy_by_seq=accuracy_by_seq,
-            family_accuracies=accuracy_by_family,
+            accuracy_by_family=accuracy_by_family,
         )
 
 
