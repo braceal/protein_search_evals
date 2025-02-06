@@ -16,6 +16,7 @@ MODELS=(
     "facebook/esm2_t33_650M_UR50D"
     "facebook/esm2_t36_3B_UR50D"
     "esmc_300m"
+    "esmc_600m"
 )
 
 MODEL_DIRS=(
@@ -25,6 +26,7 @@ MODEL_DIRS=(
     "examples/pfam/embeddings/esm2-650M_pfam20_seed-42"
     "examples/pfam/embeddings/esm2-3B_pfam20_seed-42"
     "examples/pfam/embeddings/esmc-300M_pfam20_seed-42"
+    "examples/pfam/embeddings/esmc-600M_pfam20_seed-42"
 )
 
 PRECISIONS=("float32" "ubinary")
