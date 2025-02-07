@@ -53,13 +53,21 @@ def get_encoder_config(model_name: str) -> EncoderConfigs:
 class EvaluationMetadata(BaseConfig):
     """Evaluation metadata dataclass."""
 
-    sequence_level_accuracy: float = Field(
+    sequence_level_mean_accuracy: float = Field(
         ...,
-        description='The sequence level accuracy of the model.',
+        description='The sequence level mean accuracy of the model.',
     )
-    family_level_accuracy: float = Field(
+    family_level_mean_accuracy: float = Field(
         ...,
-        description='The family level accuracy of the model.',
+        description='The family level mean accuracy of the model.',
+    )
+    sequence_level_median_accuracy: float = Field(
+        ...,
+        description='The sequence level median accuracy of the model.',
+    )
+    family_level_median_accuracy: float = Field(
+        ...,
+        description='The family level median accuracy of the model.',
     )
     precision: str = Field(
         ...,
@@ -87,8 +95,10 @@ class EvaluationMetadata(BaseConfig):
         """Return the string representation of the metadata."""
         return (
             f'EvaluationMetadata(\n'
-            f'\tSequence-level Accuracy: {self.sequence_level_accuracy * 100:.2f}%\n'  # noqa E501
-            f'\tFamily-level Accuracy: {self.family_level_accuracy * 100:.2f}%\n'  # noqa E501
+            f'\tSequence-level mean Accuracy: {self.sequence_level_mean_accuracy * 100:.2f}%\n'  # noqa E501
+            f'\tFamily-level mean Accuracy: {self.family_level_mean_accuracy * 100:.2f}%\n'  # noqa E501
+            f'\tSequence-level median Accuracy: {self.sequence_level_median_accuracy * 100:.2f}%\n'  # noqa E501
+            f'\tFamily-level median Accuracy: {self.family_level_median_accuracy * 100:.2f}%\n'  # noqa E501
             f'\tPrecision: {self.precision}\n'
             f'\tModel: {self.model}\n'
             f'\tModel Directory: {self.model_directory}\n'
@@ -101,13 +111,21 @@ class EvaluationMetadata(BaseConfig):
 class EvaluatorOutput(BaseConfig):
     """Evaluator output dataclass."""
 
-    sequence_level_accuracy: float = Field(
+    sequence_level_mean_accuracy: float = Field(
         ...,
-        description='The sequence level accuracy of the model.',
+        description='The sequence level mean accuracy of the model.',
     )
-    family_level_accuracy: float = Field(
+    family_level_mean_accuracy: float = Field(
         ...,
-        description='The family level accuracy of the model.',
+        description='The family level mean accuracy of the model.',
+    )
+    sequence_level_median_accuracy: float = Field(
+        ...,
+        description='The sequence level median accuracy of the model.',
+    )
+    family_level_median_accuracy: float = Field(
+        ...,
+        description='The family level median accuracy of the model.',
     )
     accuracy_by_seq: dict[str, float] = Field(
         ...,
@@ -235,6 +253,21 @@ class Evaluator:
         """
         return float(np.mean(list(accuracies.values())))
 
+    def _compute_median_accuracy(self, accuracies: dict[str, float]) -> float:
+        """Compute the median accuracy.
+
+        Parameters
+        ----------
+        accuracies : dict[str, float]
+            The accuracy of the model for each sequence or family.
+
+        Returns
+        -------
+        float
+            The median accuracy.
+        """
+        return float(np.median(list(accuracies.values())))
+
     def run(self) -> EvaluatorOutput:
         """Run the evaluation on the Pfam dataset.
 
@@ -276,16 +309,23 @@ class Evaluator:
             accuracy_by_seq=accuracy_by_seq,
         )
 
-        # Compute the average sequence level accuracy.
+        # Compute the average sequence/family level mean accuracies
         sequence_level_accuracy = self._compute_avg_accuracy(accuracy_by_seq)
-
-        # Compute the average family level accuracy.
         family_level_accuracy = self._compute_avg_accuracy(accuracy_by_family)
 
+        # Compute the average sequence/family level median accuracies
+        sequence_level_median_accuracy = self._compute_median_accuracy(
+            accuracy_by_seq,
+        )
+        family_level_median_accuracy = self._compute_median_accuracy(
+            accuracy_by_family,
+        )
         # Create the evaluation output
         return EvaluatorOutput(
-            sequence_level_accuracy=sequence_level_accuracy,
-            family_level_accuracy=family_level_accuracy,
+            sequence_level_mean_accuracy=sequence_level_accuracy,
+            family_level_mean_accuracy=family_level_accuracy,
+            sequence_level_median_accuracy=sequence_level_median_accuracy,
+            family_level_median_accuracy=family_level_median_accuracy,
             accuracy_by_seq=accuracy_by_seq,
             accuracy_by_family=accuracy_by_family,
         )
@@ -367,8 +407,10 @@ if __name__ == '__main__':
 
     # Create the evaluation metadata
     metadata = EvaluationMetadata(
-        sequence_level_accuracy=output.sequence_level_accuracy,
-        family_level_accuracy=output.family_level_accuracy,
+        sequence_level_mean_accuracy=output.sequence_level_mean_accuracy,
+        family_level_mean_accuracy=output.family_level_mean_accuracy,
+        sequence_level_median_accuracy=output.sequence_level_median_accuracy,
+        family_level_median_accuracy=output.family_level_median_accuracy,
         precision=args.precision,
         model=args.model_name,
         model_directory=str(args.model_dir),
