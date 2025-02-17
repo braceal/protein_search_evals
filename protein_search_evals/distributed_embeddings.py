@@ -20,6 +20,8 @@ def embedding_worker(
     input_path: Path,
     output_dir: Path,
     encoder_kwargs: dict[str, Any],
+    token_embedding_output_dir: Path | None = None,
+    token_embedding_buffer_size: int = 50_000,
 ) -> None:
     """Embed a single file and save a numpy array with embeddings."""
     # Imports are here since this function is called in a parsl process
@@ -28,6 +30,7 @@ def embedding_worker(
 
     from protein_search_evals.embed import get_encoder
     from protein_search_evals.embed.writers import HuggingFaceWriter
+    from protein_search_evals.embed.writers import TokenEmbeddingWriter
     from protein_search_evals.timer import Timer
     from protein_search_evals.utils import read_fasta
 
@@ -43,14 +46,34 @@ def embedding_worker(
         fasta_contents = read_fasta(input_path)
         sequences = [x.sequence for x in fasta_contents]
 
+    # Create an output directory name to link the dense
+    # embeddings to the pooled embeddings (and metadata)
+    dataset_name = str(uuid4())
+
+    # Check if the token embeddings should be saved
+    if token_embedding_output_dir is not None:
+        token_embedding_writer = TokenEmbeddingWriter(
+            output_dir=token_embedding_output_dir / dataset_name,
+            buffer_size=token_embedding_buffer_size,
+        )
+    else:
+        token_embedding_writer = None
+
     # Compute the embeddings
     with Timer('computed-embeddings', input_path):
-        embeddings = encoder.compute_pooled_embeddings(sequences)
+        embeddings = encoder.compute_embeddings(
+            sequences=sequences,
+            token_embedding_writer=token_embedding_writer,
+        )
+
+        # Check if the token embeddings should be saved
+        if token_embedding_writer is not None:
+            token_embedding_writer.flush()
 
     # Write the result to disk
     with Timer('wrote-embeddings', input_path):
         # Create the output directory for the embedding dataset
-        dataset_dir = output_dir / f'{uuid4()}'
+        dataset_dir = output_dir / dataset_name
         dataset_dir.mkdir(parents=True, exist_ok=True)
 
         # Create the result dictionary
@@ -77,6 +100,15 @@ class Config(BaseConfig):
     output_dir: Path = Field(
         ...,
         description='Directory to save the embeddings.',
+    )
+    store_token_embeddings: bool = Field(
+        default=False,
+        description='Whether to store the token embeddings.',
+    )
+    token_embedding_buffer_size: int = Field(
+        default=50_000,
+        description='The buffer size for writing token embeddings. '
+        'The number of embeddings to store in memory before writing to disk.',
     )
     glob_patterns: list[str] = Field(
         default=['*'],
@@ -115,6 +147,11 @@ if __name__ == '__main__':
     # Create a directory for the embeddings
     embedding_dir = config.output_dir / 'embeddings'
 
+    # Create a directory for the token embeddings if needed
+    token_embedding_dir = None
+    if config.store_token_embeddings:
+        token_embedding_dir = config.output_dir / 'token_embeddings'
+
     # Make the output directory
     embedding_dir.mkdir(parents=True, exist_ok=True)
 
@@ -126,6 +163,8 @@ if __name__ == '__main__':
         embedding_worker,
         output_dir=embedding_dir,
         encoder_kwargs=config.encoder_config.model_dump(),
+        token_embedding_output_dir=token_embedding_dir,
+        token_embedding_buffer_size=config.token_embedding_buffer_size,
     )
 
     # Collect all input files

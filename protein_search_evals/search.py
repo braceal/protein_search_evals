@@ -518,7 +518,7 @@ class Retriever:
         sorted_query = [query[i] for i in indices]
 
         # Embed the queries
-        pool_embeds = self.encoder.compute_pooled_embeddings(
+        pool_embeds = self.encoder.compute_embeddings(
             sorted_query,
             normalize_embeddings=True,
         )

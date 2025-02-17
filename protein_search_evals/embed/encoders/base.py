@@ -17,6 +17,7 @@ from transformers import BatchEncoding
 from transformers import PreTrainedTokenizer
 
 from protein_search_evals.embed.poolers import average_pool
+from protein_search_evals.embed.writers import TokenEmbeddingWriter
 
 
 class InMemoryDataset(Dataset):
@@ -94,7 +95,7 @@ class Encoder(ABC):
         Parameters
         ----------
         normalize_embeddings : bool, optional
-            Whether to normalize the embeddings, by default False.
+            Whether to normalize the pooled embeddings, by default False.
         dataloader_pin_memory : bool, optional
             Whether to pin memory for the dataloader, by default True.
         dataloader_batch_size : int, optional
@@ -203,20 +204,23 @@ class Encoder(ABC):
         )
 
     @torch.no_grad()
-    def compute_pooled_embeddings(
+    def compute_embeddings(
         self,
         sequences: list[str],
         normalize_embeddings: bool | None = None,
+        token_embedding_writer: TokenEmbeddingWriter | None = None,
     ) -> np.ndarray:
-        """Compute pooled hidden embeddings.
+        """Compute hidden embeddings.
 
         Parameters
         ----------
         sequences : list[str]
             A list of sequences to embed.
         normalize : bool, optional
-            Whether to normalize the embeddings, by default None
+            Whether to normalize the pooled embeddings, by default None
             will use the instance attribute defined at initialization.
+        token_embedding_writer : TokenEmbeddingWriter, optional
+            A writer for dense embeddings, by default None.
 
         Returns
         -------
@@ -239,7 +243,7 @@ class Encoder(ABC):
         # Index for storing embeddings
         idx = 0
 
-        for batch in tqdm(dataloader, desc='Computing pooled embeddings'):
+        for batch in tqdm(dataloader, desc='Computing embeddings'):
             # Move the batch to the model device
             inputs = batch.to(self.device)
 
@@ -258,6 +262,14 @@ class Encoder(ABC):
 
             # Store the pooled embeddings in the output buffer
             all_embeddings[idx : idx + batch_size, :] = pooled_embeds.cpu()
+
+            # If a dense writer is provided, write the embeddings
+            if token_embedding_writer is not None:
+                # Write the embeddings to disk
+                token_embedding_writer.append(
+                    embeddings,
+                    inputs.attention_mask,
+                )
 
             # Increment the output buffer index by the batch size
             idx += batch_size
