@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from dataclasses import asdict
+from dataclasses import dataclass
+from dataclasses import field
 from pathlib import Path
 from typing import Any
 
@@ -51,6 +54,20 @@ class HuggingFaceWriter:
         dataset.save_to_disk(output_dir)
 
 
+@dataclass
+class TokenEmbedInfo:
+    """Dataclass for storing token embeddings."""
+
+    # Store the token embeddings, each of shape (seq_len, hidden_size)
+    embeddings: list[np.ndarray] = field(default_factory=list)
+    # Store the sequence lengths for each sequence
+    seq_lengths: list[int] = field(default_factory=list)
+
+    def __len__(self) -> int:
+        """Return the number of embeddings."""
+        return len(self.embeddings)
+
+
 class TokenEmbeddingWriter(HuggingFaceWriter):
     """Interface for writing token embeddings to disk."""
 
@@ -68,8 +85,8 @@ class TokenEmbeddingWriter(HuggingFaceWriter):
         self.output_dir = output_dir
         self.buffer_size = buffer_size
 
-        # Initialize the buffer for storing embeddings
-        self.buffer: list[np.ndarray] = []
+        # Initialize the buffer for storing embeddings and sequence lengths
+        self.buffer = TokenEmbedInfo()
 
         # Create a file name counter for the buffer
         self.file_counter = 0
@@ -83,14 +100,11 @@ class TokenEmbeddingWriter(HuggingFaceWriter):
         output_dir = self.output_dir / dir_name
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Create the result dictionary
-        result = {'embeddings': self.buffer}
-
         # Write the result to disk
-        super().write(output_dir, result)
+        super().write(output_dir, result=asdict(self.buffer))
 
         # Reset the buffer and increment the file counter
-        self.buffer = []
+        self.buffer = TokenEmbedInfo()
         self.file_counter += 1
 
     def flush(self) -> None:
@@ -116,13 +130,14 @@ class TokenEmbeddingWriter(HuggingFaceWriter):
         seq_lengths = attention_mask.sum(axis=1)
 
         # Make a list of ragged embeddings (no padding)
-        ragged_embeddings = [
-            emb[1 : seq_len - 1].cpu().numpy()
-            for emb, seq_len in zip(embeddings, seq_lengths)
-        ]
+        # ragged_embeddings = [
+        #     emb[1 : seq_len - 1].cpu().numpy()
+        #     for emb, seq_len in zip(embeddings, seq_lengths)
+        # ]
 
-        # Extend the buffer with the ragged embeddings
-        self.buffer.extend(ragged_embeddings)
+        # Extend the buffer with the embeddings and sequence lengths
+        self.buffer.seq_lengths.extend(seq_lengths.cpu().numpy())
+        self.buffer.embeddings.extend(embeddings.cpu().numpy())
 
         # Check if the buffer is full
         if len(self.buffer) >= self.buffer_size:
