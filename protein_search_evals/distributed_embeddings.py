@@ -101,6 +101,10 @@ class Config(BaseConfig):
         ...,
         description='Directory to save the embeddings.',
     )
+    glob_patterns: list[str] = Field(
+        default=['*'],
+        description='Glob patterns to match the input files.',
+    )
     store_token_embeddings: bool = Field(
         default=False,
         description='Whether to store the token embeddings.',
@@ -109,10 +113,6 @@ class Config(BaseConfig):
         default=50_000,
         description='The buffer size for writing token embeddings. '
         'The number of embeddings to store in memory before writing to disk.',
-    )
-    glob_patterns: list[str] = Field(
-        default=['*'],
-        description='Glob patterns to match the input files.',
     )
     encoder_config: EncoderConfigs = Field(
         ...,
@@ -132,7 +132,7 @@ class Config(BaseConfig):
 
 if __name__ == '__main__':
     # Parse arguments from the command line
-    parser = ArgumentParser(description='Embed text')
+    parser = ArgumentParser(description='Embed sequences.')
     parser.add_argument(
         '--config',
         type=Path,
