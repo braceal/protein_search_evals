@@ -11,6 +11,8 @@ import h5py
 import numpy as np
 import torch
 
+from protein_search_evals.timer import timeit
+
 
 @dataclass
 class TokenEmbedInfo:
@@ -121,6 +123,7 @@ class HDF5TokenEmbeddings:
             embeddings_dset[current_size:new_size] = padded_batch
             lengths_dset[current_size:new_size] = lengths
 
+    @timeit('hdf5-flush')
     def flush(self) -> None:
         """Flush the buffer to disk."""
         if len(self.buffer):
