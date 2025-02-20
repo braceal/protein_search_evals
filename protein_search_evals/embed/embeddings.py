@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from concurrent.futures import Future
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from dataclasses import field
 from pathlib import Path
@@ -67,16 +69,19 @@ class HDF5TokenEmbeddings:
 
         # Initialize the buffer for storing embeddings and sequence lengths
         self.buffer = TokenEmbedInfo()
+        # Enable asynchronous writing to disk
+        self._executor = ThreadPoolExecutor(max_workers=1)
+        self._flush_future: Future[None] | None = None
 
         # Keep an open file handle for reading
         self._file_handle = None
 
-    def _append_batch_to_hdf5(self) -> None:
+    def _append_batch_to_hdf5(self, buffer: TokenEmbedInfo) -> None:
         # Get the batch size, embeddings, and embedding dimension
-        batch_size = len(self.buffer)
-        batch = self.buffer.embeddings
-        embedding_dim = self.buffer.embedding_dim
-        lengths = np.array(self.buffer.seq_lengths, dtype=np.int32)
+        batch_size = len(buffer)
+        batch = buffer.embeddings
+        embedding_dim = buffer.embedding_dim
+        lengths = np.array(buffer.seq_lengths, dtype=np.int32)
 
         with h5py.File(self.file, 'a') as f:
             if 'token_embeddings' not in f:
@@ -124,13 +129,35 @@ class HDF5TokenEmbeddings:
             lengths_dset[current_size:new_size] = lengths
 
     @timeit_decorator('hdf5-token-embedddings')
-    def flush(self) -> None:
-        """Flush the buffer to disk."""
-        if len(self.buffer):
-            # Append the buffer to the HDF5 file
-            self._append_batch_to_hdf5()
-            # Reset the buffer and increment the file counter
-            self.buffer = TokenEmbedInfo()
+    def flush(self, block: bool = False) -> None:
+        """Flush the buffer to disk in the background.
+
+        Parameters
+        ----------
+        block : bool, optional
+            Whether to block until the flush is complete, by default False.
+        """
+        # If the buffer is empty, return
+        if len(self.buffer) == 0:
+            return
+
+        # Wait for any previous flush to complete
+        if self._flush_future is not None:
+            self._flush_future.result()
+
+        # Swap out the buffer so we can continue collecting embeddings
+        buffer_to_flush = self.buffer
+        self.buffer = TokenEmbedInfo()
+
+        # Submit the flush operation to the background thread
+        self._flush_future = self._executor.submit(
+            self._append_batch_to_hdf5,
+            buffer_to_flush,
+        )
+
+        # Block until the flush is complete
+        if block:
+            self._flush_future.result()
 
     def append(
         self,

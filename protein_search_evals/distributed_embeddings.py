@@ -67,10 +67,6 @@ def embedding_worker(
             token_embedding_writer=token_embedding_writer,
         )
 
-        # Check if the token embeddings should be saved
-        if token_embedding_writer is not None:
-            token_embedding_writer.flush()
-
     # Write the result to disk
     with Timer('wrote-embeddings', input_path):
         # Create the output directory for the embedding dataset
@@ -86,6 +82,10 @@ def embedding_worker(
 
         # Write the result to disk
         HuggingFaceWriter().write(dataset_dir, result)
+
+    # Check if the token embeddings should be saved
+    if token_embedding_writer is not None:
+        token_embedding_writer.flush(block=True)
 
     # Stop the timer to log the worker time
     timer.stop()
