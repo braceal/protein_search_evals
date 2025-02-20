@@ -87,7 +87,7 @@ class HDF5TokenEmbeddings:
                     maxshape=(None, self.max_sequence_length, embedding_dim),
                     dtype=np.float16,
                     chunks=(1, self.max_sequence_length, embedding_dim),
-                    compression='gzip',
+                    compression='lzf',
                 )
                 f.create_dataset(
                     'sequence_lengths',
