@@ -129,7 +129,7 @@ class Timer:
         TimeLogger().log(time_stats)
 
 
-def timeit(*tags: Any) -> Callable[[Callable[P, R]], Callable[P, R]]:
+def timeit_decorator(*tags: Any) -> Callable[[Callable[P, R]], Callable[P, R]]:
     """Decorate a function to time it with Timer.
 
     Parameters
