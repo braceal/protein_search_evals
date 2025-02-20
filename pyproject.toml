@@ -25,6 +25,7 @@ dependencies = [
     "sentence-transformers",
     "torch",
     "datasets",
+    "h5py",
     "parsl-object-registry @ git+https://github.com/braceal/parsl_object_registry.git",
 ]
 

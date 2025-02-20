@@ -29,8 +29,8 @@ def embedding_worker(
     from uuid import uuid4
 
     from protein_search_evals.embed import get_encoder
+    from protein_search_evals.embed.embeddings import HDF5TokenEmbeddings
     from protein_search_evals.embed.writers import HuggingFaceWriter
-    from protein_search_evals.embed.writers import TokenEmbeddingWriter
     from protein_search_evals.timer import Timer
     from protein_search_evals.utils import read_fasta
 
@@ -52,9 +52,10 @@ def embedding_worker(
 
     # Check if the token embeddings should be saved
     if token_embedding_output_dir is not None:
-        token_embedding_writer = TokenEmbeddingWriter(
-            output_dir=token_embedding_output_dir / dataset_name,
+        token_embedding_writer = HDF5TokenEmbeddings(
+            file=token_embedding_output_dir / f'{dataset_name}.hdf5',
             buffer_size=token_embedding_buffer_size,
+            max_sequence_length=encoder.max_length,
         )
     else:
         token_embedding_writer = None

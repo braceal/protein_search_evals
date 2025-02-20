@@ -123,6 +123,11 @@ class Esm2Encoder(Encoder):
         return self.model.device
 
     @property
+    def max_length(self) -> int:
+        """Get the maximum sequence length of the encoder."""
+        return self.model.config.max_position_embeddings
+
+    @property
     def embedding_size(self) -> int:
         """Get the embedding size of the encoder."""
         return self.model.config.hidden_size

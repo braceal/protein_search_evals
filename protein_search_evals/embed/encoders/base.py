@@ -16,8 +16,8 @@ from tqdm import tqdm
 from transformers import BatchEncoding
 from transformers import PreTrainedTokenizer
 
+from protein_search_evals.embed.embeddings import HDF5TokenEmbeddings
 from protein_search_evals.embed.poolers import average_pool
-from protein_search_evals.embed.writers import TokenEmbeddingWriter
 
 
 class InMemoryDataset(Dataset):
@@ -122,6 +122,12 @@ class Encoder(ABC):
 
     @property
     @abstractmethod
+    def max_length(self) -> int:
+        """Get the maximum sequence length of the encoder."""
+        ...
+
+    @property
+    @abstractmethod
     def embedding_size(self) -> int:
         """Get the embedding size of the encoder."""
         ...
@@ -208,7 +214,7 @@ class Encoder(ABC):
         self,
         sequences: list[str],
         normalize_embeddings: bool | None = None,
-        token_embedding_writer: TokenEmbeddingWriter | None = None,
+        token_embedding_writer: HDF5TokenEmbeddings | None = None,
     ) -> np.ndarray:
         """Compute hidden embeddings.
 
@@ -219,7 +225,7 @@ class Encoder(ABC):
         normalize : bool, optional
             Whether to normalize the pooled embeddings, by default None
             will use the instance attribute defined at initialization.
-        token_embedding_writer : TokenEmbeddingWriter, optional
+        token_embedding_writer : HDF5TokenEmbeddings, optional
             A writer for dense embeddings, by default None.
 
         Returns
@@ -248,10 +254,10 @@ class Encoder(ABC):
             inputs = batch.to(self.device)
 
             # Get the model outputs with a forward pass
-            embeddings = self.encode(inputs)
+            embeds = self.encode(inputs)
 
             # Compute the pooled embeddings
-            pooled_embeds = self.pool(embeddings, inputs.attention_mask)
+            pooled_embeds = self.pool(embeds, inputs.attention_mask)
 
             # Normalize the embeddings
             if normalize_embeddings:
@@ -266,10 +272,7 @@ class Encoder(ABC):
             # If a dense writer is provided, write the embeddings
             if token_embedding_writer is not None:
                 # Write the embeddings to disk
-                token_embedding_writer.append(
-                    embeddings,
-                    inputs.attention_mask,
-                )
+                token_embedding_writer.append(embeds, inputs.attention_mask)
 
             # Increment the output buffer index by the batch size
             idx += batch_size
