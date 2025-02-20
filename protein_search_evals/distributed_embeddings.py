@@ -152,6 +152,7 @@ if __name__ == '__main__':
     token_embedding_dir = None
     if config.store_token_embeddings:
         token_embedding_dir = config.output_dir / 'token_embeddings'
+        token_embedding_dir.mkdir(parents=True, exist_ok=True)
 
     # Make the output directory
     embedding_dir.mkdir(parents=True, exist_ok=True)
