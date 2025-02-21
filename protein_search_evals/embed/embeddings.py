@@ -199,7 +199,8 @@ class HDF5TokenEmbeddings:
         -------
         np.ndarray
             The token embeddings for the given index or indices.
-            They are trimmed based on the sequence lengths (no padding).
+            They are trimmed based on the sequence lengths (no padding)
+            which makes it a ragged array.
 
         Raises
         ------
@@ -221,7 +222,7 @@ class HDF5TokenEmbeddings:
                 emb[:length]
                 for emb, length in zip(embeddings[idx], lengths[idx])
             ]
-            return np.array(token_embeddings)
+            return np.array(token_embeddings, dtype=object)
         else:
             raise TypeError(
                 f'Indexing with type {type(idx)} is not supported.',
