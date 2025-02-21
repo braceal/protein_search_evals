@@ -276,11 +276,12 @@ def fill_score_matrix(
     assert gap_penalty >= 0, 'gap penalty must be positive'
     assert isinstance(globalmode, bool)
     assert isinstance(gap_penalty, (int, float, np.float32))
-    assert isinstance(sub_matrix, np.ndarray), (
-        'substitution matrix must be numpy array'
-    )
+    assert isinstance(
+        sub_matrix,
+        np.ndarray,
+    ), 'substitution matrix must be numpy array'
     # func fill_matrix require np.float32 array as input
-    if not np.issubdtype(sub_matrix, np.float32):
+    if not np.issubdtype(sub_matrix.dtype, np.float32):
         sub_matrix = sub_matrix.astype(np.float32)
 
     if not globalmode:
