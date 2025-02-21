@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import weakref
 from dataclasses import dataclass
 from dataclasses import field
 from pathlib import Path
@@ -70,6 +71,13 @@ class HDF5TokenEmbeddings:
 
         # Keep an open file handle for reading
         self._file_handle = None
+
+        # Ensure the file is closed when the object is deleted
+        # NOTE: This is needed since if the logic from self.close is
+        # called in the destructor, the python GC may have already
+        # destroyed internal objects that the HDF5 file depends on
+        # which causes an error when closing the file.
+        self._finalizer = weakref.finalize(self, self.close)
 
     def _append_batch_to_hdf5(self, buffer: TokenEmbedInfo) -> None:
         # Get the batch size, embeddings, and embedding dimension
@@ -177,10 +185,11 @@ class HDF5TokenEmbeddings:
 
         return self._file_handle
 
-    def __del__(self) -> None:
+    def close(self) -> None:
         """Close the file handle when the object is deleted."""
         if self._file_handle is not None:
             self._file_handle.close()
+            self._file_handle = None
 
     def __len__(self) -> int:
         """Return the number of token embeddings in the dataset."""
