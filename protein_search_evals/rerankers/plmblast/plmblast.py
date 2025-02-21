@@ -53,7 +53,7 @@ def search_paths(
 
     mode = 'global' if globalmode else 'local'
     min_span = max(min_span, window)
-    if not np.issubdtype(submatrix, np.float32):
+    if not np.issubdtype(submatrix.dtype, np.float32):
         submatrix = submatrix.astype(np.float32)
     # force sigma to be not greater then average std of embeddings
     # also not too small
