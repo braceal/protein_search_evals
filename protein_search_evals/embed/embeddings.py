@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from concurrent.futures import Future
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
 from dataclasses import field
 from pathlib import Path
@@ -70,7 +70,7 @@ class HDF5TokenEmbeddings:
         # Initialize the buffer for storing embeddings and sequence lengths
         self.buffer = TokenEmbedInfo()
         # Enable asynchronous writing to disk
-        self._executor = ThreadPoolExecutor(max_workers=1)
+        self._executor = ProcessPoolExecutor(max_workers=1)
         self._flush_future: Future[None] | None = None
 
         # Keep an open file handle for reading
