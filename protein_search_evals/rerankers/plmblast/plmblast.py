@@ -1,4 +1,4 @@
-"""Extract PLM-Blast alignments from embeddings.
+"""Extract pLM-Blast alignments from embeddings.
 
 As described in the paper:
 "pLM-BLAST: distant homology detection based on direct
@@ -12,11 +12,15 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from .alignment import gather_all_paths
-from .numeric import embedding_local_similarity
-from .numeric import find_alignment_span
-from .numeric import move_mean
-from .numeric import signal_enhancement
+from protein_search_evals.embed import Encoder
+from protein_search_evals.rerankers import Reranker
+from protein_search_evals.rerankers.plmblast.alignment import gather_all_paths
+from protein_search_evals.rerankers.plmblast.numeric import (
+    embedding_local_similarity,
+)
+from protein_search_evals.rerankers.plmblast.numeric import find_alignment_span
+from protein_search_evals.rerankers.plmblast.numeric import move_mean
+from protein_search_evals.rerankers.plmblast.numeric import signal_enhancement
 
 AVG_EMBEDDING_STD: float = 0.1
 
@@ -30,16 +34,16 @@ def search_paths(
     globalmode: bool = False,
     as_df: bool = False,
 ) -> dict[str, dict] | pd.DataFrame:
-    """Iterate over all paths and search for routes matching alignmnet criteria.
+    """Iterate over all paths and find for routes matching alignment criteria.
 
     Args:
-            submatrix (np.ndarray): density matrix
-            paths: (list) list of paths to scan
-            window: (int) size of moving average window
-            min_span: (int) minimal length of alignment to collect
-            sigma_factor: (float) standard deviation threshold
-            globalmode: (bool) if True global alignemnt is extrted instead of local
-            as_df: (bool) when True, instead of dictionary dataframe is returned
+        submatrix (np.ndarray): density matrix
+        paths: (list) list of paths to scan
+        window: (int) size of moving average window
+        min_span: (int) minimal length of alignment to collect
+        sigma_factor: (float) standard deviation threshold
+        globalmode: (bool) if True global alignment is extrted instead of local
+        as_df: (bool) when True, instead of dictionary dataframe is returned
     Returns:
             (dict): alignment paths
     """
@@ -159,11 +163,12 @@ class PlmBlastParamError(Exception):
     pass
 
 
-class Extractor:
-    """Handle alignment extaction."""
+class PlmBlast(Reranker):
+    """The pLM-Blast reranker."""
 
     def __init__(
         self,
+        encoder: Encoder,
         enh: bool = False,
         norm: bool = False,
         bfactor: str | int = 2,
@@ -173,20 +178,22 @@ class Extractor:
         window_size: int = 20,
         filter_results: bool = False,
     ):
-        """Handle alignment extraction from per-reside embeddings in form of [seqlen, embdim].
+        """Alignment from per-reside embeddings in form of [seqlen, embdim].
 
         Parameters
         ----------
+        encoder : Encoder
+            The pLM encoder to use.
         enh : bool, optional
             If true use signal enhancement, by default False.
         norm : bool, optional
             If true normalize densitymap, default False..
         bfactor : str | int, optional
-            if integer - density of path search for local aligment,
+            if integer - density of path search for local alignment,
             if string ("global") change plmblast mode to global, by default 2.
         sigma_factor : int | float, optional
             higher values will result in more conservative
-            aligments, by default 2
+            alignments, by default 2
         gap_penalty : float, optional
             gap penalty, by default 0.0
         min_spanlen : int, optional
@@ -230,6 +237,7 @@ class Extractor:
                 f'{type(sigma_factor)} with value: {sigma_factor}',
             )
 
+        self.encoder = encoder
         self.enh = enh
         self.norm = norm
         self.globalmode = bfactor == 'global'
@@ -334,10 +342,58 @@ class Extractor:
         """
         res = self.embedding_to_span(emb1, emb2)
         if len(res) > 0:
-            # add referece index to each hit
+            # add reference index to each hit
             res['queryid'] = qid
             res['dbid'] = dbid
             # filter out redundant hits
             if self.filter_results:
                 res = filter_result_dataframe(res)
             return res
+
+        raise PlmBlastParamError('No results found.')
+
+    def rerank(self, query: str, hits: np.ndarray) -> list[int]:
+        """Rerank the search results.
+
+        Parameters
+        ----------
+        query : str
+            The query sequence.
+        hits : np.ndarray
+            The search results to rerank (the actual string sequences).
+
+        Returns
+        -------
+        list[int]
+            The reranked search results as indices.
+        """
+        # Gather the query and hit sequences, we need to cast to
+        # string since the hits are stored as np.str_ types.
+        sequences = list(map(str, [query, *hits]))
+
+        # Compute the embeddings for the sequences.
+        embeddings = self.encoder.compute_embeddings(
+            sequences=sequences,
+            return_token_embeddings=True,
+        )
+
+        # Extract the embeddings for the query and hits.
+        assert embeddings.token_embeddings is not None
+        query_embedding = embeddings.token_embeddings[0]
+        hit_embeddings = embeddings.token_embeddings[1:]
+
+        # Rerank the hits based on the alignment scores.
+        scores = []
+        for hit_embedding in hit_embeddings:
+            # Get the alignment dataframe
+            results = self.full_compare(
+                query_embedding,
+                hit_embedding,
+            )
+            # Get the score from the alignment dataframe
+            scores.append(results['score'][0])
+
+        # Sort the hit indices based on the scores
+        sorted_indices = np.argsort(scores)[::-1]
+
+        return sorted_indices.tolist()

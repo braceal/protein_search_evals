@@ -1,4 +1,4 @@
-"""Numeric functions for PLM-BLAST reranker."""
+"""Numeric functions for PlmBlast reranker."""
 
 from __future__ import annotations
 
@@ -348,7 +348,7 @@ def find_alignment_span(
             means: (np.ndarray)
             mthreshold: (int) minimal allowed length of span
     Returns:
-            spans: (list of tuples) coresponding to similarity sequence range
+            spans: (list of tuples) corresponding to similarity sequence range
     """
     assert minlen > 0
 

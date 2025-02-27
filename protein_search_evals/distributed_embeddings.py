@@ -62,7 +62,7 @@ def embedding_worker(
 
     # Compute the embeddings
     with Timer('computed-embeddings', input_path):
-        embeddings = encoder.compute_embeddings(
+        output = encoder.compute_embeddings(
             sequences=sequences,
             token_embedding_writer=token_embedding_writer,
         )
@@ -79,7 +79,7 @@ def embedding_worker(
 
         # Create the result dictionary
         result = {
-            'embeddings': embeddings,
+            'embeddings': output.pool_embeddings,
             'sequences': sequences,
             'tags': [x.tag for x in fasta_contents],
         }

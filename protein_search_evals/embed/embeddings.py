@@ -5,12 +5,12 @@ from __future__ import annotations
 import weakref
 from dataclasses import dataclass
 from dataclasses import field
+from functools import cached_property
 from pathlib import Path
 from typing import Sequence
 
 import h5py
 import numpy as np
-import torch
 
 from protein_search_evals.timer import timeit_decorator
 
@@ -19,8 +19,19 @@ from protein_search_evals.timer import timeit_decorator
 class TokenEmbedInfo:
     """Dataclass for storing token embeddings."""
 
-    # Store the token embeddings, each of shape (seq_len, hidden_size)
-    embeddings: list[np.ndarray] = field(default_factory=list)
+    sequences: list[str] = field(
+        default_factory=list,
+        metadata={
+            'description': 'The sequences corresponding to the embeddings',
+        },
+    )
+    embeddings: list[np.ndarray] = field(
+        default_factory=list,
+        metadata={
+            'description': 'The token embeddings, each of shape'
+            ' (seq_len, hidden_size)',
+        },
+    )
 
     def __len__(self) -> int:
         """Return the number of embeddings."""
@@ -85,10 +96,11 @@ class HDF5TokenEmbeddings:
         batch = buffer.embeddings
         embedding_dim = buffer.embedding_dim
         lengths = np.array(buffer.seq_lengths, dtype=np.int32)
+        sequences = np.array(buffer.sequences)
 
         with h5py.File(self.file, 'a') as f:
+            # Create datasets on the first batch
             if 'token_embeddings' not in f:
-                # Create datasets on the first batch
                 f.create_dataset(
                     'token_embeddings',
                     shape=(0, self.max_sequence_length, embedding_dim),
@@ -104,10 +116,18 @@ class HDF5TokenEmbeddings:
                     dtype=np.int32,
                     chunks=(batch_size,),
                 )
+                f.create_dataset(
+                    'sequences',
+                    shape=(0,),
+                    maxshape=(None,),
+                    dtype=h5py.string_dtype(encoding='utf-8'),
+                    chunks=(batch_size,),
+                )
 
             # Get the datasets
             embeddings_dset = f['token_embeddings']
             lengths_dset = f['sequence_lengths']
+            sequence_dset = f['sequences']
 
             # Current number of samples in the dataset
             current_size = embeddings_dset.shape[0]
@@ -118,6 +138,7 @@ class HDF5TokenEmbeddings:
                 (new_size, self.max_sequence_length, embedding_dim),
             )
             lengths_dset.resize((new_size,))
+            sequence_dset.resize((new_size,))
 
             # Prepare padded batch
             padded_batch = np.zeros(
@@ -130,6 +151,7 @@ class HDF5TokenEmbeddings:
             # Write to the datasets
             embeddings_dset[current_size:new_size] = padded_batch
             lengths_dset[current_size:new_size] = lengths
+            sequence_dset[current_size:new_size] = sequences
 
     @timeit_decorator('hdf5-token-embedddings')
     def flush(self) -> None:
@@ -146,8 +168,8 @@ class HDF5TokenEmbeddings:
 
     def append(
         self,
-        embeddings: torch.Tensor,
-        attention_mask: torch.Tensor,
+        sequences: list[str],
+        embeddings: list[np.ndarray],
     ) -> None:
         """Write the embeddings to disk.
 
@@ -155,23 +177,13 @@ class HDF5TokenEmbeddings:
 
         Parameters
         ----------
-        embeddings : torch.Tensor
-            The token embeddings (batch_size, seq_length, hidden_dim)
-            to write to disk.
-        attention_mask : torch.Tensor
-            The attention mask for the embeddings (batch_size, seq_length).
+        embeddings : list[np.ndarray]
+            The token embeddings stored as a list of ragged arrays
+            (batch_size, *seq_length, hidden_dim) to write to disk.
         """
-        # Get the sequence lengths
-        seq_lengths = attention_mask.sum(axis=1)
-
-        # Make a list of ragged embeddings (no padding)
-        ragged_embeddings = [
-            emb[1 : seq_len - 1].cpu().numpy()
-            for emb, seq_len in zip(embeddings, seq_lengths)
-        ]
-
-        # Extend the buffer with the ragged embeddings
-        self.buffer.embeddings.extend(ragged_embeddings)
+        # Extend the buffer with the sequences and ragged token embeddings
+        self.buffer.sequences.extend(sequences)
+        self.buffer.embeddings.extend(embeddings)
 
         # Check if the buffer is full
         if len(self.buffer) >= self.buffer_size:
@@ -196,7 +208,10 @@ class HDF5TokenEmbeddings:
         file_handle = self._get_file_handle()
         return file_handle['token_embeddings'].shape[0]
 
-    def __getitem__(self, idx: int | slice | Sequence[int]) -> np.ndarray:
+    def __getitem__(
+        self,
+        idx: int | slice | Sequence[int] | list[int],
+    ) -> np.ndarray:
         """Retrieve one or more token embeddings.
 
         Parameters
@@ -236,3 +251,39 @@ class HDF5TokenEmbeddings:
             raise TypeError(
                 f'Indexing with type {type(idx)} is not supported.',
             )
+
+    @cached_property
+    def sequence_to_index(self) -> dict[str, int]:
+        """Compute a cached mapping from sequence to index in the dataset.
+
+        Returns
+        -------
+        dict[str, int]
+            The mapping from sequence to index in the dataset.
+        """
+        file_handle = self._get_file_handle()
+        sequences = file_handle['sequences']
+        return {str(seq): idx for idx, seq in enumerate(sequences)}
+
+    def get_embeddings(self, sequences: list[str]) -> list[np.ndarray]:
+        """Get the embeddings for the given sequences.
+
+        Parameters
+        ----------
+        sequences : list[str]
+            The sequences to get the embeddings for.
+
+        Returns
+        -------
+        np.ndarray
+            The embeddings for the given sequences.
+
+        Raises
+        ------
+        KeyError
+            If a sequence is not found in the dataset.
+        """
+        # Get the indices for the sequences
+        indices = [self.sequence_to_index[seq] for seq in sequences]
+
+        return self[indices]

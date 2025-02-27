@@ -20,6 +20,7 @@ from tqdm import tqdm
 from protein_search_evals.embed import Encoder
 from protein_search_evals.embed import EncoderConfigs
 from protein_search_evals.embed import get_encoder
+from protein_search_evals.rerankers import Reranker
 
 
 def quantize_dataset(dataset_path: Path, precision: str) -> np.ndarray:
@@ -423,6 +424,7 @@ class Retriever:
         self,
         encoder: Encoder,
         faiss_index: FaissIndex,
+        reranker: Reranker | None = None,
     ) -> None:
         """Initialize the Retriever.
 
@@ -432,13 +434,17 @@ class Retriever:
             The encoder instance to use for embedding queries.
         faiss_index : FaissIndex
             The FAISS index instance to use for searching.
+        reranker : Reranker, optional
+            The reranker instance to use for re-ranking search results,
+            by default None.
         """
         self.encoder = encoder
         self.faiss_index = faiss_index
+        self.reranker = reranker
 
     def search(
         self,
-        query: str | list[str] | None = None,
+        query: str | list[str],
         query_embedding: np.ndarray | None = None,
         top_k: int = 1,
         score_threshold: float = 0.0,
@@ -467,17 +473,10 @@ class Retriever:
         np.ndarray
             The embeddings of the queries
             (shape: [num_queries, embedding_size])
-
-        Raises
-        ------
-        ValueError
-            If both query and query_embedding are None.
         """
-        # Check whether arguments are valid
-        if query is None and query_embedding is None:
-            raise ValueError(
-                'Provide at least one of query or query_embedding.',
-            )
+        # Convert the query to a list if it is a single string
+        if isinstance(query, str):
+            query = [query]
 
         # Embed the queries
         if query_embedding is None:
@@ -490,6 +489,31 @@ class Retriever:
             top_k=top_k,
             score_threshold=score_threshold,
         )
+
+        # Re-rank the results using the re-ranking strategy
+        if self.reranker is not None:
+            # Get the sequence strings for the top k results
+            sequences = [
+                self.get_sequences(indices)
+                for indices in results.total_indices
+            ]
+
+            # Re-rank the sequences
+            ranks = [
+                self.reranker.rerank(q, x) for q, x in zip(query, sequences)
+            ]
+
+            # Reorder the results based on the ranks
+            results = BatchedSearchResults(
+                total_indices=[
+                    [indices[r] for r in rank]
+                    for indices, rank in zip(results.total_indices, ranks)
+                ],
+                total_scores=[
+                    [scores[r] for r in rank]
+                    for scores, rank in zip(results.total_scores, ranks)
+                ],
+            )
 
         return results, query_embedding
 
@@ -518,13 +542,13 @@ class Retriever:
         sorted_query = [query[i] for i in indices]
 
         # Embed the queries
-        pool_embeds = self.encoder.compute_embeddings(
+        output = self.encoder.compute_embeddings(
             sorted_query,
-            normalize_embeddings=True,
+            normalize_pooled_embeddings=True,
         )
 
         # Reorder the embeddings to match the original order
-        pool_embeds = pool_embeds[np.argsort(indices)]
+        pool_embeds = output.pool_embeddings[np.argsort(indices)]
 
         return pool_embeds
 

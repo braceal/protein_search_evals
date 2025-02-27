@@ -1,3 +1,5 @@
+"""Alignment module for PlmBlast reranker."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -9,7 +11,7 @@ from protein_search_evals.rerankers.plmblast.numeric import (
 
 
 def get_borderline(
-    a: np.array,
+    a: np.ndarray,
     cutoff_h: int = 10,
     cutoff_w: int = 10,
 ) -> np.ndarray:
@@ -46,7 +48,7 @@ def get_borderline(
         bstart = 0
     else:
         bstart = cutoff_w
-    # arange with add syntetic dimension
+    # arange with add synthetic dimension
     # height + 1 is here for diagonal
     hindices = np.arange(hstart, height + 1)[:, None]
     # add new axis
@@ -123,9 +125,9 @@ def gather_all_paths(
     Calculate scoring matrix from input substitution matrix `array`
     find all Smith-Waterman-like paths from bottom and right edges of scoring matrix
     Args:
-            array (np.ndarray): raw subtitution matrix aka densitymap
+            array (np.ndarray): raw substitution matrix aka densitymap
             norm_rows (bool, str): whether to normalize array per row or per array
-            bfactor (int): use argmax pooling when extracting borders, bigger values will improve performence but may lower accuracy
+            bfactor (int): use argmax pooling when extracting borders, bigger values will improve performance but may lower accuracy
             gap_penalty: (float) default to zero
             with_scores (bool): if True return score matrix
     Returns:
@@ -142,7 +144,7 @@ def gather_all_paths(
         raise TypeError(
             f'bfactor should be int/str but given: {type(bfactor)}',
         )
-    # standarize embedding
+    # standardize embedding
     if norm:
         array = (array - array.mean()) / (array.std() + 1e-3)
     # set local or global alignment mode

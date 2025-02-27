@@ -34,14 +34,14 @@ def get_encoder_config(model_name: str) -> EncoderConfigs:
     if 'esm2' in model_name:
         # Initialize encoder configuration
         encoder_config = Esm2EncoderConfig(
-            normalize_embeddings=True,
+            normalize_pooled_embeddings=True,
             pretrained_model_name_or_path=model_name,
         )
         return encoder_config
     elif 'esmc' in model_name:
         # Initialize encoder configuration
         encoder_config = EsmCambrianEncoderConfig(
-            normalize_embeddings=True,
+            normalize_pooled_embeddings=True,
             pretrained_model_name_or_path=model_name,
         )
         return encoder_config
@@ -279,9 +279,13 @@ class Evaluator:
         # Get all query embeddings from the index
         query_embeddings = self.retriever.get(query_keys, key='embeddings')
 
+        # Get all the sequences
+        sequences = self.retriever.get(query_keys, key='sequences').tolist()
+
         # Search the index for the nearest neighbors
         # We are only interested in the top hit (excluding self-hit)
         results = self.retriever.search(
+            query=sequences,
             query_embedding=query_embeddings,
             top_k=self.top_k,
         )

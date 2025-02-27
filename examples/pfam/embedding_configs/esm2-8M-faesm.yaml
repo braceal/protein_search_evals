@@ -15,7 +15,7 @@ encoder_config:
   # Whether to use the faesm implementation (faster).
   enable_faesm: true
   # Whether to normalize the embeddings
-  normalize_embeddings: true
+  normalize_pooled_embeddings: true
 
 # Compute settings can be configured by referring to protein_search_evals/parsl.py
 # The `name` field specifies what type of system to run on and the subsequent
