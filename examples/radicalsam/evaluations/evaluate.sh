@@ -51,7 +51,7 @@ for i in "${!MODELS[@]}"; do
         for PARTITION in "${PARTITIONS[@]}"; do
             REPORT_NAME="$REPORTS_DIR/report_$(basename "$MODEL_NAME")_${PRECISION}_${PARTITION}"
             echo "Running evaluation with model: $MODEL_NAME, model_dir: $MODEL_DIR, precision: $PRECISION, partition: $PARTITION"
-            python protein_search_evals.evaluate \
+            python -m protein_search_evals.evaluate \
                 --report_name "$REPORT_NAME" \
                 --dataset_dir "$DATASET_DIR" \
                 --dataset_partition "$PARTITION" \
