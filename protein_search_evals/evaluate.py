@@ -9,6 +9,7 @@ import numpy as np
 from pydantic import Field
 
 from protein_search_evals.datasets.pfam import Pfam20Dataset
+from protein_search_evals.datasets.radicalsam import RadicalSamDataset
 from protein_search_evals.embed.encoders import EncoderConfigs
 from protein_search_evals.embed.encoders import Esm2EncoderConfig
 from protein_search_evals.embed.encoders import EsmCambrianEncoderConfig
@@ -16,6 +17,32 @@ from protein_search_evals.search import FaissIndexConfig
 from protein_search_evals.search import Retriever
 from protein_search_evals.search import RetrieverConfig
 from protein_search_evals.utils import BaseConfig
+
+
+def get_dataset(
+    dataset_dir: str | Path,
+    partition: str,
+) -> Pfam20Dataset | RadicalSamDataset:
+    """Get the Pfam dataset.
+
+    Parameters
+    ----------
+    dataset_dir : str | Path
+        The directory containing the dataset.
+    partition : str
+        The partition of the dataset to use.
+
+    Returns
+    -------
+    Pfam20Dataset | RadicalSamDataset
+        The dataset.
+    """
+    if 'pfam' in str(dataset_dir):
+        return Pfam20Dataset(dataset_dir)
+    elif 'radicalsam' in str(dataset_dir):
+        return RadicalSamDataset(dataset_dir, partition=partition)
+    else:
+        raise ValueError(f'Unknown dataset: {dataset_dir}')
 
 
 def get_encoder_config(model_name: str) -> EncoderConfigs:
@@ -57,13 +84,13 @@ class EvaluationMetadata(BaseConfig):
         ...,
         description='The sequence level mean accuracy of the model.',
     )
-    family_level_mean_accuracy: float = Field(
+    cluster_level_mean_accuracy: float = Field(
         ...,
-        description='The family level mean accuracy of the model.',
+        description='The cluster level mean accuracy of the model.',
     )
-    family_level_median_accuracy: float = Field(
+    cluster_level_median_accuracy: float = Field(
         ...,
-        description='The family level median accuracy of the model.',
+        description='The cluster level median accuracy of the model.',
     )
     precision: str = Field(
         ...,
@@ -80,7 +107,7 @@ class EvaluationMetadata(BaseConfig):
     )
     dataset: str = Field(
         ...,
-        description='The directory containing the Pfam dataset.',
+        description='The directory containing the dataset.',
     )
     index_path: str = Field(
         ...,
@@ -92,8 +119,8 @@ class EvaluationMetadata(BaseConfig):
         return (
             f'EvaluationMetadata(\n'
             f'\tSequence-level mean Accuracy: {self.sequence_level_mean_accuracy * 100:.2f}%\n'  # noqa E501
-            f'\tFamily-level mean Accuracy: {self.family_level_mean_accuracy * 100:.2f}%\n'  # noqa E501
-            f'\tFamily-level median Accuracy: {self.family_level_median_accuracy * 100:.2f}%\n'  # noqa E501
+            f'\tCluster-level mean Accuracy: {self.cluster_level_mean_accuracy * 100:.2f}%\n'  # noqa E501
+            f'\tCluster-level median Accuracy: {self.cluster_level_median_accuracy * 100:.2f}%\n'  # noqa E501
             f'\tPrecision: {self.precision}\n'
             f'\tModel: {self.model}\n'
             f'\tModel Directory: {self.model_directory}\n'
@@ -110,21 +137,21 @@ class EvaluatorOutput(BaseConfig):
         ...,
         description='The sequence level mean accuracy of the model.',
     )
-    family_level_mean_accuracy: float = Field(
+    cluster_level_mean_accuracy: float = Field(
         ...,
-        description='The family level mean accuracy of the model.',
+        description='The cluster level mean accuracy of the model.',
     )
-    family_level_median_accuracy: float = Field(
+    cluster_level_median_accuracy: float = Field(
         ...,
-        description='The family level median accuracy of the model.',
+        description='The cluster level median accuracy of the model.',
     )
     accuracy_by_seq: dict[str, float] = Field(
         ...,
         description='The accuracy of the model for each sequence.',
     )
-    accuracy_by_family: dict[str, float] = Field(
+    accuracy_by_cluster: dict[str, float] = Field(
         ...,
-        description='The accuracy of the model for each family.',
+        description='The accuracy of the model for each cluster.',
     )
 
 
@@ -133,7 +160,7 @@ class Evaluator:
 
     def __init__(
         self,
-        dataset: Pfam20Dataset,
+        dataset: Pfam20Dataset | RadicalSamDataset,
         retriever: Retriever,
         top_k: int,
     ) -> None:
@@ -141,8 +168,8 @@ class Evaluator:
 
         Parameters
         ----------
-        dataset : Pfam20Dataset
-            The Pfam dataset.
+        dataset : Pfam20Dataset | RadicalSamDataset
+            The dataset to evaluate the model on.
         retriever : Retriever
             The retriever to use for searching the index.
         top_k : int
@@ -160,7 +187,7 @@ class Evaluator:
         """Compute the accuracy for each sequence (Uniprot ID).
 
         For each query sequence, we check whether the top hit
-        is the correct family. We exclude self-hits from the
+        is the correct cluster. We exclude self-hits from the
         predicted uniprot ids.
 
         Parameters
@@ -178,15 +205,15 @@ class Evaluator:
         # Load the sequences
         sequences = self.dataset.load_sequences()
 
-        # Get the mapping from uid to family
-        uid_to_family = self.dataset.uniprot_to_cluster
+        # Get the mapping from uid to cluster
+        uid_to_cluster = self.dataset.uniprot_to_cluster
 
         # Store a mapping from uid to accuracy
         accuracy_by_seq = {}
         for query_sequence, indices in zip(sequences, predicted_indices):
-            # Get the query uniprot id and correct family
+            # Get the query uniprot id and correct cluster
             query_uid = query_sequence.tag
-            correct_family = uid_to_family[query_uid]
+            correct_cluster = uid_to_cluster[query_uid]
 
             # Get predicted uids
             uids = query_tags[indices]
@@ -194,40 +221,41 @@ class Evaluator:
             # Exclude self-hit from predicted uniprot ids
             predicted_uids = [uid for uid in uids if uid != query_uid]
 
-            # Get the predicted families
-            predicted_families = [uid_to_family[uid] for uid in predicted_uids]
+            # Get the predicted clusters
+            predicted_clusters = [
+                uid_to_cluster[uid] for uid in predicted_uids
+            ]
 
-            # Get the correct family
-            correct_family = uid_to_family[query_sequence.tag]
+            # Get the correct cluster
+            correct_cluster = uid_to_cluster[query_sequence.tag]
 
             # Correct if the top hit is the same pfam
-            correct = float(predicted_families[0] == correct_family)
+            correct = float(predicted_clusters[0] == correct_cluster)
             accuracy_by_seq[query_uid] = correct
 
         return accuracy_by_seq
 
-    def compute_family_level_accuracy(
+    def compute_cluster_level_accuracy(
         self,
         accuracy_by_seq: dict[str, float],
     ) -> dict[str, float]:
-        """Compute the average accuracy within each family.
+        """Compute the average accuracy within each cluster.
 
         Returns
         -------
         dict[str, float]
-            The accuracy of the model on the Pfam benchmark
-            for each family.
+            The accuracy of the model on the benchmark for each cluster.
         """
-        # Get the mapping from family to list of Uniprot IDs
-        families = self.dataset.load_clusters()
+        # Get the mapping from cluster to list of Uniprot IDs
+        clusters = self.dataset.load_clusters()
 
-        # Create a dictionary mapping the family name to the accuracy
-        accuracy_by_family = {
-            family: float(np.mean([accuracy_by_seq[uid] for uid in uids]))
-            for family, uids in families.items()
+        # Create a dictionary mapping the cluster name to the accuracy
+        accuracy_by_cluster = {
+            cluster: float(np.mean([accuracy_by_seq[uid] for uid in uids]))
+            for cluster, uids in clusters.items()
         }
 
-        return accuracy_by_family
+        return accuracy_by_cluster
 
     def _compute_avg_accuracy(self, accuracies: dict[str, float]) -> float:
         """Compute the average accuracy.
@@ -235,7 +263,7 @@ class Evaluator:
         Parameters
         ----------
         accuracies : dict[str, float]
-            The accuracy of the model for each sequence or family.
+            The accuracy of the model for each sequence or cluster.
 
         Returns
         -------
@@ -250,7 +278,7 @@ class Evaluator:
         Parameters
         ----------
         accuracies : dict[str, float]
-            The accuracy of the model for each sequence or family.
+            The accuracy of the model for each sequence or cluster.
 
         Returns
         -------
@@ -299,26 +327,26 @@ class Evaluator:
             predicted_indices=predicted_indices,
         )
 
-        # Compute the family level accuracy
-        accuracy_by_family = self.compute_family_level_accuracy(
+        # Compute the cluster level accuracy
+        accuracy_by_cluster = self.compute_cluster_level_accuracy(
             accuracy_by_seq=accuracy_by_seq,
         )
 
-        # Compute the average sequence/family level mean accuracies
-        sequence_level_accuracy = self._compute_avg_accuracy(accuracy_by_seq)
-        family_level_accuracy = self._compute_avg_accuracy(accuracy_by_family)
+        # Compute the average sequence/cluster level mean accuracies
+        sequence_level_acc = self._compute_avg_accuracy(accuracy_by_seq)
+        cluster_level_acc = self._compute_avg_accuracy(accuracy_by_cluster)
 
-        # Compute the average family level median accuracies
-        family_level_median_accuracy = self._compute_median_accuracy(
-            accuracy_by_family,
+        # Compute the average cluster level median accuracies
+        cluster_level_median_acc = self._compute_median_accuracy(
+            accuracy_by_cluster,
         )
         # Create the evaluation output
         return EvaluatorOutput(
-            sequence_level_mean_accuracy=sequence_level_accuracy,
-            family_level_mean_accuracy=family_level_accuracy,
-            family_level_median_accuracy=family_level_median_accuracy,
+            sequence_level_mean_accuracy=sequence_level_acc,
+            cluster_level_mean_accuracy=cluster_level_acc,
+            cluster_level_median_accuracy=cluster_level_median_acc,
             accuracy_by_seq=accuracy_by_seq,
-            accuracy_by_family=accuracy_by_family,
+            accuracy_by_cluster=accuracy_by_cluster,
         )
 
 
@@ -338,6 +366,12 @@ if __name__ == '__main__':
         type=Path,
         required=True,
         help='The directory containing the Pfam dataset.',
+    )
+    parser.add_argument(
+        '--dataset_partition',
+        type=str,
+        default='',
+        help='The partition of the dataset to use.',
     )
     parser.add_argument(
         '--model_dir',
@@ -367,7 +401,7 @@ if __name__ == '__main__':
 
     # Get the dataset directory (a single directory named with a UUID
     # present in the embeddings directory)
-    dataset_dir = next((args.model_dir / 'embeddings').glob('*'))
+    embedding_dataset_dir = next((args.model_dir / 'embeddings').glob('*'))
 
     # Will automatically create the faiss index if it does not exist
     faiss_index_path = args.model_dir / f'{args.precision}-faiss.index'
@@ -381,7 +415,7 @@ if __name__ == '__main__':
 
     # Initialize FaissIndexConfig
     faiss_config = FaissIndexConfig(
-        dataset_dir=dataset_dir,
+        dataset_dir=embedding_dataset_dir,
         faiss_index_path=faiss_index_path,
         precision=args.precision,
         search_algorithm='exact',
@@ -401,7 +435,7 @@ if __name__ == '__main__':
     retriever = retriever_config.get_retriever()
 
     # Load the query sequences
-    dataset = Pfam20Dataset(args.dataset_dir)
+    dataset = get_dataset(args.dataset_dir, args.dataset_partition)
 
     # Create the evaluator
     evaluator = Evaluator(dataset, retriever, top_k=2)
@@ -412,8 +446,8 @@ if __name__ == '__main__':
     # Create the evaluation metadata
     metadata = EvaluationMetadata(
         sequence_level_mean_accuracy=output.sequence_level_mean_accuracy,
-        family_level_mean_accuracy=output.family_level_mean_accuracy,
-        family_level_median_accuracy=output.family_level_median_accuracy,
+        cluster_level_mean_accuracy=output.cluster_level_mean_accuracy,
+        cluster_level_median_accuracy=output.cluster_level_median_accuracy,
         precision=args.precision,
         model=args.model_name,
         model_directory=str(args.model_dir),
