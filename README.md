@@ -31,6 +31,13 @@ Or, if you want to forego flash attention and just use SDPA
 pip install faesm
 ```
 
+### Building the datasets
+
+The Radical SAM benchmark dataset can be built using the following command:
+```bash
+python -m protein_search_evals.datasets.radicalsam
+```
+
 ## Contributing
 
 For development, it is recommended to use a virtual environment. The following
