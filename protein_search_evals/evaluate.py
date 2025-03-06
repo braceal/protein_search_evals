@@ -434,7 +434,7 @@ if __name__ == '__main__':
     # Create the retriever
     retriever = retriever_config.get_retriever()
 
-    # Load the query sequences
+    # Load the benchmark dataset containing the  query sequences
     dataset = get_dataset(args.dataset_dir, args.dataset_partition)
 
     # Create the evaluator
