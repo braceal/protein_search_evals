@@ -1,0 +1,11 @@
+{
+  "name": "",
+  "sequence_level_mean_accuracy": 0.9447385306384344,
+  "cluster_level_mean_accuracy": 0.9164896168660915,
+  "cluster_level_median_accuracy": 0.9168030169661195,
+  "precision": "ubinary",
+  "model": "esmc_600m",
+  "model_directory": "examples/radicalsam/embeddings/all/esmc-600M_radicalsam_all",
+  "dataset": "data/radicalsam",
+  "index_path": "examples/radicalsam/embeddings/all/esmc-600M_radicalsam_all/ubinary-faiss.index"
+}
