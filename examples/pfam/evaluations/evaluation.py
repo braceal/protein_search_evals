@@ -179,7 +179,7 @@ class Evaluator:
         sequences = self.dataset.load_sequences()
 
         # Get the mapping from uid to family
-        uid_to_family = self.dataset.uniprot_to_family
+        uid_to_family = self.dataset.uniprot_to_cluster
 
         # Store a mapping from uid to accuracy
         accuracy_by_seq = {}
@@ -219,7 +219,7 @@ class Evaluator:
             for each family.
         """
         # Get the mapping from family to list of Uniprot IDs
-        families = self.dataset.load_families()
+        families = self.dataset.load_clusters()
 
         # Create a dictionary mapping the family name to the accuracy
         accuracy_by_family = {

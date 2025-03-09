@@ -1,0 +1,11 @@
+{
+  "name": "",
+  "sequence_level_mean_accuracy": 0.8959523218276633,
+  "cluster_level_mean_accuracy": 0.5791525526276066,
+  "cluster_level_median_accuracy": 0.8461538461538461,
+  "precision": "float32",
+  "model": "esmc_600m",
+  "model_directory": "examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4",
+  "dataset": "data/radicalsam",
+  "index_path": "examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4/float32-faiss.index"
+}
