@@ -23,6 +23,7 @@ dependencies = [
     "pydantic",
     "transformers",
     "sentence-transformers",
+    "sentencepiece",
     "torch",
     "datasets",
     "h5py",
