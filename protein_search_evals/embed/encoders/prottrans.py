@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any
 from typing import Literal
 
@@ -98,6 +99,13 @@ class ProtTransEncoder(Encoder):
         self._tokenizer = tokenizer
 
     @property
+    def sos_token(self) -> bool:
+        """Whether the encoder has a start of sequence token."""
+        # ProtTrans does not have a start of sequence token,
+        # but it does have a end of sequence token.
+        return False
+
+    @property
     def dtype(self) -> torch.dtype:
         """Get the data type of the encoder."""
         return self.model.dtype
@@ -137,7 +145,10 @@ class ProtTransEncoder(Encoder):
             The dataloader instance.
         """
         # Need to make sure amino acids are separated by a space
-        sequences = [' '.join(seq) for seq in sequences]
+        # Also replace 'U', 'Z', 'O', 'B' with 'X' unknown amino acid
+        sequences = [
+            ' '.join(list(re.sub(r'[UZOB]', 'X', seq))) for seq in sequences
+        ]
 
         # Call the base method
         return super().get_dataloader(sequences)
