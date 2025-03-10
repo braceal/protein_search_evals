@@ -139,5 +139,5 @@ class ProtTransEncoder(Encoder):
         """
         # Get the model outputs with a forward pass
         outputs = self.model(**batch_encoding)
-
+ 
         return outputs.last_hidden_state
