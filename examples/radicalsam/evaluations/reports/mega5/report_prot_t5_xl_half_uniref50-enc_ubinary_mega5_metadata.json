@@ -1,0 +1,11 @@
+{
+  "name": "",
+  "sequence_level_mean_accuracy": 0.9945321992709599,
+  "cluster_level_mean_accuracy": 0.9923557807351777,
+  "cluster_level_median_accuracy": 0.9910714285714286,
+  "precision": "ubinary",
+  "model": "Rostlab/prot_t5_xl_half_uniref50-enc",
+  "model_directory": "examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5",
+  "dataset": "data/radicalsam",
+  "index_path": "examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5/ubinary-faiss.index"
+}

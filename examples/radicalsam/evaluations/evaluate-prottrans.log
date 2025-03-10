@@ -1,0 +1,211 @@
+nohup: ignoring input
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/all/prottrans_radicalsam_all, precision: float32, partition: all
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/all/prottrans_radicalsam_all/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (87276, 1024)
+Writing the index to disk...
+Search time: 1.509767 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.97%
+	Cluster-level mean Accuracy: 97.56%
+	Cluster-level median Accuracy: 98.14%
+	Precision: float32
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/all/prottrans_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/prottrans_radicalsam_all/float32-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/all/prottrans_radicalsam_all, precision: ubinary, partition: all
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/all/prottrans_radicalsam_all/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (87276, 128)
+Writing the index to disk...
+Search time: 8.887040 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.96%
+	Cluster-level mean Accuracy: 97.66%
+	Cluster-level median Accuracy: 98.18%
+	Precision: ubinary
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/all/prottrans_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/prottrans_radicalsam_all/ubinary-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2, precision: float32, partition: mega2
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (33644, 1024)
+Writing the index to disk...
+Search time: 0.327259 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.56%
+	Cluster-level mean Accuracy: 99.16%
+	Cluster-level median Accuracy: 99.45%
+	Precision: float32
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2/float32-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2, precision: ubinary, partition: mega2
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (33644, 128)
+Writing the index to disk...
+Search time: 2.701477 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.58%
+	Cluster-level mean Accuracy: 99.22%
+	Cluster-level median Accuracy: 99.47%
+	Precision: ubinary
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2/ubinary-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3, precision: float32, partition: mega3
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (7472, 1024)
+Writing the index to disk...
+Search time: 0.045870 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.10%
+	Cluster-level mean Accuracy: 86.64%
+	Cluster-level median Accuracy: 97.91%
+	Precision: float32
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3/float32-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3, precision: ubinary, partition: mega3
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (7472, 128)
+Writing the index to disk...
+Search time: 0.554319 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.90%
+	Cluster-level mean Accuracy: 86.05%
+	Cluster-level median Accuracy: 97.65%
+	Precision: ubinary
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3/ubinary-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4, precision: float32, partition: mega4
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (4027, 1024)
+Writing the index to disk...
+Search time: 0.025873 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.74%
+	Cluster-level mean Accuracy: 68.79%
+	Cluster-level median Accuracy: 97.12%
+	Precision: float32
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4/float32-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4, precision: ubinary, partition: mega4
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (4027, 128)
+Writing the index to disk...
+Search time: 0.295981 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.57%
+	Cluster-level mean Accuracy: 68.62%
+	Cluster-level median Accuracy: 96.97%
+	Precision: ubinary
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4/ubinary-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5, precision: float32, partition: mega5
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (3292, 1024)
+Writing the index to disk...
+Search time: 0.019278 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.42%
+	Cluster-level mean Accuracy: 98.90%
+	Cluster-level median Accuracy: 99.20%
+	Precision: float32
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5/float32-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5, precision: ubinary, partition: mega5
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (3292, 128)
+Writing the index to disk...
+Search time: 0.242349 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.45%
+	Cluster-level mean Accuracy: 99.24%
+	Cluster-level median Accuracy: 99.11%
+	Precision: ubinary
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5/ubinary-faiss.index
+)
