@@ -7,6 +7,7 @@ from typing import Literal
 
 import torch
 from pydantic import Field
+from torch.utils.data import DataLoader
 from transformers import BatchEncoding
 from transformers import PreTrainedTokenizer
 from transformers import T5EncoderModel
@@ -121,6 +122,25 @@ class ProtTransEncoder(Encoder):
     def tokenizer(self) -> PreTrainedTokenizer:
         """Get the tokenizer of the encoder."""
         return self._tokenizer
+
+    def get_dataloader(self, sequences: list[str]) -> DataLoader:
+        """Override base functionality to add space between amino aicds.
+
+        Parameters
+        ----------
+        sequences : list[str]
+            The list of sequences to encode.
+
+        Returns
+        -------
+        DataLoader
+            The dataloader instance.
+        """
+        # Need to make sure amino acids are separated by a space
+        sequences = [' '.join(seq) for seq in sequences]
+
+        # Call the base method
+        return super().get_dataloader(sequences)
 
     def encode(self, batch_encoding: BatchEncoding) -> torch.Tensor:
         """Encode the sequence.
