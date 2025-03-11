@@ -139,6 +139,22 @@ class Encoder(ABC):
             )
 
     @property
+    def sos_token(self) -> bool:
+        """Whether the encoder has a start token.
+
+        Override this property if the encoder does not have a start token.
+        """
+        return True
+
+    @property
+    def eos_token(self) -> bool:
+        """Whether the encoder has an end token.
+
+        Override this property if the encoder does not have an end token.
+        """
+        return True
+
+    @property
     @abstractmethod
     def dtype(self) -> torch.dtype:
         """Get the data type of the encoder."""
@@ -210,7 +226,12 @@ class Encoder(ABC):
             The pooled hidden states
             (shape: [num_sequences, hidden_size])
         """
-        return average_pool(hidden_states, attention_mask)
+        return average_pool(
+            embeddings=hidden_states,
+            attention_mask=attention_mask,
+            sos_token=self.sos_token,
+            eos_token=self.eos_token,
+        )
 
     def get_dataloader(self, sequences: list[str]) -> DataLoader:
         """Instantiate a dataloader for the sequences.
@@ -272,8 +293,9 @@ class Encoder(ABC):
             return None
 
         # Compute attention masks (including space for special tokens)
+        special_token_offset = int(self.sos_token) + int(self.eos_token)
         attention_masks = [
-            torch.ones(len(seq) + 2, dtype=torch.long)
+            torch.ones(len(seq) + special_token_offset, dtype=torch.long)
             for seq in token_embeddings
         ]
 
@@ -383,8 +405,9 @@ class Encoder(ABC):
                 seq_lengths = inputs.attention_mask.sum(axis=1)
 
                 # Make a list of ragged embeddings (no padding)
+                start, stop = int(self.sos_token), int(self.eos_token)
                 ragged_embeddings = [
-                    emb[1 : seq_len - 1].cpu().numpy()
+                    emb[start : seq_len - stop].cpu().numpy()
                     for emb, seq_len in zip(embeds, seq_lengths)
                 ]
 

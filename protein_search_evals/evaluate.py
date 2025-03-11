@@ -13,6 +13,7 @@ from protein_search_evals.datasets.radicalsam import RadicalSamDataset
 from protein_search_evals.embed.encoders import EncoderConfigs
 from protein_search_evals.embed.encoders import Esm2EncoderConfig
 from protein_search_evals.embed.encoders import EsmCambrianEncoderConfig
+from protein_search_evals.embed.encoders import ProtTransEncoderConfig
 from protein_search_evals.search import FaissIndexConfig
 from protein_search_evals.search import Retriever
 from protein_search_evals.search import RetrieverConfig
@@ -58,21 +59,22 @@ def get_encoder_config(model_name: str) -> EncoderConfigs:
     EncoderConfigs
         The encoder configuration.
     """
+    # Initialize encoder configuration
     if 'esm2' in model_name:
-        # Initialize encoder configuration
-        encoder_config = Esm2EncoderConfig(
+        return Esm2EncoderConfig(
             normalize_pooled_embeddings=True,
             pretrained_model_name_or_path=model_name,
         )
-        return encoder_config
     elif 'esmc' in model_name:
-        # Initialize encoder configuration
-        encoder_config = EsmCambrianEncoderConfig(
+        return EsmCambrianEncoderConfig(
             normalize_pooled_embeddings=True,
             pretrained_model_name_or_path=model_name,
         )
-        return encoder_config
-
+    elif 'prot_t5' in model_name:
+        return ProtTransEncoderConfig(
+            normalize_pooled_embeddings=True,
+            pretrained_model_name_or_path=model_name,
+        )
     else:
         raise ValueError(f'Unknown encoder: {model_name}')
 

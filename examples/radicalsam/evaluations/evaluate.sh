@@ -13,6 +13,7 @@ MODELS=(
     "facebook/esm2_t36_3B_UR50D"
     "esmc_300m"
     "esmc_600m"
+    "Rostlab/prot_t5_xl_half_uniref50-enc"
 )
 
 # Define precision types
@@ -63,6 +64,7 @@ MODEL_DIRS_ALL=(
     "examples/radicalsam/embeddings/all/esm2-3B_radicalsam_all"
     "examples/radicalsam/embeddings/all/esmc-300M_radicalsam_all"
     "examples/radicalsam/embeddings/all/esmc-600M_radicalsam_all"
+    "examples/radicalsam/embeddings/all/prottrans_radicalsam_all"
 )
 
 run_evaluation MODEL_DIRS_ALL[@] "all"
@@ -76,6 +78,7 @@ MODEL_DIRS_MEGA2=(
     "examples/radicalsam/embeddings/mega2/esm2-3B_radicalsam_mega2"
     "examples/radicalsam/embeddings/mega2/esmc-300M_radicalsam_mega2"
     "examples/radicalsam/embeddings/mega2/esmc-600M_radicalsam_mega2"
+    "examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2"
 )
 
 run_evaluation MODEL_DIRS_MEGA2[@] "mega2"
@@ -89,6 +92,7 @@ MODEL_DIRS_MEGA3=(
     "examples/radicalsam/embeddings/mega3/esm2-3B_radicalsam_mega3"
     "examples/radicalsam/embeddings/mega3/esmc-300M_radicalsam_mega3"
     "examples/radicalsam/embeddings/mega3/esmc-600M_radicalsam_mega3"
+    "examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3"
 )
 
 run_evaluation MODEL_DIRS_MEGA3[@] "mega3"
@@ -102,6 +106,7 @@ MODEL_DIRS_MEGA4=(
     "examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4"
     "examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4"
     "examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4"
+    "examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4"
 )
 
 run_evaluation MODEL_DIRS_MEGA4[@] "mega4"
@@ -115,6 +120,7 @@ MODEL_DIRS_MEGA5=(
     "examples/radicalsam/embeddings/mega5/esm2-3B_radicalsam_mega5"
     "examples/radicalsam/embeddings/mega5/esmc-300M_radicalsam_mega5"
     "examples/radicalsam/embeddings/mega5/esmc-600M_radicalsam_mega5"
+    "examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5"
 )
 
 run_evaluation MODEL_DIRS_MEGA5[@] "mega5"

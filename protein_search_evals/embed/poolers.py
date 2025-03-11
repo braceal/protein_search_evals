@@ -5,10 +5,11 @@ from __future__ import annotations
 import torch
 
 
-# TODO: We might want to configure whether to include the start and end tokens
 def average_pool(
     embeddings: torch.Tensor,
     attention_mask: torch.Tensor,
+    sos_token: bool = True,
+    eos_token: bool = True,
 ) -> torch.Tensor:
     """Average pool the hidden states using the attention mask.
 
@@ -18,6 +19,10 @@ def average_pool(
         The hidden states to pool (B, SeqLen, HiddenDim).
     attention_mask : torch.Tensor
         The attention mask for the hidden states (B, SeqLen).
+    sos_token : bool, optional
+        Whether to include the start token in the pooling, by default True.
+    eos_token : bool, optional
+        Whether to include the end token in the pooling, by default True.
 
     Returns
     -------
@@ -31,8 +36,10 @@ def average_pool(
     seq_lengths = attn_mask.sum(axis=1)
 
     # Set the attention mask to 0 for start and end tokens
-    attn_mask[:, 0] = 0
-    attn_mask[:, seq_lengths - 1] = 0
+    if sos_token:
+        attn_mask[:, 0] = 0
+    if eos_token:
+        attn_mask[:, seq_lengths - 1] = 0
 
     # Create a mask for the pooling operation (B, SeqLen, HiddenDim)
     pool_mask = attn_mask.unsqueeze(-1).expand(embeddings.shape)

@@ -12,15 +12,21 @@ from protein_search_evals.embed.encoders.esm2 import Esm2Encoder
 from protein_search_evals.embed.encoders.esm2 import Esm2EncoderConfig
 from protein_search_evals.embed.encoders.esmc import EsmCambrianEncoder
 from protein_search_evals.embed.encoders.esmc import EsmCambrianEncoderConfig
+from protein_search_evals.embed.encoders.prottrans import ProtTransEncoder
+from protein_search_evals.embed.encoders.prottrans import (
+    ProtTransEncoderConfig,
+)
 
 EncoderConfigs = Union[
     Esm2EncoderConfig,
     EsmCambrianEncoderConfig,
+    ProtTransEncoderConfig,
 ]
 
 STRATEGIES = {
     'esm2': Esm2Encoder,
     'esmc': EsmCambrianEncoder,
+    'prottrans': ProtTransEncoder,
 }
 
 
@@ -48,6 +54,7 @@ def get_encoder(
     Currently supports the following strategies:
     - esm2
     - esmc
+    - prottrans
 
     Parameters
     ----------
