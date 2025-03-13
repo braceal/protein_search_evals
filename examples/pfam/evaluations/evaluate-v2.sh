@@ -19,7 +19,7 @@ MODELS=(
 # Define precision types
 PRECISIONS=("float32" "ubinary")
 
-# Function to run evaluations
+# Function to run evaluations (requires 2 GPUs)
 run_evaluation() {
     local model_dirs=("${!1}")
     local partition="$2"
@@ -42,7 +42,8 @@ run_evaluation() {
                 --dataset_partition "$partition" \
                 --model_dir "$MODEL_DIR" \
                 --model_name "$MODEL_NAME" \
-                --precision "$PRECISION"
+                --precision "$PRECISION" \
+                --gpus 2
         done
     done
 }
