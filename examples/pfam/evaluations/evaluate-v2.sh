@@ -11,6 +11,7 @@ MODELS=(
     "facebook/esm2_t30_150M_UR50D"
     "facebook/esm2_t33_650M_UR50D"
     "facebook/esm2_t36_3B_UR50D"
+    "facebook/esm2_t48_15B_UR50D"
     "esmc_300m"
     "esmc_600m"
     "Rostlab/prot_t5_xl_half_uniref50-enc"
