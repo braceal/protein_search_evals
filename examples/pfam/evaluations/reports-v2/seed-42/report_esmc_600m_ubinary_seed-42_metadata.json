@@ -1,0 +1,11 @@
+{
+  "name": "",
+  "sequence_level_mean_accuracy": 0.6710921075061083,
+  "cluster_level_mean_accuracy": 0.6710921075061084,
+  "cluster_level_median_accuracy": 0.7,
+  "precision": "ubinary",
+  "model": "esmc_600m",
+  "model_directory": "examples/pfam/embeddings/esmc-600M_pfam20_seed-42",
+  "dataset": "data/pfam",
+  "index_path": "examples/pfam/embeddings/esmc-600M_pfam20_seed-42/ubinary-faiss.index"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "",
+  "sequence_level_mean_accuracy": 0.5793368941417126,
+  "cluster_level_mean_accuracy": 0.5793368941417126,
+  "cluster_level_median_accuracy": 0.6,
+  "precision": "ubinary",
+  "model": "facebook/esm2_t12_35M_UR50D",
+  "model_directory": "examples/pfam/embeddings/esm2-35M_pfam20_seed-42",
+  "dataset": "data/pfam",
+  "index_path": "examples/pfam/embeddings/esm2-35M_pfam20_seed-42/ubinary-faiss.index"
+}

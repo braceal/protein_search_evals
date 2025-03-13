@@ -1,0 +1,11 @@
+{
+  "name": "",
+  "sequence_level_mean_accuracy": 0.6244786635604296,
+  "cluster_level_mean_accuracy": 0.6244786635604296,
+  "cluster_level_median_accuracy": 0.65,
+  "precision": "float32",
+  "model": "esmc_300m",
+  "model_directory": "examples/pfam/embeddings/esmc-300M_pfam20_seed-42",
+  "dataset": "data/pfam",
+  "index_path": "examples/pfam/embeddings/esmc-300M_pfam20_seed-42/float32-faiss.index"
+}
