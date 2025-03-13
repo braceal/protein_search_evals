@@ -1,0 +1,1413 @@
+nohup: ignoring input
+Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/all/esm2-8M_radicalsam_all, precision: float32, partition: all
+Loading FAISS index from examples/radicalsam/embeddings/all/esm2-8M_radicalsam_all/float32-faiss.index
+Search time: 0.903639 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 92.86%
+	Cluster-level mean Accuracy: 83.86%
+	Cluster-level median Accuracy: 80.55%
+	Precision: float32
+	Model: facebook/esm2_t6_8M_UR50D
+	Model Directory: examples/radicalsam/embeddings/all/esm2-8M_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esm2-8M_radicalsam_all/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/all/esm2-8M_radicalsam_all, precision: ubinary, partition: all
+Loading FAISS index from examples/radicalsam/embeddings/all/esm2-8M_radicalsam_all/ubinary-faiss.index
+Search time: 6.206415 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 90.95%
+	Cluster-level mean Accuracy: 77.96%
+	Cluster-level median Accuracy: 72.56%
+	Precision: ubinary
+	Model: facebook/esm2_t6_8M_UR50D
+	Model Directory: examples/radicalsam/embeddings/all/esm2-8M_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esm2-8M_radicalsam_all/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/radicalsam/embeddings/all/esm2-35M_radicalsam_all, precision: float32, partition: all
+Loading FAISS index from examples/radicalsam/embeddings/all/esm2-35M_radicalsam_all/float32-faiss.index
+Search time: 1.080430 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.18%
+	Cluster-level mean Accuracy: 93.38%
+	Cluster-level median Accuracy: 92.55%
+	Precision: float32
+	Model: facebook/esm2_t12_35M_UR50D
+	Model Directory: examples/radicalsam/embeddings/all/esm2-35M_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esm2-35M_radicalsam_all/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/radicalsam/embeddings/all/esm2-35M_radicalsam_all, precision: ubinary, partition: all
+Loading FAISS index from examples/radicalsam/embeddings/all/esm2-35M_radicalsam_all/ubinary-faiss.index
+Search time: 6.285399 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 96.90%
+	Cluster-level mean Accuracy: 91.77%
+	Cluster-level median Accuracy: 91.21%
+	Precision: ubinary
+	Model: facebook/esm2_t12_35M_UR50D
+	Model Directory: examples/radicalsam/embeddings/all/esm2-35M_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esm2-35M_radicalsam_all/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/radicalsam/embeddings/all/esm2-150M_radicalsam_all, precision: float32, partition: all
+Loading FAISS index from examples/radicalsam/embeddings/all/esm2-150M_radicalsam_all/float32-faiss.index
+Search time: 1.096658 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.12%
+	Cluster-level mean Accuracy: 94.05%
+	Cluster-level median Accuracy: 94.54%
+	Precision: float32
+	Model: facebook/esm2_t30_150M_UR50D
+	Model Directory: examples/radicalsam/embeddings/all/esm2-150M_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esm2-150M_radicalsam_all/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/radicalsam/embeddings/all/esm2-150M_radicalsam_all, precision: ubinary, partition: all
+Loading FAISS index from examples/radicalsam/embeddings/all/esm2-150M_radicalsam_all/ubinary-faiss.index
+Search time: 6.684677 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 96.81%
+	Cluster-level mean Accuracy: 93.00%
+	Cluster-level median Accuracy: 92.89%
+	Precision: ubinary
+	Model: facebook/esm2_t30_150M_UR50D
+	Model Directory: examples/radicalsam/embeddings/all/esm2-150M_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esm2-150M_radicalsam_all/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/radicalsam/embeddings/all/esm2-650M_radicalsam_all, precision: float32, partition: all
+Loading FAISS index from examples/radicalsam/embeddings/all/esm2-650M_radicalsam_all/float32-faiss.index
+Search time: 1.761652 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.16%
+	Cluster-level mean Accuracy: 96.06%
+	Cluster-level median Accuracy: 96.37%
+	Precision: float32
+	Model: facebook/esm2_t33_650M_UR50D
+	Model Directory: examples/radicalsam/embeddings/all/esm2-650M_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esm2-650M_radicalsam_all/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/radicalsam/embeddings/all/esm2-650M_radicalsam_all, precision: ubinary, partition: all
+Loading FAISS index from examples/radicalsam/embeddings/all/esm2-650M_radicalsam_all/ubinary-faiss.index
+Search time: 8.279283 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.41%
+	Cluster-level mean Accuracy: 96.47%
+	Cluster-level median Accuracy: 96.26%
+	Precision: ubinary
+	Model: facebook/esm2_t33_650M_UR50D
+	Model Directory: examples/radicalsam/embeddings/all/esm2-650M_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esm2-650M_radicalsam_all/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/radicalsam/embeddings/all/esm2-3B_radicalsam_all, precision: float32, partition: all
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.03it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.39it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.11it/s]
+Loading FAISS index from examples/radicalsam/embeddings/all/esm2-3B_radicalsam_all/float32-faiss.index
+Search time: 3.260993 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.32%
+	Cluster-level mean Accuracy: 98.08%
+	Cluster-level median Accuracy: 98.24%
+	Precision: float32
+	Model: facebook/esm2_t36_3B_UR50D
+	Model Directory: examples/radicalsam/embeddings/all/esm2-3B_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esm2-3B_radicalsam_all/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/radicalsam/embeddings/all/esm2-3B_radicalsam_all, precision: ubinary, partition: all
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.32it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.63it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.37it/s]
+Loading FAISS index from examples/radicalsam/embeddings/all/esm2-3B_radicalsam_all/ubinary-faiss.index
+Search time: 14.008981 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.46%
+	Cluster-level mean Accuracy: 98.30%
+	Cluster-level median Accuracy: 98.64%
+	Precision: ubinary
+	Model: facebook/esm2_t36_3B_UR50D
+	Model Directory: examples/radicalsam/embeddings/all/esm2-3B_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esm2-3B_radicalsam_all/ubinary-faiss.index
+)
+Running evaluation with model: esmc_300m, model_dir: examples/radicalsam/embeddings/all/esmc-300M_radicalsam_all, precision: float32, partition: all
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 29330.80it/s]
+Creating FAISS index at examples/radicalsam/embeddings/all/esmc-300M_radicalsam_all/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (87276, 960)
+Writing the index to disk...
+Search time: 1.712834 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 93.78%
+	Cluster-level mean Accuracy: 89.80%
+	Cluster-level median Accuracy: 88.98%
+	Precision: float32
+	Model: esmc_300m
+	Model Directory: examples/radicalsam/embeddings/all/esmc-300M_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esmc-300M_radicalsam_all/float32-faiss.index
+)
+Running evaluation with model: esmc_300m, model_dir: examples/radicalsam/embeddings/all/esmc-300M_radicalsam_all, precision: ubinary, partition: all
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 61908.55it/s]
+Creating FAISS index at examples/radicalsam/embeddings/all/esmc-300M_radicalsam_all/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (87276, 120)
+Writing the index to disk...
+Search time: 7.641134 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 95.58%
+	Cluster-level mean Accuracy: 93.31%
+	Cluster-level median Accuracy: 92.39%
+	Precision: ubinary
+	Model: esmc_300m
+	Model Directory: examples/radicalsam/embeddings/all/esmc-300M_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esmc-300M_radicalsam_all/ubinary-faiss.index
+)
+Running evaluation with model: esmc_600m, model_dir: examples/radicalsam/embeddings/all/esmc-600M_radicalsam_all, precision: float32, partition: all
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 59074.70it/s]
+Creating FAISS index at examples/radicalsam/embeddings/all/esmc-600M_radicalsam_all/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (87276, 1152)
+Writing the index to disk...
+Search time: 1.868415 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 92.10%
+	Cluster-level mean Accuracy: 88.20%
+	Cluster-level median Accuracy: 87.78%
+	Precision: float32
+	Model: esmc_600m
+	Model Directory: examples/radicalsam/embeddings/all/esmc-600M_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esmc-600M_radicalsam_all/float32-faiss.index
+)
+Running evaluation with model: esmc_600m, model_dir: examples/radicalsam/embeddings/all/esmc-600M_radicalsam_all, precision: ubinary, partition: all
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 57456.22it/s]
+Creating FAISS index at examples/radicalsam/embeddings/all/esmc-600M_radicalsam_all/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (87276, 144)
+Writing the index to disk...
+Search time: 8.084071 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 94.47%
+	Cluster-level mean Accuracy: 91.65%
+	Cluster-level median Accuracy: 91.68%
+	Precision: ubinary
+	Model: esmc_600m
+	Model Directory: examples/radicalsam/embeddings/all/esmc-600M_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/esmc-600M_radicalsam_all/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega2/esm2-8M_radicalsam_mega2, precision: float32, partition: mega2
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esm2-8M_radicalsam_mega2/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (33644, 320)
+Writing the index to disk...
+Search time: 0.343567 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 96.79%
+	Cluster-level mean Accuracy: 94.77%
+	Cluster-level median Accuracy: 96.57%
+	Precision: float32
+	Model: facebook/esm2_t6_8M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega2/esm2-8M_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esm2-8M_radicalsam_mega2/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega2/esm2-8M_radicalsam_mega2, precision: ubinary, partition: mega2
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esm2-8M_radicalsam_mega2/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (33644, 40)
+Writing the index to disk...
+Search time: 2.240675 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 95.78%
+	Cluster-level mean Accuracy: 92.74%
+	Cluster-level median Accuracy: 95.73%
+	Precision: ubinary
+	Model: facebook/esm2_t6_8M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega2/esm2-8M_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esm2-8M_radicalsam_mega2/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/radicalsam/embeddings/mega2/esm2-35M_radicalsam_mega2, precision: float32, partition: mega2
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esm2-35M_radicalsam_mega2/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (33644, 480)
+Writing the index to disk...
+Search time: 0.380621 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.73%
+	Cluster-level mean Accuracy: 97.71%
+	Cluster-level median Accuracy: 98.38%
+	Precision: float32
+	Model: facebook/esm2_t12_35M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega2/esm2-35M_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esm2-35M_radicalsam_mega2/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/radicalsam/embeddings/mega2/esm2-35M_radicalsam_mega2, precision: ubinary, partition: mega2
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esm2-35M_radicalsam_mega2/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (33644, 60)
+Writing the index to disk...
+Search time: 2.391341 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.53%
+	Cluster-level mean Accuracy: 97.17%
+	Cluster-level median Accuracy: 98.48%
+	Precision: ubinary
+	Model: facebook/esm2_t12_35M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega2/esm2-35M_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esm2-35M_radicalsam_mega2/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/radicalsam/embeddings/mega2/esm2-150M_radicalsam_mega2, precision: float32, partition: mega2
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esm2-150M_radicalsam_mega2/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (33644, 640)
+Writing the index to disk...
+Search time: 0.243489 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.60%
+	Cluster-level mean Accuracy: 97.52%
+	Cluster-level median Accuracy: 97.90%
+	Precision: float32
+	Model: facebook/esm2_t30_150M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega2/esm2-150M_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esm2-150M_radicalsam_mega2/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/radicalsam/embeddings/mega2/esm2-150M_radicalsam_mega2, precision: ubinary, partition: mega2
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esm2-150M_radicalsam_mega2/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (33644, 80)
+Writing the index to disk...
+Search time: 2.349851 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.48%
+	Cluster-level mean Accuracy: 97.29%
+	Cluster-level median Accuracy: 97.82%
+	Precision: ubinary
+	Model: facebook/esm2_t30_150M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega2/esm2-150M_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esm2-150M_radicalsam_mega2/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/radicalsam/embeddings/mega2/esm2-650M_radicalsam_mega2, precision: float32, partition: mega2
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esm2-650M_radicalsam_mega2/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (33644, 1280)
+Writing the index to disk...
+Search time: 0.368816 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.07%
+	Cluster-level mean Accuracy: 98.38%
+	Cluster-level median Accuracy: 98.60%
+	Precision: float32
+	Model: facebook/esm2_t33_650M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega2/esm2-650M_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esm2-650M_radicalsam_mega2/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/radicalsam/embeddings/mega2/esm2-650M_radicalsam_mega2, precision: ubinary, partition: mega2
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esm2-650M_radicalsam_mega2/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (33644, 160)
+Writing the index to disk...
+Search time: 2.871282 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.25%
+	Cluster-level mean Accuracy: 98.54%
+	Cluster-level median Accuracy: 99.09%
+	Precision: ubinary
+	Model: facebook/esm2_t33_650M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega2/esm2-650M_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esm2-650M_radicalsam_mega2/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/radicalsam/embeddings/mega2/esm2-3B_radicalsam_mega2, precision: float32, partition: mega2
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.01it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.05it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.85it/s]
+Error during conversion: ChunkedEncodingError(ProtocolError('Response ended prematurely'))
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esm2-3B_radicalsam_mega2/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (33644, 2560)
+Writing the index to disk...
+Search time: 0.699608 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.64%
+	Cluster-level mean Accuracy: 99.34%
+	Cluster-level median Accuracy: 99.46%
+	Precision: float32
+	Model: facebook/esm2_t36_3B_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega2/esm2-3B_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esm2-3B_radicalsam_mega2/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/radicalsam/embeddings/mega2/esm2-3B_radicalsam_mega2, precision: ubinary, partition: mega2
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.22it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.31it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.10it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esm2-3B_radicalsam_mega2/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (33644, 320)
+Writing the index to disk...
+Search time: 4.333412 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.72%
+	Cluster-level mean Accuracy: 99.45%
+	Cluster-level median Accuracy: 99.66%
+	Precision: ubinary
+	Model: facebook/esm2_t36_3B_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega2/esm2-3B_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esm2-3B_radicalsam_mega2/ubinary-faiss.index
+)
+Running evaluation with model: esmc_300m, model_dir: examples/radicalsam/embeddings/mega2/esmc-300M_radicalsam_mega2, precision: float32, partition: mega2
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 57260.12it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esmc-300M_radicalsam_mega2/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (33644, 960)
+Writing the index to disk...
+Search time: 0.321364 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.16%
+	Cluster-level mean Accuracy: 95.04%
+	Cluster-level median Accuracy: 95.66%
+	Precision: float32
+	Model: esmc_300m
+	Model Directory: examples/radicalsam/embeddings/mega2/esmc-300M_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esmc-300M_radicalsam_mega2/float32-faiss.index
+)
+Running evaluation with model: esmc_300m, model_dir: examples/radicalsam/embeddings/mega2/esmc-300M_radicalsam_mega2, precision: ubinary, partition: mega2
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 65536.00it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esmc-300M_radicalsam_mega2/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (33644, 120)
+Writing the index to disk...
+Search time: 2.621606 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.10%
+	Cluster-level mean Accuracy: 96.75%
+	Cluster-level median Accuracy: 97.39%
+	Precision: ubinary
+	Model: esmc_300m
+	Model Directory: examples/radicalsam/embeddings/mega2/esmc-300M_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esmc-300M_radicalsam_mega2/ubinary-faiss.index
+)
+Running evaluation with model: esmc_600m, model_dir: examples/radicalsam/embeddings/mega2/esmc-600M_radicalsam_mega2, precision: float32, partition: mega2
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 49636.73it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esmc-600M_radicalsam_mega2/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (33644, 1152)
+Writing the index to disk...
+Search time: 0.367215 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 96.69%
+	Cluster-level mean Accuracy: 93.98%
+	Cluster-level median Accuracy: 94.71%
+	Precision: float32
+	Model: esmc_600m
+	Model Directory: examples/radicalsam/embeddings/mega2/esmc-600M_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esmc-600M_radicalsam_mega2/float32-faiss.index
+)
+Running evaluation with model: esmc_600m, model_dir: examples/radicalsam/embeddings/mega2/esmc-600M_radicalsam_mega2, precision: ubinary, partition: mega2
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 34663.67it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega2/esmc-600M_radicalsam_mega2/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (33644, 144)
+Writing the index to disk...
+Search time: 2.993977 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.45%
+	Cluster-level mean Accuracy: 95.67%
+	Cluster-level median Accuracy: 96.55%
+	Precision: ubinary
+	Model: esmc_600m
+	Model Directory: examples/radicalsam/embeddings/mega2/esmc-600M_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/esmc-600M_radicalsam_mega2/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega3/esm2-8M_radicalsam_mega3, precision: float32, partition: mega3
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esm2-8M_radicalsam_mega3/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (7472, 320)
+Writing the index to disk...
+Search time: 0.029387 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 86.63%
+	Cluster-level mean Accuracy: 59.83%
+	Cluster-level median Accuracy: 83.35%
+	Precision: float32
+	Model: facebook/esm2_t6_8M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega3/esm2-8M_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esm2-8M_radicalsam_mega3/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega3/esm2-8M_radicalsam_mega3, precision: ubinary, partition: mega3
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esm2-8M_radicalsam_mega3/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (7472, 40)
+Writing the index to disk...
+Search time: 0.639296 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 81.00%
+	Cluster-level mean Accuracy: 52.24%
+	Cluster-level median Accuracy: 74.75%
+	Precision: ubinary
+	Model: facebook/esm2_t6_8M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega3/esm2-8M_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esm2-8M_radicalsam_mega3/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/radicalsam/embeddings/mega3/esm2-35M_radicalsam_mega3, precision: float32, partition: mega3
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esm2-35M_radicalsam_mega3/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (7472, 480)
+Writing the index to disk...
+Search time: 0.182537 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 93.28%
+	Cluster-level mean Accuracy: 77.15%
+	Cluster-level median Accuracy: 92.63%
+	Precision: float32
+	Model: facebook/esm2_t12_35M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega3/esm2-35M_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esm2-35M_radicalsam_mega3/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/radicalsam/embeddings/mega3/esm2-35M_radicalsam_mega3, precision: ubinary, partition: mega3
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esm2-35M_radicalsam_mega3/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (7472, 60)
+Writing the index to disk...
+Search time: 0.623412 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 91.23%
+	Cluster-level mean Accuracy: 84.36%
+	Cluster-level median Accuracy: 91.24%
+	Precision: ubinary
+	Model: facebook/esm2_t12_35M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega3/esm2-35M_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esm2-35M_radicalsam_mega3/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/radicalsam/embeddings/mega3/esm2-150M_radicalsam_mega3, precision: float32, partition: mega3
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esm2-150M_radicalsam_mega3/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (7472, 640)
+Writing the index to disk...
+Search time: 0.033966 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 94.34%
+	Cluster-level mean Accuracy: 85.62%
+	Cluster-level median Accuracy: 94.81%
+	Precision: float32
+	Model: facebook/esm2_t30_150M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega3/esm2-150M_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esm2-150M_radicalsam_mega3/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/radicalsam/embeddings/mega3/esm2-150M_radicalsam_mega3, precision: ubinary, partition: mega3
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esm2-150M_radicalsam_mega3/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (7472, 80)
+Writing the index to disk...
+Search time: 0.524757 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 93.23%
+	Cluster-level mean Accuracy: 84.20%
+	Cluster-level median Accuracy: 92.49%
+	Precision: ubinary
+	Model: facebook/esm2_t30_150M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega3/esm2-150M_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esm2-150M_radicalsam_mega3/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/radicalsam/embeddings/mega3/esm2-650M_radicalsam_mega3, precision: float32, partition: mega3
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esm2-650M_radicalsam_mega3/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (7472, 1280)
+Writing the index to disk...
+Search time: 0.060107 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 96.51%
+	Cluster-level mean Accuracy: 89.00%
+	Cluster-level median Accuracy: 96.40%
+	Precision: float32
+	Model: facebook/esm2_t33_650M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega3/esm2-650M_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esm2-650M_radicalsam_mega3/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/radicalsam/embeddings/mega3/esm2-650M_radicalsam_mega3, precision: ubinary, partition: mega3
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esm2-650M_radicalsam_mega3/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (7472, 160)
+Writing the index to disk...
+Search time: 0.605147 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.04%
+	Cluster-level mean Accuracy: 88.08%
+	Cluster-level median Accuracy: 96.56%
+	Precision: ubinary
+	Model: facebook/esm2_t33_650M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega3/esm2-650M_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esm2-650M_radicalsam_mega3/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/radicalsam/embeddings/mega3/esm2-3B_radicalsam_mega3, precision: float32, partition: mega3
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  2.95it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.09it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.87it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esm2-3B_radicalsam_mega3/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (7472, 2560)
+Writing the index to disk...
+Search time: 0.095585 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.54%
+	Cluster-level mean Accuracy: 93.25%
+	Cluster-level median Accuracy: 98.69%
+	Precision: float32
+	Model: facebook/esm2_t36_3B_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega3/esm2-3B_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esm2-3B_radicalsam_mega3/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/radicalsam/embeddings/mega3/esm2-3B_radicalsam_mega3, precision: ubinary, partition: mega3
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.35it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.62it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.37it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esm2-3B_radicalsam_mega3/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (7472, 320)
+Writing the index to disk...
+Search time: 0.798509 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.20%
+	Cluster-level mean Accuracy: 98.85%
+	Cluster-level median Accuracy: 99.32%
+	Precision: ubinary
+	Model: facebook/esm2_t36_3B_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega3/esm2-3B_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esm2-3B_radicalsam_mega3/ubinary-faiss.index
+)
+Running evaluation with model: esmc_300m, model_dir: examples/radicalsam/embeddings/mega3/esmc-300M_radicalsam_mega3, precision: float32, partition: mega3
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 54120.05it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esmc-300M_radicalsam_mega3/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (7472, 960)
+Writing the index to disk...
+Search time: 0.048175 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 92.25%
+	Cluster-level mean Accuracy: 80.69%
+	Cluster-level median Accuracy: 90.57%
+	Precision: float32
+	Model: esmc_300m
+	Model Directory: examples/radicalsam/embeddings/mega3/esmc-300M_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esmc-300M_radicalsam_mega3/float32-faiss.index
+)
+Running evaluation with model: esmc_300m, model_dir: examples/radicalsam/embeddings/mega3/esmc-300M_radicalsam_mega3, precision: ubinary, partition: mega3
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 54295.20it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esmc-300M_radicalsam_mega3/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (7472, 120)
+Writing the index to disk...
+Search time: 0.563928 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 94.83%
+	Cluster-level mean Accuracy: 81.30%
+	Cluster-level median Accuracy: 93.52%
+	Precision: ubinary
+	Model: esmc_300m
+	Model Directory: examples/radicalsam/embeddings/mega3/esmc-300M_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esmc-300M_radicalsam_mega3/ubinary-faiss.index
+)
+Running evaluation with model: esmc_600m, model_dir: examples/radicalsam/embeddings/mega3/esmc-600M_radicalsam_mega3, precision: float32, partition: mega3
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 28728.11it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esmc-600M_radicalsam_mega3/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (7472, 1152)
+Writing the index to disk...
+Search time: 0.051371 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 90.08%
+	Cluster-level mean Accuracy: 78.87%
+	Cluster-level median Accuracy: 87.23%
+	Precision: float32
+	Model: esmc_600m
+	Model Directory: examples/radicalsam/embeddings/mega3/esmc-600M_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esmc-600M_radicalsam_mega3/float32-faiss.index
+)
+Running evaluation with model: esmc_600m, model_dir: examples/radicalsam/embeddings/mega3/esmc-600M_radicalsam_mega3, precision: ubinary, partition: mega3
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 47393.27it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega3/esmc-600M_radicalsam_mega3/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (7472, 144)
+Writing the index to disk...
+Search time: 0.601818 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 93.23%
+	Cluster-level mean Accuracy: 82.80%
+	Cluster-level median Accuracy: 91.71%
+	Precision: ubinary
+	Model: esmc_600m
+	Model Directory: examples/radicalsam/embeddings/mega3/esmc-600M_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/esmc-600M_radicalsam_mega3/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4, precision: float32, partition: mega4
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (4027, 320)
+Writing the index to disk...
+Search time: 0.019049 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 77.33%
+	Cluster-level mean Accuracy: 50.37%
+	Cluster-level median Accuracy: 66.75%
+	Precision: float32
+	Model: facebook/esm2_t6_8M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4, precision: ubinary, partition: mega4
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (4027, 40)
+Writing the index to disk...
+Search time: 0.298579 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 71.52%
+	Cluster-level mean Accuracy: 46.60%
+	Cluster-level median Accuracy: 59.26%
+	Precision: ubinary
+	Model: facebook/esm2_t6_8M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4, precision: float32, partition: mega4
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (4027, 480)
+Writing the index to disk...
+Search time: 0.019272 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 86.96%
+	Cluster-level mean Accuracy: 57.22%
+	Cluster-level median Accuracy: 81.20%
+	Precision: float32
+	Model: facebook/esm2_t12_35M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4, precision: ubinary, partition: mega4
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (4027, 60)
+Writing the index to disk...
+Search time: 0.314718 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 85.15%
+	Cluster-level mean Accuracy: 52.21%
+	Cluster-level median Accuracy: 75.42%
+	Precision: ubinary
+	Model: facebook/esm2_t12_35M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4, precision: float32, partition: mega4
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (4027, 640)
+Writing the index to disk...
+Search time: 0.026463 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 90.76%
+	Cluster-level mean Accuracy: 62.42%
+	Cluster-level median Accuracy: 85.78%
+	Precision: float32
+	Model: facebook/esm2_t30_150M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4, precision: ubinary, partition: mega4
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (4027, 80)
+Writing the index to disk...
+Search time: 0.273223 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 89.97%
+	Cluster-level mean Accuracy: 60.69%
+	Cluster-level median Accuracy: 81.69%
+	Precision: ubinary
+	Model: facebook/esm2_t30_150M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4, precision: float32, partition: mega4
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (4027, 1280)
+Writing the index to disk...
+Search time: 0.034709 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 95.43%
+	Cluster-level mean Accuracy: 66.75%
+	Cluster-level median Accuracy: 93.39%
+	Precision: float32
+	Model: facebook/esm2_t33_650M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4, precision: ubinary, partition: mega4
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (4027, 160)
+Writing the index to disk...
+Search time: 0.335260 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 96.13%
+	Cluster-level mean Accuracy: 64.79%
+	Cluster-level median Accuracy: 95.18%
+	Precision: ubinary
+	Model: facebook/esm2_t33_650M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4, precision: float32, partition: mega4
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.15it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.51it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.23it/s]
+Error during conversion: ChunkedEncodingError(ProtocolError('Response ended prematurely'))
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (4027, 2560)
+Writing the index to disk...
+Search time: 0.047869 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.04%
+	Cluster-level mean Accuracy: 68.73%
+	Cluster-level median Accuracy: 96.97%
+	Precision: float32
+	Model: facebook/esm2_t36_3B_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4, precision: ubinary, partition: mega4
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.15it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.21it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.01it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (4027, 320)
+Writing the index to disk...
+Search time: 0.489694 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.53%
+	Cluster-level mean Accuracy: 69.39%
+	Cluster-level median Accuracy: 98.31%
+	Precision: ubinary
+	Model: facebook/esm2_t36_3B_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4/ubinary-faiss.index
+)
+Running evaluation with model: esmc_300m, model_dir: examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4, precision: float32, partition: mega4
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 56871.92it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (4027, 960)
+Writing the index to disk...
+Search time: 0.021335 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 92.05%
+	Cluster-level mean Accuracy: 62.03%
+	Cluster-level median Accuracy: 89.16%
+	Precision: float32
+	Model: esmc_300m
+	Model Directory: examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4/float32-faiss.index
+)
+Running evaluation with model: esmc_300m, model_dir: examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4, precision: ubinary, partition: mega4
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 64527.75it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (4027, 120)
+Writing the index to disk...
+Search time: 0.298876 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 94.81%
+	Cluster-level mean Accuracy: 67.34%
+	Cluster-level median Accuracy: 93.81%
+	Precision: ubinary
+	Model: esmc_300m
+	Model Directory: examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4/ubinary-faiss.index
+)
+Running evaluation with model: esmc_600m, model_dir: examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4, precision: float32, partition: mega4
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 42048.16it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (4027, 1152)
+Writing the index to disk...
+Search time: 0.022019 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 89.60%
+	Cluster-level mean Accuracy: 57.92%
+	Cluster-level median Accuracy: 84.62%
+	Precision: float32
+	Model: esmc_600m
+	Model Directory: examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4/float32-faiss.index
+)
+Running evaluation with model: esmc_600m, model_dir: examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4, precision: ubinary, partition: mega4
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 62836.01it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (4027, 144)
+Writing the index to disk...
+Search time: 0.306934 seconds
+Retrieved 4027 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 94.26%
+	Cluster-level mean Accuracy: 61.14%
+	Cluster-level median Accuracy: 92.48%
+	Precision: ubinary
+	Model: esmc_600m
+	Model Directory: examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega5/esm2-8M_radicalsam_mega5, precision: float32, partition: mega5
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esm2-8M_radicalsam_mega5/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (3292, 320)
+Writing the index to disk...
+Search time: 0.016707 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 93.01%
+	Cluster-level mean Accuracy: 84.57%
+	Cluster-level median Accuracy: 93.47%
+	Precision: float32
+	Model: facebook/esm2_t6_8M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega5/esm2-8M_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esm2-8M_radicalsam_mega5/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega5/esm2-8M_radicalsam_mega5, precision: ubinary, partition: mega5
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esm2-8M_radicalsam_mega5/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (3292, 40)
+Writing the index to disk...
+Search time: 0.240659 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 91.89%
+	Cluster-level mean Accuracy: 80.72%
+	Cluster-level median Accuracy: 93.42%
+	Precision: ubinary
+	Model: facebook/esm2_t6_8M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega5/esm2-8M_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esm2-8M_radicalsam_mega5/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/radicalsam/embeddings/mega5/esm2-35M_radicalsam_mega5, precision: float32, partition: mega5
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esm2-35M_radicalsam_mega5/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (3292, 480)
+Writing the index to disk...
+Search time: 0.017630 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 94.68%
+	Cluster-level mean Accuracy: 87.53%
+	Cluster-level median Accuracy: 95.48%
+	Precision: float32
+	Model: facebook/esm2_t12_35M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega5/esm2-35M_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esm2-35M_radicalsam_mega5/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/radicalsam/embeddings/mega5/esm2-35M_radicalsam_mega5, precision: ubinary, partition: mega5
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esm2-35M_radicalsam_mega5/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (3292, 60)
+Writing the index to disk...
+Search time: 0.213129 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 94.05%
+	Cluster-level mean Accuracy: 86.05%
+	Cluster-level median Accuracy: 95.23%
+	Precision: ubinary
+	Model: facebook/esm2_t12_35M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega5/esm2-35M_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esm2-35M_radicalsam_mega5/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/radicalsam/embeddings/mega5/esm2-150M_radicalsam_mega5, precision: float32, partition: mega5
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esm2-150M_radicalsam_mega5/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (3292, 640)
+Writing the index to disk...
+Search time: 0.021395 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 96.93%
+	Cluster-level mean Accuracy: 92.95%
+	Cluster-level median Accuracy: 97.50%
+	Precision: float32
+	Model: facebook/esm2_t30_150M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega5/esm2-150M_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esm2-150M_radicalsam_mega5/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/radicalsam/embeddings/mega5/esm2-150M_radicalsam_mega5, precision: ubinary, partition: mega5
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esm2-150M_radicalsam_mega5/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (3292, 80)
+Writing the index to disk...
+Search time: 0.223326 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 96.23%
+	Cluster-level mean Accuracy: 91.76%
+	Cluster-level median Accuracy: 96.83%
+	Precision: ubinary
+	Model: facebook/esm2_t30_150M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega5/esm2-150M_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esm2-150M_radicalsam_mega5/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/radicalsam/embeddings/mega5/esm2-650M_radicalsam_mega5, precision: float32, partition: mega5
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esm2-650M_radicalsam_mega5/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (3292, 1280)
+Writing the index to disk...
+Search time: 0.029509 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.03%
+	Cluster-level mean Accuracy: 95.67%
+	Cluster-level median Accuracy: 98.30%
+	Precision: float32
+	Model: facebook/esm2_t33_650M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega5/esm2-650M_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esm2-650M_radicalsam_mega5/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/radicalsam/embeddings/mega5/esm2-650M_radicalsam_mega5, precision: ubinary, partition: mega5
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esm2-650M_radicalsam_mega5/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (3292, 160)
+Writing the index to disk...
+Search time: 0.270812 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.42%
+	Cluster-level mean Accuracy: 96.91%
+	Cluster-level median Accuracy: 98.48%
+	Precision: ubinary
+	Model: facebook/esm2_t33_650M_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega5/esm2-650M_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esm2-650M_radicalsam_mega5/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/radicalsam/embeddings/mega5/esm2-3B_radicalsam_mega5, precision: float32, partition: mega5
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.18it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.25it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.05it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esm2-3B_radicalsam_mega5/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (3292, 2560)
+Writing the index to disk...
+Search time: 0.036985 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.27%
+	Cluster-level mean Accuracy: 98.98%
+	Cluster-level median Accuracy: 99.20%
+	Precision: float32
+	Model: facebook/esm2_t36_3B_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega5/esm2-3B_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esm2-3B_radicalsam_mega5/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/radicalsam/embeddings/mega5/esm2-3B_radicalsam_mega5, precision: ubinary, partition: mega5
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.04it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.41it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.13it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esm2-3B_radicalsam_mega5/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (3292, 320)
+Writing the index to disk...
+Search time: 0.349849 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.33%
+	Cluster-level mean Accuracy: 98.84%
+	Cluster-level median Accuracy: 99.11%
+	Precision: ubinary
+	Model: facebook/esm2_t36_3B_UR50D
+	Model Directory: examples/radicalsam/embeddings/mega5/esm2-3B_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esm2-3B_radicalsam_mega5/ubinary-faiss.index
+)
+Running evaluation with model: esmc_300m, model_dir: examples/radicalsam/embeddings/mega5/esmc-300M_radicalsam_mega5, precision: float32, partition: mega5
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 24105.20it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esmc-300M_radicalsam_mega5/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (3292, 960)
+Writing the index to disk...
+Search time: 0.021195 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.75%
+	Cluster-level mean Accuracy: 95.45%
+	Cluster-level median Accuracy: 97.86%
+	Precision: float32
+	Model: esmc_300m
+	Model Directory: examples/radicalsam/embeddings/mega5/esmc-300M_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esmc-300M_radicalsam_mega5/float32-faiss.index
+)
+Running evaluation with model: esmc_300m, model_dir: examples/radicalsam/embeddings/mega5/esmc-300M_radicalsam_mega5, precision: ubinary, partition: mega5
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 63072.24it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esmc-300M_radicalsam_mega5/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (3292, 120)
+Writing the index to disk...
+Search time: 0.239793 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.33%
+	Cluster-level mean Accuracy: 96.40%
+	Cluster-level median Accuracy: 98.69%
+	Precision: ubinary
+	Model: esmc_300m
+	Model Directory: examples/radicalsam/embeddings/mega5/esmc-300M_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esmc-300M_radicalsam_mega5/ubinary-faiss.index
+)
+Running evaluation with model: esmc_600m, model_dir: examples/radicalsam/embeddings/mega5/esmc-600M_radicalsam_mega5, precision: float32, partition: mega5
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 53261.00it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esmc-600M_radicalsam_mega5/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (3292, 1152)
+Writing the index to disk...
+Search time: 0.018102 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.45%
+	Cluster-level mean Accuracy: 93.79%
+	Cluster-level median Accuracy: 97.86%
+	Precision: float32
+	Model: esmc_600m
+	Model Directory: examples/radicalsam/embeddings/mega5/esmc-600M_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esmc-600M_radicalsam_mega5/float32-faiss.index
+)
+Running evaluation with model: esmc_600m, model_dir: examples/radicalsam/embeddings/mega5/esmc-600M_radicalsam_mega5, precision: ubinary, partition: mega5
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 60567.57it/s]
+Creating FAISS index at examples/radicalsam/embeddings/mega5/esmc-600M_radicalsam_mega5/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (3292, 144)
+Writing the index to disk...
+Search time: 0.258946 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.33%
+	Cluster-level mean Accuracy: 96.40%
+	Cluster-level median Accuracy: 98.69%
+	Precision: ubinary
+	Model: esmc_600m
+	Model Directory: examples/radicalsam/embeddings/mega5/esmc-600M_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/esmc-600M_radicalsam_mega5/ubinary-faiss.index
+)

@@ -130,7 +130,7 @@ class PfamDataset:
         for url in urls:
             download_and_unzip(url, self._data_dir)
 
-    def load_families(self) -> dict[str, list[str]]:
+    def load_clusters(self) -> dict[str, list[str]]:
         """Load the Pfam families metadata.
 
         Will cache the families metadata in the data directory to avoid
@@ -443,7 +443,7 @@ class PfamSubsetDataset(PfamDataset):
 
         return families_subset
 
-    def load_families(self) -> dict[str, list[str]]:
+    def load_clusters(self) -> dict[str, list[str]]:
         """Load the Pfam`subset_size` families metadata.
 
         Create the Pfam{subset_size} dataset by randomly selecting
@@ -474,7 +474,7 @@ class PfamSubsetDataset(PfamDataset):
                 return json.load(f)
 
         # Load the underlying Pfam families metadata from families.json
-        families = super().load_families()
+        families = super().load_clusters()
 
         # Filter the families by uniprot IDs to avoid multiple correct answers
         families = self._filter_by_uniprot_ids(families)
@@ -518,7 +518,7 @@ class PfamSubsetDataset(PfamDataset):
             return read_fasta(self.sequences_path)
 
         # Load the Pfam families metadata
-        families = self.load_families()
+        families = self.load_clusters()
 
         # Build a set of the uniprot IDs in the Pfam{subset_size} families
         print(
@@ -542,7 +542,7 @@ class PfamSubsetDataset(PfamDataset):
         return sequences
 
     @cached_property
-    def uniprot_to_family(self) -> dict[str, str]:
+    def uniprot_to_cluster(self) -> dict[str, str]:
         """Map Uniprot IDs to Pfam families.
 
         Parameters
@@ -556,7 +556,7 @@ class PfamSubsetDataset(PfamDataset):
             The Uniprot ID to Pfam family mapping.
         """
         # Load the Pfam families metadata
-        families = self.load_families()
+        families = self.load_clusters()
 
         # Make a uniprot_id to family mapping
         uid_to_family = {}
@@ -592,7 +592,7 @@ class Pfam20Dataset(PfamSubsetDataset):
     >>> dataset = Pfam20Dataset('data/pfam')
 
     >>> # Load the Pfam families metadata
-    >>> families = dataset.load_families()
+    >>> families = dataset.load_clusters()
 
     >>> # Load the Pfam sequences
     >>> sequences = dataset.load_sequences()

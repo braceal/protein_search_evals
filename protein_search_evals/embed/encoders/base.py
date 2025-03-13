@@ -4,6 +4,9 @@ from __future__ import annotations
 
 from abc import ABC
 from abc import abstractmethod
+from dataclasses import dataclass
+from dataclasses import field
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -16,6 +19,7 @@ from tqdm import tqdm
 from transformers import BatchEncoding
 from transformers import PreTrainedTokenizer
 
+from protein_search_evals.embed.embeddings import HDF5TokenEmbeddings
 from protein_search_evals.embed.poolers import average_pool
 
 
@@ -61,9 +65,9 @@ class DataCollator:
 class EncoderConfig(BaseModel):
     """Configuration for the Encoder."""
 
-    normalize_embeddings: bool = Field(
+    normalize_pooled_embeddings: bool = Field(
         default=False,
-        description='Whether to normalize the embeddings.',
+        description='Whether to normalize the pooled embeddings.',
     )
     dataloader_pin_memory: bool = Field(
         default=True,
@@ -77,6 +81,23 @@ class EncoderConfig(BaseModel):
         default=4,
         description='Number of data workers for batching.',
     )
+    cached_token_embeddings_path: str | Path | None = Field(
+        default=None,
+        description='Path to the cached HDF5 token embeddings.',
+    )
+
+
+@dataclass
+class EncoderOutput:
+    """Output of the encoder."""
+
+    pool_embeddings: np.ndarray = field(
+        metadata={'description': 'Pooled embeddings.'},
+    )
+    token_embeddings: list[np.ndarray] | None = field(
+        default=None,
+        metadata={'description': 'Token embeddings stored as a ragged array.'},
+    )
 
 
 class Encoder(ABC):
@@ -84,28 +105,54 @@ class Encoder(ABC):
 
     def __init__(
         self,
-        normalize_embeddings: bool = False,
+        normalize_pooled_embeddings: bool = False,
         dataloader_pin_memory: bool = True,
         dataloader_batch_size: int = 8,
         dataloader_num_data_workers: int = 4,
+        cached_token_embeddings_path: str | Path | None = None,
     ) -> None:
         """Initialize the encoder.
 
         Parameters
         ----------
-        normalize_embeddings : bool, optional
-            Whether to normalize the embeddings, by default False.
+        normalize_pooled_embeddings : bool, optional
+            Whether to normalize the pooled embeddings, by default False.
         dataloader_pin_memory : bool, optional
             Whether to pin memory for the dataloader, by default True.
         dataloader_batch_size : int, optional
             The batch size for inference, by default 8.
         dataloader_num_data_workers : int, optional
             Number of data workers for batching, by default 4.
+        cached_token_embeddings_path : str | Path | None, optional
+            Path to the cached HDF5 token embeddings, by default None.
         """
-        self.normalize_embeddings = normalize_embeddings
+        self.normalize_pooled_embeddings = normalize_pooled_embeddings
         self.dataloader_pin_memory = dataloader_pin_memory
         self.dataloader_batch_size = dataloader_batch_size
         self.dataloader_num_data_workers = dataloader_num_data_workers
+        self.cached_token_embeddings_path = cached_token_embeddings_path
+
+        # Load the cached token embeddings
+        if self.cached_token_embeddings_path is not None:
+            self.token_embedding_reader = HDF5TokenEmbeddings(
+                file=self.cached_token_embeddings_path,
+            )
+
+    @property
+    def sos_token(self) -> bool:
+        """Whether the encoder has a start token.
+
+        Override this property if the encoder does not have a start token.
+        """
+        return True
+
+    @property
+    def eos_token(self) -> bool:
+        """Whether the encoder has an end token.
+
+        Override this property if the encoder does not have an end token.
+        """
+        return True
 
     @property
     @abstractmethod
@@ -117,6 +164,12 @@ class Encoder(ABC):
     @abstractmethod
     def device(self) -> torch.device:
         """Get the device of the encoder."""
+        ...
+
+    @property
+    @abstractmethod
+    def max_length(self) -> int:
+        """Get the maximum sequence length of the encoder."""
         ...
 
     @property
@@ -173,7 +226,12 @@ class Encoder(ABC):
             The pooled hidden states
             (shape: [num_sequences, hidden_size])
         """
-        return average_pool(hidden_states, attention_mask)
+        return average_pool(
+            embeddings=hidden_states,
+            attention_mask=attention_mask,
+            sos_token=self.sos_token,
+            eos_token=self.eos_token,
+        )
 
     def get_dataloader(self, sequences: list[str]) -> DataLoader:
         """Instantiate a dataloader for the sequences.
@@ -202,30 +260,111 @@ class Encoder(ABC):
             collate_fn=DataCollator(self.tokenizer),
         )
 
-    @torch.no_grad()
-    def compute_pooled_embeddings(
+    def _embeddings_from_cache(
         self,
         sequences: list[str],
-        normalize_embeddings: bool | None = None,
-    ) -> np.ndarray:
-        """Compute pooled hidden embeddings.
+        normalize_pooled_embeddings: bool,
+        return_token_embeddings: bool = False,
+    ) -> EncoderOutput | None:
+        """Get embeddings from the cache.
+
+        Parameters
+        ----------
+        sequences : list[str]
+            The list of sequences to embed.
+        normalize_pooled_embeddings : bool
+            Whether to normalize the pooled embeddings.
+        return_token_embeddings : bool, optional
+            Whether to return the token embeddings, by default False.
+
+        Returns
+        -------
+        EncoderOutput | None
+            The pooled embeddings and token embeddings,
+            or None if not found in cache.
+        """
+        try:
+            # Get the token embeddings from the cache
+            token_embeddings = self.token_embedding_reader.get_embeddings(
+                sequences,
+            )
+        except KeyError:
+            # If a sequence is not found, compute the embeddings
+            return None
+
+        # Compute attention masks (including space for special tokens)
+        special_token_offset = int(self.sos_token) + int(self.eos_token)
+        attention_masks = [
+            torch.ones(len(seq) + special_token_offset, dtype=torch.long)
+            for seq in token_embeddings
+        ]
+
+        # Compute the pooled embeddings
+        pooled_embeds = torch.tensor(
+            [
+                self.pool(torch.tensor(emb, dtype=self.dtype), mask)
+                for emb, mask in zip(token_embeddings, attention_masks)
+            ],
+        )
+
+        # Normalize the embeddings
+        if normalize_pooled_embeddings:
+            pooled_embeds = F.normalize(pooled_embeds, p=2, dim=-1)
+
+        # Return the embeddings
+        if return_token_embeddings:
+            return EncoderOutput(
+                pool_embeddings=pooled_embeds.numpy(),
+                token_embeddings=token_embeddings,
+            )
+        else:
+            return EncoderOutput(
+                pool_embeddings=pooled_embeds.numpy(),
+                token_embeddings=None,
+            )
+
+    @torch.no_grad()
+    def compute_embeddings(
+        self,
+        sequences: list[str],
+        normalize_pooled_embeddings: bool | None = None,
+        token_embedding_writer: HDF5TokenEmbeddings | None = None,
+        return_token_embeddings: bool = False,
+    ) -> EncoderOutput:
+        """Compute hidden embeddings.
 
         Parameters
         ----------
         sequences : list[str]
             A list of sequences to embed.
-        normalize : bool, optional
-            Whether to normalize the embeddings, by default None
+        normalize_pooled_embeddings : bool, optional
+            Whether to normalize the pooled embeddings, by default None
             will use the instance attribute defined at initialization.
+        token_embedding_writer : HDF5TokenEmbeddings, optional
+            A writer for dense embeddings, by default None.
+        return_token_embeddings : bool, optional
+            Whether to return the token embeddings, by default False.
 
         Returns
         -------
-        np.ndarray
-            A numpy array of pooled hidden embeddings.
+        EncoderOutput
+            The pooled embeddings and token embeddings.
         """
         # Decide whether to normalize the embeddings
-        if normalize_embeddings is None:
-            normalize_embeddings = self.normalize_embeddings
+        if normalize_pooled_embeddings is None:
+            normalize_pooled_embeddings = self.normalize_pooled_embeddings
+
+        # If a cached token embedding reader is provided, use it
+        if self.cached_token_embeddings_path is not None:
+            cached_output = self._embeddings_from_cache(
+                sequences,
+                normalize_pooled_embeddings,
+                return_token_embeddings=return_token_embeddings,
+            )
+            # If the embeddings are found in the cache, return them
+            # otherwise, we compute embeddings as usual
+            if cached_output is not None:
+                return cached_output
 
         # Create a dataloader for the sequences
         dataloader = self.get_dataloader(sequences)
@@ -235,22 +374,23 @@ class Encoder(ABC):
             (len(sequences), self.embedding_size),
             dtype=self.dtype,
         )
+        token_embeddings = []
 
         # Index for storing embeddings
         idx = 0
 
-        for batch in tqdm(dataloader, desc='Computing pooled embeddings'):
+        for batch in tqdm(dataloader, desc='Computing embeddings'):
             # Move the batch to the model device
             inputs = batch.to(self.device)
 
             # Get the model outputs with a forward pass
-            embeddings = self.encode(inputs)
+            embeds = self.encode(inputs)
 
             # Compute the pooled embeddings
-            pooled_embeds = self.pool(embeddings, inputs.attention_mask)
+            pooled_embeds = self.pool(embeds, inputs.attention_mask)
 
             # Normalize the embeddings
-            if normalize_embeddings:
+            if normalize_pooled_embeddings:
                 pooled_embeds = F.normalize(pooled_embeds, p=2, dim=-1)
 
             # Get the batch size
@@ -259,9 +399,34 @@ class Encoder(ABC):
             # Store the pooled embeddings in the output buffer
             all_embeddings[idx : idx + batch_size, :] = pooled_embeds.cpu()
 
+            # If the token embeddings are requested, prepare a ragged list
+            if return_token_embeddings or token_embedding_writer is not None:
+                # Get the sequence lengths
+                seq_lengths = inputs.attention_mask.sum(axis=1)
+
+                # Make a list of ragged embeddings (no padding)
+                start, stop = int(self.sos_token), int(self.eos_token)
+                ragged_embeddings = [
+                    emb[start : seq_len - stop].cpu().numpy()
+                    for emb, seq_len in zip(embeds, seq_lengths)
+                ]
+
+            # If the token embeddings are requested, append to the list
+            if return_token_embeddings:
+                token_embeddings.extend(ragged_embeddings)
+
+            # If a dense writer is provided, write the embeddings
+            if token_embedding_writer is not None:
+                # Get the sequences associated with the embeddings
+                seqs = sequences[idx : idx + batch_size]
+                # Write the embeddings to disk
+                token_embedding_writer.append(seqs, ragged_embeddings)
+
             # Increment the output buffer index by the batch size
             idx += batch_size
 
-        return all_embeddings.numpy()
-
-    # TODO: Function to compute non-pooled embeddings
+        # Construct the encoder result
+        return EncoderOutput(
+            pool_embeddings=all_embeddings.numpy(),
+            token_embeddings=token_embeddings if token_embeddings else None,
+        )

@@ -9,11 +9,15 @@ from __future__ import annotations
 import re
 import sys
 import time
+from functools import wraps
 from pathlib import Path
 from types import TracebackType
 from typing import Any
+from typing import Callable
 from typing import NamedTuple
+from typing import ParamSpec
 from typing import Sequence
+from typing import TypeVar
 from typing import Union
 
 if sys.version_info >= (3, 11):  # pragma: >=3.11 cover
@@ -21,6 +25,8 @@ if sys.version_info >= (3, 11):  # pragma: >=3.11 cover
 else:  # pragma: <3.11 cover
     from typing_extensions import Self
 
+P = ParamSpec('P')
+R = TypeVar('R')
 PathLike = Union[Path, str]
 
 
@@ -121,6 +127,31 @@ class Timer:
             end_unix=self._end_unix,
         )
         TimeLogger().log(time_stats)
+
+
+def timeit_decorator(*tags: Any) -> Callable[[Callable[P, R]], Callable[P, R]]:
+    """Decorate a function to time it with Timer.
+
+    Parameters
+    ----------
+    *tags : Any
+        Tags to annotate the timing event.
+
+    Returns
+    -------
+    Callable[[Callable[P, R]], Callable[P, R]]
+        A decorator that times the execution of a function.
+    """
+
+    def decorator(func: Callable[P, R]) -> Callable[P, R]:
+        @wraps(func)
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+            with Timer(*tags, func.__name__):
+                return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
 
 
 class TimeLogger:

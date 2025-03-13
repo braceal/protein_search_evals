@@ -1,0 +1,11 @@
+{
+  "name": "",
+  "sequence_level_mean_accuracy": 0.9680897383014804,
+  "cluster_level_mean_accuracy": 0.9300358975273231,
+  "cluster_level_median_accuracy": 0.9288807230956256,
+  "precision": "ubinary",
+  "model": "facebook/esm2_t30_150M_UR50D",
+  "model_directory": "examples/radicalsam/embeddings/all/esm2-150M_radicalsam_all",
+  "dataset": "data/radicalsam",
+  "index_path": "examples/radicalsam/embeddings/all/esm2-150M_radicalsam_all/ubinary-faiss.index"
+}

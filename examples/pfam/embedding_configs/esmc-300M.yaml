@@ -15,7 +15,7 @@ encoder_config:
   # The model name or path to the pretrained model.
   pretrained_model_name_or_path: esmc_300m
   # Whether to normalize the embeddings
-  normalize_embeddings: true
+  normalize_pooled_embeddings: true
   # The batch size to use for embedding
   dataloader_batch_size: 8
 
