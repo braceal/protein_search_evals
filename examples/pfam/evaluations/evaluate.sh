@@ -51,9 +51,6 @@ run_evaluation() {
 
 # Run each partition evaluation
 # -----------------------------
-# Note: The ESM-15B model is evaluated separately since it needs
-# multiple GPUs to run the model inference plus the faiss search.
-#
 # Note: The model directories need to appear in the same order as
 # the MODELS array defined above.
 
