@@ -1,0 +1,339 @@
+nohup: ignoring input
+Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/pfam/embeddings/esm2-8M_pfam20_seed-42, precision: float32, partition: seed-42
+Loading FAISS index from examples/pfam/embeddings/esm2-8M_pfam20_seed-42/float32-faiss.index
+Search time: 8.149310 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 51.00%
+	Cluster-level mean Accuracy: 51.00%
+	Cluster-level median Accuracy: 50.00%
+	Precision: float32
+	Model: facebook/esm2_t6_8M_UR50D
+	Model Directory: examples/pfam/embeddings/esm2-8M_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esm2-8M_pfam20_seed-42/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/pfam/embeddings/esm2-8M_pfam20_seed-42, precision: ubinary, partition: seed-42
+Loading FAISS index from examples/pfam/embeddings/esm2-8M_pfam20_seed-42/ubinary-faiss.index
+Search time: 33.790194 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 46.34%
+	Cluster-level mean Accuracy: 46.34%
+	Cluster-level median Accuracy: 45.00%
+	Precision: ubinary
+	Model: facebook/esm2_t6_8M_UR50D
+	Model Directory: examples/pfam/embeddings/esm2-8M_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esm2-8M_pfam20_seed-42/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/pfam/embeddings/esm2-35M_pfam20_seed-42, precision: float32, partition: seed-42
+Loading FAISS index from examples/pfam/embeddings/esm2-35M_pfam20_seed-42/float32-faiss.index
+Search time: 11.083088 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 59.66%
+	Cluster-level mean Accuracy: 59.66%
+	Cluster-level median Accuracy: 60.00%
+	Precision: float32
+	Model: facebook/esm2_t12_35M_UR50D
+	Model Directory: examples/pfam/embeddings/esm2-35M_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esm2-35M_pfam20_seed-42/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/pfam/embeddings/esm2-35M_pfam20_seed-42, precision: ubinary, partition: seed-42
+Loading FAISS index from examples/pfam/embeddings/esm2-35M_pfam20_seed-42/ubinary-faiss.index
+Search time: 30.698350 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 57.93%
+	Cluster-level mean Accuracy: 57.93%
+	Cluster-level median Accuracy: 60.00%
+	Precision: ubinary
+	Model: facebook/esm2_t12_35M_UR50D
+	Model Directory: examples/pfam/embeddings/esm2-35M_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esm2-35M_pfam20_seed-42/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/pfam/embeddings/esm2-150M_pfam20_seed-42, precision: float32, partition: seed-42
+Loading FAISS index from examples/pfam/embeddings/esm2-150M_pfam20_seed-42/float32-faiss.index
+Search time: 13.453996 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 65.99%
+	Cluster-level mean Accuracy: 65.99%
+	Cluster-level median Accuracy: 70.00%
+	Precision: float32
+	Model: facebook/esm2_t30_150M_UR50D
+	Model Directory: examples/pfam/embeddings/esm2-150M_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esm2-150M_pfam20_seed-42/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/pfam/embeddings/esm2-150M_pfam20_seed-42, precision: ubinary, partition: seed-42
+Loading FAISS index from examples/pfam/embeddings/esm2-150M_pfam20_seed-42/ubinary-faiss.index
+Search time: 34.706009 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 65.28%
+	Cluster-level mean Accuracy: 65.28%
+	Cluster-level median Accuracy: 70.00%
+	Precision: ubinary
+	Model: facebook/esm2_t30_150M_UR50D
+	Model Directory: examples/pfam/embeddings/esm2-150M_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esm2-150M_pfam20_seed-42/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/pfam/embeddings/esm2-650M_pfam20_seed-42, precision: float32, partition: seed-42
+Loading FAISS index from examples/pfam/embeddings/esm2-650M_pfam20_seed-42/float32-faiss.index
+Search time: 24.293606 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 73.52%
+	Cluster-level mean Accuracy: 73.52%
+	Cluster-level median Accuracy: 80.00%
+	Precision: float32
+	Model: facebook/esm2_t33_650M_UR50D
+	Model Directory: examples/pfam/embeddings/esm2-650M_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esm2-650M_pfam20_seed-42/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/pfam/embeddings/esm2-650M_pfam20_seed-42, precision: ubinary, partition: seed-42
+Loading FAISS index from examples/pfam/embeddings/esm2-650M_pfam20_seed-42/ubinary-faiss.index
+Search time: 50.910899 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 74.95%
+	Cluster-level mean Accuracy: 74.95%
+	Cluster-level median Accuracy: 80.00%
+	Precision: ubinary
+	Model: facebook/esm2_t33_650M_UR50D
+	Model Directory: examples/pfam/embeddings/esm2-650M_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esm2-650M_pfam20_seed-42/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/pfam/embeddings/esm2-3B_pfam20_seed-42, precision: float32, partition: seed-42
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:02<00:02,  2.31s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.08s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.26s/it]
+Loading FAISS index from examples/pfam/embeddings/esm2-3B_pfam20_seed-42/float32-faiss.index
+Search time: 47.090852 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 79.27%
+	Cluster-level mean Accuracy: 79.27%
+	Cluster-level median Accuracy: 85.00%
+	Precision: float32
+	Model: facebook/esm2_t36_3B_UR50D
+	Model Directory: examples/pfam/embeddings/esm2-3B_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esm2-3B_pfam20_seed-42/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/pfam/embeddings/esm2-3B_pfam20_seed-42, precision: ubinary, partition: seed-42
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.00it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.05it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.85it/s]
+Loading FAISS index from examples/pfam/embeddings/esm2-3B_pfam20_seed-42/ubinary-faiss.index
+Search time: 71.192660 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 81.24%
+	Cluster-level mean Accuracy: 81.24%
+	Cluster-level median Accuracy: 90.00%
+	Precision: ubinary
+	Model: facebook/esm2_t36_3B_UR50D
+	Model Directory: examples/pfam/embeddings/esm2-3B_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esm2-3B_pfam20_seed-42/ubinary-faiss.index
+)
+Running evaluation with model: facebook/esm2_t48_15B_UR50D, model_dir: examples/pfam/embeddings/esm2-15B_pfam20_seed-42, precision: float32, partition: seed-42
+Loading checkpoint shards: 100%|██████████| 7/7 [00:16<00:00,  2.40s/it]
+Loading FAISS index from examples/pfam/embeddings/esm2-15B_pfam20_seed-42/float32-faiss.index
+Search time: 95.396960 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 82.61%
+	Cluster-level mean Accuracy: 82.61%
+	Cluster-level median Accuracy: 90.00%
+	Precision: float32
+	Model: facebook/esm2_t48_15B_UR50D
+	Model Directory: examples/pfam/embeddings/esm2-15B_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esm2-15B_pfam20_seed-42/float32-faiss.index
+)
+Running evaluation with model: facebook/esm2_t48_15B_UR50D, model_dir: examples/pfam/embeddings/esm2-15B_pfam20_seed-42, precision: ubinary, partition: seed-42
+Loading checkpoint shards: 100%|██████████| 7/7 [00:01<00:00,  5.01it/s]
+Loading FAISS index from examples/pfam/embeddings/esm2-15B_pfam20_seed-42/ubinary-faiss.index
+Search time: 181.716156 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 82.77%
+	Cluster-level mean Accuracy: 82.77%
+	Cluster-level median Accuracy: 90.00%
+	Precision: ubinary
+	Model: facebook/esm2_t48_15B_UR50D
+	Model Directory: examples/pfam/embeddings/esm2-15B_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esm2-15B_pfam20_seed-42/ubinary-faiss.index
+)
+Running evaluation with model: esmc_300m, model_dir: examples/pfam/embeddings/esmc-300M_pfam20_seed-42, precision: float32, partition: seed-42
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 61230.72it/s]
+Loading FAISS index from examples/pfam/embeddings/esmc-300M_pfam20_seed-42/float32-faiss.index
+Search time: 19.137758 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 62.45%
+	Cluster-level mean Accuracy: 62.45%
+	Cluster-level median Accuracy: 65.00%
+	Precision: float32
+	Model: esmc_300m
+	Model Directory: examples/pfam/embeddings/esmc-300M_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esmc-300M_pfam20_seed-42/float32-faiss.index
+)
+Running evaluation with model: esmc_300m, model_dir: examples/pfam/embeddings/esmc-300M_pfam20_seed-42, precision: ubinary, partition: seed-42
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 63791.70it/s]
+Loading FAISS index from examples/pfam/embeddings/esmc-300M_pfam20_seed-42/ubinary-faiss.index
+Search time: 40.434193 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 67.53%
+	Cluster-level mean Accuracy: 67.53%
+	Cluster-level median Accuracy: 75.00%
+	Precision: ubinary
+	Model: esmc_300m
+	Model Directory: examples/pfam/embeddings/esmc-300M_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esmc-300M_pfam20_seed-42/ubinary-faiss.index
+)
+Running evaluation with model: esmc_600m, model_dir: examples/pfam/embeddings/esmc-600M_pfam20_seed-42, precision: float32, partition: seed-42
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 56871.92it/s]
+Loading FAISS index from examples/pfam/embeddings/esmc-600M_pfam20_seed-42/float32-faiss.index
+Search time: 22.399004 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 61.47%
+	Cluster-level mean Accuracy: 61.47%
+	Cluster-level median Accuracy: 65.00%
+	Precision: float32
+	Model: esmc_600m
+	Model Directory: examples/pfam/embeddings/esmc-600M_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esmc-600M_pfam20_seed-42/float32-faiss.index
+)
+Running evaluation with model: esmc_600m, model_dir: examples/pfam/embeddings/esmc-600M_pfam20_seed-42, precision: ubinary, partition: seed-42
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 59283.45it/s]
+Loading FAISS index from examples/pfam/embeddings/esmc-600M_pfam20_seed-42/ubinary-faiss.index
+Search time: 45.358863 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 67.11%
+	Cluster-level mean Accuracy: 67.11%
+	Cluster-level median Accuracy: 70.00%
+	Precision: ubinary
+	Model: esmc_600m
+	Model Directory: examples/pfam/embeddings/esmc-600M_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/esmc-600M_pfam20_seed-42/ubinary-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/pfam/embeddings/prottrans_pfam20_seed-42, precision: float32, partition: seed-42
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/pfam/embeddings/prottrans_pfam20_seed-42/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (351980, 1024)
+Writing the index to disk...
+Search time: 19.580443 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 78.58%
+	Cluster-level mean Accuracy: 78.58%
+	Cluster-level median Accuracy: 85.00%
+	Precision: float32
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/pfam/embeddings/prottrans_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/prottrans_pfam20_seed-42/float32-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/pfam/embeddings/prottrans_pfam20_seed-42, precision: ubinary, partition: seed-42
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/pfam/embeddings/prottrans_pfam20_seed-42/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (351980, 128)
+Writing the index to disk...
+Search time: 41.051912 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 78.28%
+	Cluster-level mean Accuracy: 78.28%
+	Cluster-level median Accuracy: 85.00%
+	Precision: ubinary
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/pfam/embeddings/prottrans_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/prottrans_pfam20_seed-42/ubinary-faiss.index
+)

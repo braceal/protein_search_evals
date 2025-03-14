@@ -1,0 +1,11 @@
+{
+  "name": "",
+  "sequence_level_mean_accuracy": 0.6598727200409115,
+  "cluster_level_mean_accuracy": 0.6598727200409115,
+  "cluster_level_median_accuracy": 0.7,
+  "precision": "float32",
+  "model": "facebook/esm2_t30_150M_UR50D",
+  "model_directory": "examples/pfam/embeddings/esm2-150M_pfam20_seed-42",
+  "dataset": "data/pfam",
+  "index_path": "examples/pfam/embeddings/esm2-150M_pfam20_seed-42/float32-faiss.index"
+}
