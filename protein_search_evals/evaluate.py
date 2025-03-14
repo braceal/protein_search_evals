@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 from pydantic import Field
@@ -46,7 +47,7 @@ def get_dataset(
         raise ValueError(f'Unknown dataset: {dataset_dir}')
 
 
-def get_encoder_config(model_name: str) -> EncoderConfigs:
+def get_encoder_config(model_name: str, **kwargs: Any) -> EncoderConfigs:
     """Get the encoder configuration.
 
     Parameters
@@ -64,16 +65,19 @@ def get_encoder_config(model_name: str) -> EncoderConfigs:
         return Esm2EncoderConfig(
             normalize_pooled_embeddings=True,
             pretrained_model_name_or_path=model_name,
+            **kwargs,
         )
     elif 'esmc' in model_name:
         return EsmCambrianEncoderConfig(
             normalize_pooled_embeddings=True,
             pretrained_model_name_or_path=model_name,
+            **kwargs,
         )
     elif 'prot_t5' in model_name:
         return ProtTransEncoderConfig(
             normalize_pooled_embeddings=True,
             pretrained_model_name_or_path=model_name,
+            **kwargs,
         )
     else:
         raise ValueError(f'Unknown encoder: {model_name}')

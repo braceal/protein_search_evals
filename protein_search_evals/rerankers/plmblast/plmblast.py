@@ -163,7 +163,7 @@ class PlmBlastParamError(Exception):
     pass
 
 
-class PlmBlast(Reranker):
+class PlmBlastReranker(Reranker):
     """The pLM-Blast reranker."""
 
     def __init__(
