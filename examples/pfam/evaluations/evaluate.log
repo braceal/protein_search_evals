@@ -295,3 +295,45 @@ EvaluationMetadata(
 	Dataset: data/pfam
 	Index Path: examples/pfam/embeddings/esmc-600M_pfam20_seed-42/ubinary-faiss.index
 )
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/pfam/embeddings/prottrans_pfam20_seed-42, precision: float32, partition: seed-42
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/pfam/embeddings/prottrans_pfam20_seed-42/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (351980, 1024)
+Writing the index to disk...
+Search time: 19.580443 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 78.58%
+	Cluster-level mean Accuracy: 78.58%
+	Cluster-level median Accuracy: 85.00%
+	Precision: float32
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/pfam/embeddings/prottrans_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/prottrans_pfam20_seed-42/float32-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/pfam/embeddings/prottrans_pfam20_seed-42, precision: ubinary, partition: seed-42
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/pfam/embeddings/prottrans_pfam20_seed-42/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (351980, 128)
+Writing the index to disk...
+Search time: 41.051912 seconds
+Retrieved 351980 results
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/sequences.fasta
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Loading Pfam20 families metadata from data/pfam/pfam20_seed-42/families.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 78.28%
+	Cluster-level mean Accuracy: 78.28%
+	Cluster-level median Accuracy: 85.00%
+	Precision: ubinary
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/pfam/embeddings/prottrans_pfam20_seed-42
+	Dataset: data/pfam
+	Index Path: examples/pfam/embeddings/prottrans_pfam20_seed-42/ubinary-faiss.index
+)
