@@ -17,20 +17,19 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "typer",
-    "tqdm",
-    "parsl",
-    "pydantic",
-    "transformers",
-    "sentence-transformers",
-    "sentencepiece",
-    "torch",
-    "datasets",
-    "h5py",
-    "numba",
+    "typer>=0.15.2",
+    "tqdm>=4.67.1",
+    "parsl>=2025.3.10",
+    "pydantic>=2.10.6",
+    "transformers>=4.49.0",
+    "sentence-transformers>=3.4.1",
+    "sentencepiece>=0.2.0",
+    "torch>=2.6.0",
+    "datasets>=3.3.2",
+    "h5py>=3.13.0",
+    "numba>=0.61.0",
     "parsl-object-registry @ git+https://github.com/braceal/parsl_object_registry.git",
 ]
-
 [project.urls]
 homepage = "https://github.com/braceal/protein_search_evals"
 documentation = "https://github.com/braceal/protein_search_evals"
