@@ -413,7 +413,7 @@ if __name__ == '__main__':
     # will be placed on the next available GPUs (relative to
     # CUDA_VISIBLE_DEVICES). Otherwise, the faiss index will share
     # the same GPU as the encoder.
-    search_gpus = 0 if args.gpus == 0 else list(range(1, args.gpus))
+    search_gpus = 0 if args.gpus == 0 else list(range(1, args.gpus + 1))
 
     # Initialize FaissIndexConfig
     faiss_config = FaissIndexConfig(
