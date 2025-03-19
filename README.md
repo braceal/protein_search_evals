@@ -11,6 +11,11 @@ pip install -U pip setuptools wheel
 pip install -e .
 ```
 
+To install Faiss, for GPU support with CUDA 12, run the following command:
+```bash
+pip install faiss-gpu-cu12
+```
+
 For ESMC, you can install the following packages and model weights:
 ```bash
 pip install esm
