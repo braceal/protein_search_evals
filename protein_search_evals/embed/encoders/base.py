@@ -110,6 +110,7 @@ class Encoder(ABC):
         dataloader_batch_size: int = 8,
         dataloader_num_data_workers: int = 4,
         cached_token_embeddings_path: str | Path | None = None,
+        verbose: bool = False,
     ) -> None:
         """Initialize the encoder.
 
@@ -125,12 +126,16 @@ class Encoder(ABC):
             Number of data workers for batching, by default 4.
         cached_token_embeddings_path : str | Path | None, optional
             Path to the cached HDF5 token embeddings, by default None.
+        verbose : bool, optional
+            Whether to print verbose output (progress bar for embedding
+            computation), by default False.
         """
         self.normalize_pooled_embeddings = normalize_pooled_embeddings
         self.dataloader_pin_memory = dataloader_pin_memory
         self.dataloader_batch_size = dataloader_batch_size
         self.dataloader_num_data_workers = dataloader_num_data_workers
         self.cached_token_embeddings_path = cached_token_embeddings_path
+        self.verbose = verbose
 
         # Load the cached token embeddings
         if self.cached_token_embeddings_path is not None:
@@ -379,7 +384,11 @@ class Encoder(ABC):
         # Index for storing embeddings
         idx = 0
 
-        for batch in tqdm(dataloader, desc='Computing embeddings'):
+        for batch in tqdm(
+            dataloader,
+            desc='Computing embeddings',
+            disable=not self.verbose,
+        ):
             # Move the batch to the model device
             inputs = batch.to(self.device)
 
