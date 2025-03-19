@@ -466,8 +466,8 @@ class Retriever:
         Returns
         -------
         BatchedSearchResults
-            A namedtuple with list[list[float]] (.total_scores) of scores for
-            each  of the top_k returned items and a list[list[int]]]
+            A namedtuple with list[list[float]] (.total_scores) of scores
+            for each of the top_k returned items and a list[list[int]]]
             (.total_indices) of indices for each of the top_k returned items
             for each query sequence.
         np.ndarray
