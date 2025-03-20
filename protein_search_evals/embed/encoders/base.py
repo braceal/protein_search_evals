@@ -81,6 +81,10 @@ class EncoderConfig(BaseModel):
         default=4,
         description='Number of data workers for batching.',
     )
+    dataloader_prefetch_factor: int = Field(
+        default=2,
+        description='The prefetch factor for the dataloader.',
+    )
     cached_token_embeddings_path: str | Path | None = Field(
         default=None,
         description='Path to the cached HDF5 token embeddings.',
@@ -113,6 +117,7 @@ class Encoder(ABC):
         dataloader_pin_memory: bool = True,
         dataloader_batch_size: int = 8,
         dataloader_num_data_workers: int = 4,
+        dataloader_prefetch_factor: int = 2,
         cached_token_embeddings_path: str | Path | None = None,
         verbose: bool = False,
     ) -> None:
@@ -128,6 +133,8 @@ class Encoder(ABC):
             The batch size for inference, by default 8.
         dataloader_num_data_workers : int, optional
             Number of data workers for batching, by default 4.
+        dataloader_prefetch_factor : int, optional
+            The prefetch factor for the dataloader, by default 2.
         cached_token_embeddings_path : str | Path | None, optional
             Path to the cached HDF5 token embeddings, by default None.
         verbose : bool, optional
@@ -138,6 +145,7 @@ class Encoder(ABC):
         self.dataloader_pin_memory = dataloader_pin_memory
         self.dataloader_batch_size = dataloader_batch_size
         self.dataloader_num_data_workers = dataloader_num_data_workers
+        self.dataloader_prefetch_factor = dataloader_prefetch_factor
         self.cached_token_embeddings_path = cached_token_embeddings_path
         self.verbose = verbose
 
@@ -265,6 +273,7 @@ class Encoder(ABC):
             pin_memory=self.dataloader_pin_memory,
             batch_size=self.dataloader_batch_size,
             num_workers=self.dataloader_num_data_workers,
+            prefetch_factor=self.dataloader_prefetch_factor,
             dataset=InMemoryDataset(data),
             collate_fn=DataCollator(self.tokenizer),
         )
