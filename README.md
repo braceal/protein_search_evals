@@ -49,6 +49,16 @@ tar -zxvf data/radicalsam.tar.gz -C data
 python -m protein_search_evals.datasets.radicalsam
 ```
 
+### Running the embedding computation
+
+To compute the embeddings for the Pfam20 dataset using ESM2-3B with faesm, run the following command:
+```bash
+nohup python -m protein_search_evals.distributed_embeddings --config examples/pfam/embedding_configs/esm2-3B-faesm.yaml &> nohup.log &
+```
+
+Modify the YAML file to use different models or datasets.
+
+
 ## Contributing
 
 For development, it is recommended to use a virtual environment. The following

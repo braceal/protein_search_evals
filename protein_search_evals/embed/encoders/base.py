@@ -85,6 +85,10 @@ class EncoderConfig(BaseModel):
         default=None,
         description='Path to the cached HDF5 token embeddings.',
     )
+    verbose: bool = Field(
+        default=False,
+        description='Whether to print verbose output (progress bar).',
+    )
 
 
 @dataclass
