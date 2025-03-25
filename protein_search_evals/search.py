@@ -388,6 +388,9 @@ class FaissIndex:
         np.ndarray
             The dataset for the given indices.
         """
+        # TODO
+        # For scale, we need to do indices first [indices][key]
+        # For benchmarks, we need to do key first [key][indices]
         return self.dataset[key][indices]
 
 
