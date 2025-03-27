@@ -610,3 +610,11 @@ class Pfam20Dataset(PfamSubsetDataset):
             each family, by default 42.
         """
         super().__init__(data_dir, seed, subset_size=20)
+
+
+if __name__ == '__main__':
+    # Set the Pfam dataset path to the data directory
+    data_dir = Path('data/pfam')
+
+    # Create the Pfam20 dataset
+    Pfam20Dataset(data_dir).load_sequences()

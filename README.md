@@ -38,11 +38,26 @@ pip install faesm
 
 ### Building the datasets
 
+The Pfam20 benchmark dataset can be built using the following command:
+```bash
+python -m protein_search_evals.datasets.pfam
+```
+
 The Radical SAM benchmark dataset can be built using the following command:
 ```bash
 tar -zxvf data/radicalsam.tar.gz -C data
 python -m protein_search_evals.datasets.radicalsam
 ```
+
+### Running the embedding computation
+
+To compute the embeddings for the Pfam20 dataset using ESM2-3B with faesm, run the following command:
+```bash
+nohup python -m protein_search_evals.distributed_embeddings --config examples/pfam/embedding_configs/esm2-3B-faesm.yaml &> nohup.log &
+```
+
+Modify the YAML file to use different models or datasets.
+
 
 ## Contributing
 

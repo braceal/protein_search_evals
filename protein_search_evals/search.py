@@ -123,6 +123,7 @@ class FaissIndex:
         rescore_multiplier: int = 2,
         num_quantization_workers: int = 1,
         search_gpus: int | list[int] | None = None,
+        scale_mode: bool = False,
     ) -> None:
         """Initialize the FAISS index.
 
@@ -158,6 +159,14 @@ class FaissIndex:
         search_gpus : int | list[int], optional
             The list of GPUs to use for searching, by default None
             (uses CPU by default).
+        scale_mode : bool, optional
+            Whether to index the dataset by key or index first. If True,
+            the dataset will be indexed by the index first so that the
+            full per-key column is not loaded into memory. If False, the
+            dataset will be indexed by key first so that the full column
+            is loaded into memory. False is useful for small datasets for
+            benchmarking. True is useful for large datasets to scale the
+            similarity search beyond 1M samples, by default False.
         """
         self.dataset_dir = dataset_dir
         self.faiss_index_path = faiss_index_path
@@ -166,6 +175,7 @@ class FaissIndex:
         self.search_algorithm = search_algorithm
         self.rescore_multiplier = rescore_multiplier
         self.num_workers = num_quantization_workers
+        self.scale_mode = scale_mode
 
         # Validate the precision and search algorithm
         if self.precision not in ('float32', 'ubinary'):
@@ -388,7 +398,13 @@ class FaissIndex:
         np.ndarray
             The dataset for the given indices.
         """
-        return self.dataset[key][indices]
+        if self.scale_mode:
+            # Only load the contents for the given indices, helpful
+            # for large datasets to avoid loading the full column
+            return np.array([self.dataset[i][key] for i in indices])
+        else:
+            # Load the full column into memory, helpful for small datasets
+            return self.dataset[key][indices]
 
 
 class RetrieverConfig(BaseModel):

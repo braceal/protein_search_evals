@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import typer
+from natsort import natsorted
 from tqdm import tqdm
 
 app = typer.Typer(add_completion=False, pretty_exceptions_show_locals=False)
@@ -33,7 +34,7 @@ def merge(
     writer = HuggingFaceWriter()
 
     # Get the dataset directories
-    dataset_dirs = list(dataset_dir.glob('*'))
+    dataset_dirs = natsorted(dataset_dir.glob('*'))
 
     # Merge the datasets
     writer.merge(dataset_dirs, output_dir)
