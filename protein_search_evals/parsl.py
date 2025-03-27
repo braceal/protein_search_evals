@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from abc import ABC
 from abc import abstractmethod
 from pathlib import Path
@@ -18,6 +19,7 @@ from parsl.addresses import address_by_hostname
 from parsl.config import Config
 from parsl.executors import HighThroughputExecutor
 from parsl.launchers import MpiExecLauncher
+from parsl.launchers import WrappedLauncher
 from parsl.providers import LocalProvider
 from parsl.providers import PBSProProvider
 from pydantic import BaseModel
@@ -191,4 +193,73 @@ class PolarisConfig(BaseComputeConfig):
         )
 
 
-ComputeConfigs = Union[WorkstationConfig, PolarisConfig]
+class PolarisHeadlessConfig(BaseComputeConfig):
+    """Polaris@ALCF headless configuration.
+
+    See here for details: https://docs.alcf.anl.gov/polaris/workflows/parsl/
+    """
+
+    name: Literal['polaris_headless'] = 'polaris_headless'
+
+    num_nodes: int = Field(
+        ge=1,
+        description='Number of nodes to use (must use at least 1 nodes).',
+    )
+    retries: int = Field(
+        default=1,
+        description='Number of retries for the task.',
+    )
+    max_idletime: float = Field(
+        default=60.0 * 10,
+        description='The maximum idle time allowed for an executor before '
+        'strategy could shut down unused blocks. Default is 10 minutes.',
+    )
+
+    def get_config(self, run_dir: str | Path) -> Config:
+        """Create a parsl configuration for running headless on Polaris@ALCF.
+
+        We will launch 4 workers per node, each pinned to a different GPU.
+
+        Parameters
+        ----------
+        run_dir: str | Path
+            Directory in which to store Parsl run files.
+        """
+        # Convert run_dir to a Path object and create the directory
+        run_dir = Path(run_dir)
+        run_dir.mkdir(parents=True, exist_ok=True)
+
+        # Parse the hosts from the nodefile
+        with open(os.environ['PBS_NODEFILE']) as fp:
+            hosts = [x.strip() for x in fp]
+
+        # Write the hostfile
+        hostfile = run_dir / 'htex.hosts'
+        hostfile.write_text('\n'.join(hosts))
+
+        # Return the Parsl configuration
+        return Config(
+            run_dir=str(run_dir),
+            retries=self.retries,
+            max_idletime=self.max_idletime,
+            executors=[
+                HighThroughputExecutor(
+                    label='htex',
+                    cpu_affinity='block-reverse',
+                    available_accelerators=4,
+                    provider=LocalProvider(
+                        launcher=WrappedLauncher(
+                            f'mpiexec -n {self.num_nodes} --ppn 1 --hostfile '
+                            f'{hostfile} --depth=64 --cpu-bind depth',
+                        ),
+                        cmd_timeout=120,
+                        nodes_per_block=self.num_nodes,
+                        init_blocks=1,
+                        max_blocks=1,
+                    ),
+                ),
+            ],
+        )
+
+
+ComputeConfigs = Union[WorkstationConfig, PolarisConfig, PolarisHeadlessConfig]
