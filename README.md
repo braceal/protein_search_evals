@@ -78,12 +78,12 @@ pip install -e .
 
 Then run the embedding computation for SwissProt:
 ```bash
-sbatch examples/swissprot/submit.sh
+qsub examples/swissprot/submit.sh
 ```
 
 To run the embedding computation for TrEMBL:
 ```bash
-sbatch examples/trembl/submit.sh
+qsub examples/trembl/submit.sh
 ```
 
 See the `examples` swissprot and trembl directories for more configuration details.
