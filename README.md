@@ -74,6 +74,9 @@ git clone git@github.com:braceal/protein_search_evals.git
 cd protein_search_evals
 pip install -U pip setuptools wheel
 pip install -e .
+pip install flash-attn --no-build-isolation
+pip install faesm[flash_attn]
+pip install faiss-gpu-cu12
 ```
 
 Then run the embedding computation for SwissProt:
