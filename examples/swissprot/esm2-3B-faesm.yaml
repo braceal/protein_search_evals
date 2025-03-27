@@ -21,11 +21,11 @@ encoder_config:
   # Whether to normalize the embeddings
   normalize_pooled_embeddings: true
   # The batch size to use for embedding
-  dataloader_batch_size: 64
+  dataloader_batch_size: 128
   # The prefetch factor to use for embedding
-  dataloader_prefetch_factor: 4
+  dataloader_prefetch_factor: 8
   # The number of data workers to use for embedding
-  dataloader_num_data_workers: 4
+  dataloader_num_data_workers: 8
   # Verbose embedding progress
   verbose: true
 
@@ -38,4 +38,4 @@ compute_config:
   name: polaris_headless
   # Number of nodes to use (must use at least 1 nodes).
   # NOTE: Also requires updating the submit script to request the correct number of nodes.
-  num_nodes: 1
+  num_nodes: 2
