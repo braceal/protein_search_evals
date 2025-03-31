@@ -401,7 +401,7 @@ class FaissIndex:
         if self.scale_mode:
             # Only load the contents for the given indices, helpful
             # for large datasets to avoid loading the full column
-            return np.array([self.dataset[i][key] for i in indices])
+            return self.dataset[indices][key]
         else:
             # Load the full column into memory, helpful for small datasets
             return self.dataset[key][indices]
