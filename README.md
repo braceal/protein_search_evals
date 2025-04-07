@@ -58,6 +58,38 @@ nohup python -m protein_search_evals.distributed_embeddings --config examples/pf
 
 Modify the YAML file to use different models or datasets.
 
+### Computing embeddings on Polaris
+
+Create a new conda environment with the following commands:
+```bash
+qsub -I -l select=1 -l filesystems=home:eagle -l walltime=1:00:00 -q debug -A FoundEpidem
+module use /soft/modulefiles; module load conda
+conda create -n protein_search_evals_03_25 python=3.12 -y
+conda activate protein_search_evals_03_25
+```
+
+Then install the package and dependencies:
+```bash
+git clone git@github.com:braceal/protein_search_evals.git
+cd protein_search_evals
+pip install -U pip setuptools wheel
+pip install -e .
+pip install flash-attn --no-build-isolation
+pip install faesm[flash_attn]
+pip install faiss-gpu-cu12
+```
+
+Then run the embedding computation for SwissProt:
+```bash
+qsub examples/swissprot/submit.sh
+```
+
+To run the embedding computation for TrEMBL:
+```bash
+qsub examples/trembl/submit.sh
+```
+
+See the `examples` swissprot and trembl directories for more configuration details.
 
 ## Contributing
 

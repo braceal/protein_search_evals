@@ -383,7 +383,12 @@ class FaissIndex:
             total_scores=new_total_scores,
         )
 
-    def get(self, indices: list[int] | np.ndarray, key: str) -> np.ndarray:
+    def get(
+        self,
+        indices: list[int] | np.ndarray,
+        key: str,
+        scale_mode: bool | None = None,
+    ) -> np.ndarray:
         """Get the values of a key from the dataset for the given indices.
 
         Parameters
@@ -392,16 +397,22 @@ class FaissIndex:
             The list of indices to get.
         key : str
             The key to get from the dataset.
+        scale_mode : bool | None, optional
+            Whether to load the full column into memory or only the
+            contents for the given indices, by default None.
 
         Returns
         -------
         np.ndarray
             The dataset for the given indices.
         """
-        if self.scale_mode:
+        # Set the scale mode if not provided
+        scale_mode = scale_mode if scale_mode is not None else self.scale_mode
+
+        if scale_mode:
             # Only load the contents for the given indices, helpful
             # for large datasets to avoid loading the full column
-            return np.array([self.dataset[i][key] for i in indices])
+            return self.dataset[indices][key]
         else:
             # Load the full column into memory, helpful for small datasets
             return self.dataset[key][indices]
@@ -568,7 +579,12 @@ class Retriever:
 
         return pool_embeds
 
-    def get(self, indices: list[int] | np.ndarray, key: str) -> np.ndarray:
+    def get(
+        self,
+        indices: list[int] | np.ndarray,
+        key: str,
+        scale_mode: bool | None = None,
+    ) -> np.ndarray:
         """Get the values of a key from the dataset for the given indices.
 
         Parameters
@@ -577,40 +593,57 @@ class Retriever:
             The list of indices to get.
         key : str
             The key to get from the dataset.
+        scale_mode : bool | None, optional
+            Whether to load the full column into memory or only the
+            contents for the given indices, by default None.
 
         Returns
         -------
         np.ndarray
             The values for the given indices.
         """
-        return self.faiss_index.get(indices, key)
+        return self.faiss_index.get(indices, key, scale_mode)
 
-    def get_embeddings(self, indices: list[int] | np.ndarray) -> np.ndarray:
+    def get_embeddings(
+        self,
+        indices: list[int] | np.ndarray,
+        scale_mode: bool | None = None,
+    ) -> np.ndarray:
         """Get the embeddings for the given indices.
 
         Parameters
         ----------
         indices : list[int] | np.ndarray
             The list of indices returned from the search.
+        scale_mode : bool | None, optional
+            Whether to load the full column into memory or only the
+            contents for the given indices, by default None.
 
         Returns
         -------
         np.ndarray
             Array of embeddings (shape: [num_indices, embed_size])
         """
-        return self.faiss_index.get(indices, 'embeddings')
+        return self.faiss_index.get(indices, 'embeddings', scale_mode)
 
-    def get_sequences(self, indices: list[int] | np.ndarray) -> np.ndarray:
+    def get_sequences(
+        self,
+        indices: list[int] | np.ndarray,
+        scale_mode: bool | None = None,
+    ) -> np.ndarray:
         """Get the sequences for the given indices.
 
         Parameters
         ----------
         indices : list[int] | np.ndarray
             The list of indices returned from the search.
+        scale_mode : bool | None, optional
+            Whether to load the full column into memory or only the
+            contents for the given indices, by default None.
 
         Returns
         -------
         np.ndarray
             List of sequences strings for the given indices.
         """
-        return self.faiss_index.get(indices, 'sequences')
+        return self.faiss_index.get(indices, 'sequences', scale_mode)
