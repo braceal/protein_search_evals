@@ -80,6 +80,9 @@ def download_latest_uniprot(download_dir: Path, download_trembl: bool) -> None:
     for path in download_paths:
         # Check if the file exists
         if path.exists():
+            # Print the file being unzipped
+            print(f'Unzipping {path}...')
+
             # Unzip the file
             subprocess.run(['gunzip', str(path)], check=True)
         else:
