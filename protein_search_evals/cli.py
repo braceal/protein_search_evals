@@ -5,6 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 
 import typer
+from Bio import SeqIO
+from Bio.SeqRecord import SeqRecord
 from natsort import natsorted
 from tqdm import tqdm
 
@@ -54,31 +56,37 @@ def chunk_fasta_file(
         '-o',
         help='The directory to save the chunked fasta files to.',
     ),
-    num_chunks: int = typer.Option(
+    num_seqs_per_file: int = typer.Option(
         ...,
-        '--chunk_size',
-        '-c',
-        help='The number of smaller files to chunk the fasta file into.',
+        '--num_seqs_per_file',
+        '-n',
+        help='The number of sequences per chunked fasta file.',
     ),
 ) -> None:
     """Chunk a fasta file into smaller fasta files."""
-    from protein_search_evals.utils import batch_data
-    from protein_search_evals.utils import read_fasta
-    from protein_search_evals.utils import write_fasta
+    output_dir.mkdir(parents=True, exist_ok=True)
+    record_iter = SeqIO.parse(input_file, 'fasta')
+    batch = []
+    file_index = 0
 
-    # Read the fasta file
-    sequences = read_fasta(input_file)
+    def _write_batch(batch: list[SeqRecord]) -> None:
+        # Closure on the file_index
+        filename = f'{input_file.stem}_{file_index:04}{input_file.suffix}'
+        output_path = output_dir / filename
+        SeqIO.write(batch, output_path, 'fasta')
 
-    # Chunk the sequences
-    chunks = batch_data(sequences, len(sequences) // num_chunks)
+    # Iterate over the records in the fasta file
+    # and write them to the output directory in batches
+    for record in tqdm(record_iter, desc='Writing sequences'):
+        batch.append(record)
+        if len(batch) >= num_seqs_per_file:
+            _write_batch(batch)
+            batch = []
+            file_index += 1
 
-    # Make the output directory
-    output_dir.mkdir(parents=True)
-
-    # Save the chunked fasta files
-    for i, chunk in tqdm(enumerate(chunks), desc='Writing chunks'):
-        filename = f'{input_file.stem}_{i:04}{input_file.suffix}'
-        write_fasta(chunk, output_dir / filename)
+    # Write any remaining sequences
+    if batch:
+        _write_batch(batch)
 
 
 def main() -> None:
