@@ -2,7 +2,7 @@
 input_dir: /lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/data/uniprot_2025_02/trembl
 
 # Directory to save the embeddings.
-output_dir: /lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/data/uniprot_2025_02/trembl-embeddings/esm3-3B_faesm_embeddings
+output_dir: /lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/data/uniprot_2025_02/trembl-embeddings/esm2-3B_faesm_embeddings
 
 # Glob patterns to match the input files.
 glob_patterns:
