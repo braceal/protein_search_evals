@@ -6,6 +6,11 @@ import argparse
 import subprocess
 from pathlib import Path
 
+from Bio.SeqRecord import SeqRecord
+
+from protein_search_evals.utils import chunk_fasta_file
+
+# Define the URLs for the latest UniProt release
 RELEASE_URL = 'ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/RELEASE.metalink'
 
 DOWNLOAD_URLS = [
@@ -89,6 +94,26 @@ def download_latest_uniprot(download_dir: Path, download_trembl: bool) -> None:
             print(f'File {path} does not exist. Skipping unzipping.')
 
 
+def _uniprot_header_format(record: SeqRecord) -> SeqRecord:
+    """Format the header of a UniProt sequence.
+
+    When building the Faiss index, it is convenient to keep the
+    sequence header simply as the UniProt accession number to
+    make cross-referencing easier. The raw sequence header format
+    is as follows for UniProtKB/Swiss-Prot and UniProtKB/TrEMBL:
+        >sp|UNIPROT_ID|REST_OF_HEADER
+        >tr|UNIPROT_ID|REST_OF_HEADER
+    """
+    # Split the header into parts
+    parts = record.description.split('|')
+
+    # Set the new header to the UniProt ID
+    record.id = parts[1]
+    record.description = ''
+
+    return record
+
+
 if __name__ == '__main__':
     # Set up argument parser
     parser = argparse.ArgumentParser(
@@ -112,3 +137,20 @@ if __name__ == '__main__':
 
     # Call the function to download the latest UniProt release
     download_latest_uniprot(args.download_dir, args.download_trembl)
+
+    # Chunk the Swiss-Prot FASTA file
+    chunk_fasta_file(
+        input_file=args.download_dir / 'uniprot_sprot.fasta',
+        output_dir=args.download_dir / 'sprot',
+        num_seqs_per_file=50_000,
+        header_formatter=_uniprot_header_format,
+    )
+
+    # If downloading TrEMBL, chunk the TrEMBL FASTA file as well
+    if args.download_trembl:
+        chunk_fasta_file(
+            input_file=args.download_dir / 'uniprot_trembl.fasta',
+            output_dir=args.download_dir / 'trembl',
+            num_seqs_per_file=500_000,
+            header_formatter=_uniprot_header_format,
+        )

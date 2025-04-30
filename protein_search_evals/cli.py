@@ -5,10 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import typer
-from Bio import SeqIO
-from Bio.SeqRecord import SeqRecord
 from natsort import natsorted
-from tqdm import tqdm
 
 app = typer.Typer(add_completion=False, pretty_exceptions_show_locals=False)
 
@@ -64,29 +61,10 @@ def chunk_fasta_file(
     ),
 ) -> None:
     """Chunk a fasta file into smaller fasta files."""
-    output_dir.mkdir(parents=True, exist_ok=True)
-    record_iter = SeqIO.parse(input_file, 'fasta')
-    batch = []
-    file_index = 0
+    from protein_search_evals.utils import chunk_fasta_file
 
-    def _write_batch(batch: list[SeqRecord]) -> None:
-        # Closure on the file_index
-        filename = f'{input_file.stem}_{file_index:04}{input_file.suffix}'
-        output_path = output_dir / filename
-        SeqIO.write(batch, output_path, 'fasta')
-
-    # Iterate over the records in the fasta file
-    # and write them to the output directory in batches
-    for record in tqdm(record_iter, desc='Writing sequences'):
-        batch.append(record)
-        if len(batch) >= num_seqs_per_file:
-            _write_batch(batch)
-            batch = []
-            file_index += 1
-
-    # Write any remaining sequences
-    if batch:
-        _write_batch(batch)
+    # Chunk the fasta file
+    chunk_fasta_file(input_file, output_dir, num_seqs_per_file)
 
 
 def main() -> None:

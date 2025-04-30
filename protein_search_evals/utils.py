@@ -6,11 +6,15 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Callable
 from typing import Literal
 from typing import TypeVar
 
 import yaml  # type: ignore[import-untyped]
+from Bio import SeqIO
+from Bio.SeqRecord import SeqRecord
 from pydantic import BaseModel
+from tqdm import tqdm
 
 T = TypeVar('T')
 
@@ -147,3 +151,60 @@ def write_fasta(
     with open(fasta_file, mode) as f:
         for seq in seqs:
             f.write(f'>{seq.tag}\n{seq.sequence}\n')
+
+
+def chunk_fasta_file(
+    input_file: Path,
+    output_dir: Path,
+    num_seqs_per_file: int,
+    header_formatter: Callable[[SeqRecord], SeqRecord] | None = None,
+) -> None:
+    """Chunk a fasta file into smaller fasta files.
+
+    Parameters
+    ----------
+    input_file : Path
+        The fasta file to chunk.
+    output_dir : Path
+        The directory to save the chunked fasta files to.
+    num_seqs_per_file : int
+        The number of sequences per chunked fasta file.
+    header_formatter : Callable[[SeqRecord], SeqRecord] | None
+        A function to format the header of each sequence. If None, the
+        default header will be used.
+    """
+    # Create the output directory if it doesn't exist
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Read the fasta file
+    record_iter = SeqIO.parse(input_file, 'fasta')
+
+    # Initialize the batch and file index
+    batch = []
+    file_index = 0
+
+    # Closure on the file_index
+    def _write_batch(batch: list[SeqRecord]) -> None:
+        # Create the output filename
+        filename = f'{input_file.stem}_{file_index:04}{input_file.suffix}'
+        output_path = output_dir / filename
+
+        # Format the header if a formatter is provided
+        if header_formatter:
+            batch = [header_formatter(record) for record in batch]
+
+        # Write the batch to the output file
+        SeqIO.write(batch, output_path, 'fasta')
+
+    # Iterate over the records in the fasta file
+    # and write them to the output directory in batches
+    for record in tqdm(record_iter, desc='Writing sequences'):
+        batch.append(record)
+        if len(batch) >= num_seqs_per_file:
+            _write_batch(batch)
+            batch = []
+            file_index += 1
+
+    # Write any remaining sequences
+    if batch:
+        _write_batch(batch)
