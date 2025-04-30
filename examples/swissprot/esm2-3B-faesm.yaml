@@ -1,8 +1,8 @@
 # Directory containing the input files to embed.
-input_dir: /lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/data/swiss-prot/sprot
+input_dir: /lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/data/uniprot_2025_02/sprot
 
 # Directory to save the embeddings.
-output_dir: /lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/data/swiss-prot/esm3-3B_faesm_embeddings
+output_dir: /lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/data/uniprot_2025_02/sprot-embeddings/esm3-3B_faesm_embeddings
 
 # Glob patterns to match the input files.
 glob_patterns:
