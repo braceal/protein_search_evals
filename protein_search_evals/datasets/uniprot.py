@@ -148,6 +148,7 @@ if __name__ == '__main__':
 
     # If downloading TrEMBL, chunk the TrEMBL FASTA file as well
     if args.download_trembl:
+        # This can take a while (1hr+) due to the size of the file
         chunk_fasta_file(
             input_file=args.download_dir / 'uniprot_trembl.fasta',
             output_dir=args.download_dir / 'trembl',
