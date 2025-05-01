@@ -6,7 +6,6 @@ from pathlib import Path
 
 import typer
 from natsort import natsorted
-from tqdm import tqdm
 
 app = typer.Typer(add_completion=False, pretty_exceptions_show_locals=False)
 
@@ -54,31 +53,18 @@ def chunk_fasta_file(
         '-o',
         help='The directory to save the chunked fasta files to.',
     ),
-    num_chunks: int = typer.Option(
+    num_seqs_per_file: int = typer.Option(
         ...,
-        '--chunk_size',
-        '-c',
-        help='The number of smaller files to chunk the fasta file into.',
+        '--num_seqs_per_file',
+        '-n',
+        help='The number of sequences per chunked fasta file.',
     ),
 ) -> None:
     """Chunk a fasta file into smaller fasta files."""
-    from protein_search_evals.utils import batch_data
-    from protein_search_evals.utils import read_fasta
-    from protein_search_evals.utils import write_fasta
+    from protein_search_evals.utils import chunk_fasta_file
 
-    # Read the fasta file
-    sequences = read_fasta(input_file)
-
-    # Chunk the sequences
-    chunks = batch_data(sequences, len(sequences) // num_chunks)
-
-    # Make the output directory
-    output_dir.mkdir(parents=True)
-
-    # Save the chunked fasta files
-    for i, chunk in tqdm(enumerate(chunks), desc='Writing chunks'):
-        filename = f'{input_file.stem}_{i:04}{input_file.suffix}'
-        write_fasta(chunk, output_dir / filename)
+    # Chunk the fasta file
+    chunk_fasta_file(input_file, output_dir, num_seqs_per_file)
 
 
 def main() -> None:

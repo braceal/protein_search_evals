@@ -1,8 +1,8 @@
 # Directory containing the input files to embed.
-input_dir: /lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/data/uniprot_2025_02/sprot
+input_dir: /lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/data/uniprot_2025_02/trembl
 
 # Directory to save the embeddings.
-output_dir: /lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/data/uniprot_2025_02/sprot-embeddings/esm2-3B_faesm_embeddings
+output_dir: /lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/data/uniprot_2025_02/trembl-embeddings/esm2-3B_faesm_embeddings
 
 # Glob patterns to match the input files.
 glob_patterns:
@@ -38,4 +38,4 @@ compute_config:
   name: polaris_headless
   # Number of nodes to use (must use at least 1 nodes).
   # NOTE: Also requires updating the submit script to request the correct number of nodes.
-  num_nodes: 2
+  num_nodes: 127

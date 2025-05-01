@@ -4,6 +4,8 @@
 
 # Datasets
 data/radicalsam/*
+data/pfam/*
+data/uniprot/*
 
 
 ### JupyterNotebooks ###
