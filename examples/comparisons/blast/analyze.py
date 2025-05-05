@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from argparse import ArgumentParser
 from collections import defaultdict
+from io import StringIO
 from pathlib import Path
 
 import numpy as np
@@ -46,12 +47,19 @@ if __name__ == '__main__':
     # Get the mapping from uid to cluster
     uid_to_cluster = dataset.uniprot_to_cluster
 
+    # Pre-parse and filter out invalid (non-tabular) lines
+    valid_lines = []
+    with open(args.blast_log_file) as f:
+        next(f)  # Skip the first line (a nohup message)
+        for line in f:
+            if len(line.strip().split('\t')) == 12:
+                valid_lines.append(line)
+
     # Load the BLAST log file into a DataFrame
     df = pd.read_csv(
-        filepath_or_buffer=args.blast_log_file,
+        StringIO(''.join(valid_lines)),
         sep='\t',
         header=None,
-        skiprows=1,  # Skip first line (a nohup message)
         names=[
             'qseqid',
             'sseqid',
@@ -67,6 +75,28 @@ if __name__ == '__main__':
             'bitscore',
         ],
     )
+
+    # # Load the BLAST log file into a DataFrame
+    # df = pd.read_csv(
+    #     filepath_or_buffer=args.blast_log_file,
+    #     sep='\t',
+    #     header=None,
+    #     skiprows=1,  # Skip first line (a nohup message)
+    #     names=[
+    #         'qseqid',
+    #         'sseqid',
+    #         'pident',
+    #         'length',
+    #         'mismatch',
+    #         'gapopen',
+    #         'qstart',
+    #         'qend',
+    #         'sstart',
+    #         'send',
+    #         'evalue',
+    #         'bitscore',
+    #     ],
+    # )
 
     # We need to skip the self hit (which will be the top hit for each query
     # with qseqid == sseqid and pident == 100) e.g.,
