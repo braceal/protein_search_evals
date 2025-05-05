@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 from argparse import ArgumentParser
+from collections import defaultdict
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from protein_search_evals.evaluate import get_dataset
@@ -75,7 +77,38 @@ if __name__ == '__main__':
     # First, drop self-hits
     non_self_hits = df[df['qseqid'] != df['sseqid']]
 
-    # Then, take the first (top) hit per query
+    # Then, take the first (top) hit per query (since the subjects
+    # are already pre-sorted by pident/bitscore)
     top_hits = non_self_hits.groupby('qseqid', as_index=False).first()
 
-    # breakpoint()
+    # Get the ground truth and predicted cluster ids for the queries and hits
+    groundtruths = [uid_to_cluster[x] for x in top_hits['qseqid']]
+    preds = [uid_to_cluster[x] for x in top_hits['sseqid']]
+
+    # Compute the accuracy of each prediction
+    correct = [float(p == c) for p, c in zip(preds, groundtruths)]
+
+    # Compute the accuracy per cluster
+    cluster_to_correct = defaultdict(list)
+    for cluster, correct_ in zip(groundtruths, correct):
+        cluster_to_correct[cluster].append(correct_)
+
+    # Map the cluster id to the accuracy
+    accuracies = {
+        cluster: np.mean(correct_)
+        for cluster, correct_ in cluster_to_correct.items()
+    }
+
+    # Compute the mean accuracy statistics
+    sequence_level_mean_accuracy = float(np.mean(correct))
+    cluster_level_mean_accuracy = float(np.mean(list(accuracies.values())))
+
+    # Compute the median accuracy statistics
+    sequence_level_median_accuracy = float(np.median(correct))
+    cluster_level_median_accuracy = float(np.median(list(accuracies.values())))
+
+    # Print the results
+    print('Sequence level mean accuracy:', sequence_level_mean_accuracy)
+    print('Cluster level mean accuracy:', cluster_level_mean_accuracy)
+    print('Sequence level median accuracy:', sequence_level_median_accuracy)
+    print('Cluster level median accuracy:', cluster_level_median_accuracy)
