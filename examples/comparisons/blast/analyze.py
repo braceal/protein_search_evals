@@ -76,28 +76,6 @@ if __name__ == '__main__':
         ],
     )
 
-    # # Load the BLAST log file into a DataFrame
-    # df = pd.read_csv(
-    #     filepath_or_buffer=args.blast_log_file,
-    #     sep='\t',
-    #     header=None,
-    #     skiprows=1,  # Skip first line (a nohup message)
-    #     names=[
-    #         'qseqid',
-    #         'sseqid',
-    #         'pident',
-    #         'length',
-    #         'mismatch',
-    #         'gapopen',
-    #         'qstart',
-    #         'qend',
-    #         'sstart',
-    #         'send',
-    #         'evalue',
-    #         'bitscore',
-    #     ],
-    # )
-
     # We need to skip the self hit (which will be the top hit for each query
     # with qseqid == sseqid and pident == 100) e.g.,
     # qseqid        sseqid        pident    length   mismatch  ...
