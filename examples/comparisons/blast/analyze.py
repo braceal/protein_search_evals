@@ -47,6 +47,9 @@ if __name__ == '__main__':
     # Get the mapping from uid to cluster
     uid_to_cluster = dataset.uniprot_to_cluster
 
+    # Get all unique query sequences from the dataset
+    all_query_sequences = set(uid_to_cluster.keys())
+
     # Pre-parse and filter out invalid (non-tabular) lines
     valid_lines = []
     with open(args.blast_log_file) as f:
@@ -89,12 +92,24 @@ if __name__ == '__main__':
     # are already pre-sorted by pident/bitscore)
     top_hits = non_self_hits.groupby('qseqid', as_index=False).first()
 
+    # Get sequences that have no hits
+    sequences_with_hits = set(top_hits['qseqid'])
+    sequences_without_hits = all_query_sequences - sequences_with_hits
+
     # Get the ground truth and predicted cluster ids for the queries and hits
     groundtruths = [uid_to_cluster[x] for x in top_hits['qseqid']]
     preds = [uid_to_cluster[x] for x in top_hits['sseqid']]
 
+    # Add sequences with no hits as incorrect predictions
+    for seq in sequences_without_hits:
+        groundtruths.append(uid_to_cluster[seq])
+        preds.append('NO_HIT')  # Special marker for sequences with no hits
+
     # Compute the accuracy of each prediction
-    correct = [float(p == c) for p, c in zip(preds, groundtruths)]
+    correct = [
+        float(p == c) if p != 'NO_HIT' else 0.0
+        for p, c in zip(preds, groundtruths)
+    ]
 
     # Compute the accuracy per cluster
     cluster_to_correct = defaultdict(list)
