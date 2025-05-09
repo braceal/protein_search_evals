@@ -32,5 +32,5 @@ nohup blastp -query query.fasta -db pfam_db -outfmt 6 -evalue 1e-3 -max_target_s
 
 To analyze the results, you can use the following command:
 ```bash
-TODO
+python analyze.py --blast_log_file blastp.log --dataset_dir ../../../data/pfam
 ```
