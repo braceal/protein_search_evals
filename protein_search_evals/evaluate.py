@@ -355,7 +355,7 @@ class Evaluator:
 if __name__ == '__main__':
     # Parse the arguments
     parser = argparse.ArgumentParser(
-        description='Evaluate a model on the Pfam benchmark.',
+        description='Evaluate a model on the benchmark.',
     )
     parser.add_argument(
         '--report_name',
@@ -367,7 +367,7 @@ if __name__ == '__main__':
         '--dataset_dir',
         type=Path,
         required=True,
-        help='The directory containing the Pfam dataset.',
+        help='The directory containing the dataset.',
     )
     parser.add_argument(
         '--dataset_partition',
