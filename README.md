@@ -91,6 +91,27 @@ qsub examples/trembl/submit.sh
 
 See the `examples` swissprot and trembl directories for more configuration details.
 
+
+### Merging embeddings
+To combine embeddings from multiple workflow runs, you can use symlinks:
+```bash
+SRC_DIR=/path/to/sprot-embeddings/esm3-3B_faesm_embeddings/embeddings
+DST_DIR=/path/to/combined_embeddings
+
+mkdir -p "$DST_DIR"
+for dir in "$SRC_DIR"/*; do
+    ln -s "$(realpath "$dir")" "$DST_DIR/$(basename "$dir")"
+done
+```
+Simply replace the `SRC_DIR` and `DST_DIR` with the paths to the embeddings you want to combine.
+You can run the command for multiple SRC_DIRs to merge embeddings from multiple runs.
+
+Once you have all the embeddings in the same directory, you can run the following command to merge
+them into a single Arrow file:
+```bash
+protein_search_evals merge --dataset_dir /path/to/combined_embeddings/ --output_dir /path/to/combined_embeddings.merge
+```
+
 ## Contributing
 
 For development, it is recommended to use a virtual environment. The following
