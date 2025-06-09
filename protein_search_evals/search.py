@@ -184,6 +184,7 @@ class FaissIndex:
         self.search_algorithm = search_algorithm
         self.rescore_multiplier = rescore_multiplier
         self.num_workers = num_quantization_workers
+        self.search_gpus = search_gpus
         self.use_ivf = use_ivf
         self.ivf_nlist = ivf_nlist
         self.ivf_nprobe = ivf_nprobe
@@ -214,15 +215,20 @@ class FaissIndex:
             self.faiss_index = self._create_index()
 
         # Move the index to the GPU if available
-        if search_gpus is not None:
+        if not self.use_ivf:
+            self._move_index_to_gpus()
+
+    def _move_index_to_gpus(self) -> None:
+        """Move the FAISS index to the specified GPUs."""
+        if self.search_gpus is not None:
             # Handle single GPU
-            if isinstance(search_gpus, int):
-                search_gpus = [search_gpus]
+            if isinstance(self.search_gpus, int):
+                self.search_gpus = [self.search_gpus]
 
             # Move the index to the specified GPUs
             self.faiss_index = faiss.index_cpu_to_gpus_list(
                 self.faiss_index,
-                gpus=search_gpus,
+                gpus=self.search_gpus,
             )
 
     def _load_index_from_disk(self) -> faiss.Index:
@@ -272,6 +278,8 @@ class FaissIndex:
         elif self.precision == 'ubinary':
             if self.search_algorithm == 'exact':
                 if self.use_ivf:
+                    print('Using IVF for the FAISS index')
+
                     # Use exact search with the binary index
                     dimension = embeddings.shape[1] * 8
                     quantizer = faiss.IndexBinaryFlat(dimension)
@@ -281,8 +289,21 @@ class FaissIndex:
                         self.ivf_nlist,
                     )
 
+                    print('Moving the index to the GPUs for training')
+
+                    # Move the index to the GPUs for training
+                    self._move_index_to_gpus()
+
+                    print(
+                        f'Training the index to cluster into cells '
+                        f'{self.ivf_nlist} cells',
+                    )
+
                     # Train the index to cluster into cells
                     index.train(embeddings)
+
+                    print('Done training the index to cluster into cells')
+
                 else:
                     # Use exact search with the binary index
                     index = faiss.IndexBinaryFlat(embeddings.shape[1] * 8)
@@ -297,6 +318,10 @@ class FaissIndex:
 
         # If using IVF, set how many of nearest cells to search
         if self.use_ivf:
+            print(
+                'Setting the number of clusters to probe '
+                f'to {self.ivf_nprobe}',
+            )
             index.nprobe = self.ivf_nprobe
 
         print('Writing the index to disk...')
