@@ -216,9 +216,9 @@ class FaissIndex:
 
         # Move the index to the GPU if available
         if not self.use_ivf:
-            self._move_index_to_gpus()
+            self.faiss_index = self._move_index_to_gpus(self.faiss_index)
 
-    def _move_index_to_gpus(self) -> None:
+    def _move_index_to_gpus(self, index: faiss.Index) -> faiss.Index:
         """Move the FAISS index to the specified GPUs."""
         if self.search_gpus is not None:
             # Handle single GPU
@@ -226,10 +226,12 @@ class FaissIndex:
                 self.search_gpus = [self.search_gpus]
 
             # Move the index to the specified GPUs
-            self.faiss_index = faiss.index_cpu_to_gpus_list(
-                self.faiss_index,
+            index = faiss.index_cpu_to_gpus_list(
+                index,
                 gpus=self.search_gpus,
             )
+
+        return index
 
     def _load_index_from_disk(self) -> faiss.Index:
         """Load the FAISS index from disk."""
@@ -292,7 +294,7 @@ class FaissIndex:
                     print('Moving the index to the GPUs for training')
 
                     # Move the index to the GPUs for training
-                    self._move_index_to_gpus()
+                    index = self._move_index_to_gpus(index)
 
                     print(
                         f'Training the index to cluster into cells '
