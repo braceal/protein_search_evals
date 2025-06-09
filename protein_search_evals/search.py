@@ -122,6 +122,9 @@ class FaissIndex:
         search_algorithm: str = 'exact',
         rescore_multiplier: int = 2,
         num_quantization_workers: int = 1,
+        use_ivf: bool = False,
+        ivf_nlist: int = 10_000,
+        ivf_nprobe: int = 10,
         search_gpus: int | list[int] | None = None,
         scale_mode: bool = False,
     ) -> None:
@@ -159,6 +162,12 @@ class FaissIndex:
         search_gpus : int | list[int], optional
             The list of GPUs to use for searching, by default None
             (uses CPU by default).
+         use_ivf : bool, optional
+            Whether to use IVF for the FAISS index, by default False.
+        ivf_nlist : int, optional
+            The number of clusters for the IVF index, by default 10_000.
+        ivf_nprobe : int, optional
+            The number of clusters to probe for each search, by default 10.
         scale_mode : bool, optional
             Whether to index the dataset by key or index first. If True,
             the dataset will be indexed by the index first so that the
@@ -175,6 +184,9 @@ class FaissIndex:
         self.search_algorithm = search_algorithm
         self.rescore_multiplier = rescore_multiplier
         self.num_workers = num_quantization_workers
+        self.use_ivf = use_ivf
+        self.ivf_nlist = ivf_nlist
+        self.ivf_nprobe = ivf_nprobe
         self.scale_mode = scale_mode
 
         # Validate the precision and search algorithm
@@ -220,7 +232,7 @@ class FaissIndex:
         else:
             return faiss.read_index_binary(str(self.faiss_index_path))
 
-    def _create_index(self) -> faiss.Index:
+    def _create_index(self) -> faiss.Index:  # noqa: PLR0912
         # Define the worker function for quantization
         func = functools.partial(quantize_dataset, precision=self.precision)
 
@@ -259,8 +271,21 @@ class FaissIndex:
 
         elif self.precision == 'ubinary':
             if self.search_algorithm == 'exact':
-                # Use exact search with the binary index
-                index = faiss.IndexBinaryFlat(embeddings.shape[1] * 8)
+                if self.use_ivf:
+                    # Use exact search with the binary index
+                    dimension = embeddings.shape[1] * 8
+                    quantizer = faiss.IndexBinaryFlat(dimension)
+                    index = faiss.IndexBinaryIVF(
+                        quantizer,
+                        dimension,
+                        self.ivf_nlist,
+                    )
+
+                    # Train the index to cluster into cells
+                    index.train(embeddings)
+                else:
+                    # Use exact search with the binary index
+                    index = faiss.IndexBinaryFlat(embeddings.shape[1] * 8)
             else:
                 # Use the HNSW algorithm for approximate search
                 index = faiss.IndexBinaryHNSW(embeddings.shape[1] * 8, 16)
@@ -269,6 +294,10 @@ class FaissIndex:
 
         # Add the embeddings to the index
         index.add(embeddings)
+
+        # If using IVF, set how many of nearest cells to search
+        if self.use_ivf:
+            index.nprobe = self.ivf_nprobe
 
         print('Writing the index to disk...')
 
