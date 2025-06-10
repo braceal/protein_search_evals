@@ -132,6 +132,7 @@ class FaissIndex:
         num_quantization_workers: int = 1,
         ivf_nlist: int = 512,
         ivf_nprobe: int = 8,
+        ivf_max_train_size: int = 1_000_000,
         search_gpus: int | list[int] | None = None,
         scale_mode: bool = False,
     ) -> None:
@@ -170,15 +171,18 @@ class FaissIndex:
             keep `top_k`, by default 2.
         num_quantization_workers : int, optional
             The number of quantization process workers, by default 1.
-        search_gpus : int | list[int], optional
-            The list of GPUs to use for searching, by default None
-            (uses CPU by default).
         ivf_nlist : int, optional
             The number of clusters for the IVF index, by default 512.
             Only used if `search_algorithm` is 'ivf'.
         ivf_nprobe : int, optional
             The number of clusters to probe for each search, by default 8.
             Only used if `search_algorithm` is 'ivf'.
+        ivf_max_train_size : int, optional
+            The maximum number of embeddings to use for training the IVF index,
+            by default 1_000_000. Only used if `search_algorithm` is 'ivf'.
+        search_gpus : int | list[int], optional
+            The list of GPUs to use for searching, by default None
+            (uses CPU by default).
         scale_mode : bool, optional
             Whether to index the dataset by key or index first. If True,
             the dataset will be indexed by the index first so that the
@@ -198,6 +202,7 @@ class FaissIndex:
         self.search_gpus = search_gpus
         self.ivf_nlist = ivf_nlist
         self.ivf_nprobe = ivf_nprobe
+        self.ivf_max_train_size = ivf_max_train_size
         self.scale_mode = scale_mode
 
         # Validate the precision and search algorithm
@@ -268,7 +273,7 @@ class FaissIndex:
         else:
             faiss.write_index_binary(index, str(self.faiss_index_path))
 
-    def _create_index(self) -> faiss.Index:
+    def _create_index(self) -> faiss.Index:  # noqa: PLR0912
         # Define the worker function for quantization
         func = functools.partial(quantize_dataset, precision=self.precision)
 
@@ -342,8 +347,25 @@ class FaissIndex:
                     f'nprobe={self.ivf_nprobe}...',
                 )
 
+                # Limit the number of embeddings used for training
+                train_size = min(len(embeddings), self.ivf_max_train_size)
+                if train_size < len(embeddings):
+                    print(
+                        f'Using {train_size:,} embeddings for training '
+                        f'(randomly sampled from {len(embeddings):,})',
+                    )
+                    # Randomly sample embeddings for training
+                    indices = np.random.choice(
+                        len(embeddings),
+                        size=train_size,
+                        replace=False,
+                    )
+                    train_embeddings = embeddings[indices]
+                else:
+                    train_embeddings = embeddings
+
                 # Train the index to cluster into cells
-                index.train(embeddings)
+                index.train(train_embeddings)
             else:
                 # Use the HNSW algorithm for approximate search
                 index = faiss.IndexBinaryHNSW(embeddings.shape[1] * 8, 16)
