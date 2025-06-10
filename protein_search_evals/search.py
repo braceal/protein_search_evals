@@ -323,19 +323,14 @@ class FaissIndex:
 
                 # Use exact search with the binary index for the quantizer
                 dim = embeddings.shape[1] * 8
-                quantizer = faiss.IndexBinaryFlat(dim, verbose=True)
+                quantizer = faiss.IndexBinaryFlat(dim)
 
                 # Move the quantizer to the GPUs
                 quantizer = self._move_index_to_gpus(quantizer)
 
                 # Create the index (note faiss does not support moving
                 # binary IVF indices to GPUs)
-                index = faiss.IndexBinaryIVF(
-                    quantizer,
-                    dim,
-                    self.ivf_nlist,
-                    verbose=True,
-                )
+                index = faiss.IndexBinaryIVF(quantizer, dim, self.ivf_nlist)
 
                 # Initialize the direct map for reconstruction
                 index.set_direct_map_type(faiss.DirectMap.Array)
