@@ -327,6 +327,9 @@ class FaissIndex:
                 # binary IVF indices to GPUs)
                 index = faiss.IndexBinaryIVF(quantizer, dim, self.ivf_nlist)
 
+                # Initialize the direct map for reconstruction
+                index.set_direct_map_type(faiss.DirectMap.Array)
+
                 # TODO: nprobe could be configured dynamically along
                 # with top_k
 
