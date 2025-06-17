@@ -263,17 +263,13 @@ class FaissIndex:
 
     def _write_index_to_disk(self, index: faiss.Index) -> None:
         """Save the FAISS index to disk."""
-        # The binary IVF index is not supported for saving to disk
-        if self.precision == 'ubinary' and self.search_algorithm == 'ivf':
-            print('Note: Binary IVF index does not support saving to disk...')
-            return None
-
         if self.precision in ('float32', 'uint8'):
             faiss.write_index(index, str(self.faiss_index_path))
         else:
             faiss.write_index_binary(index, str(self.faiss_index_path))
 
-    def _create_index(self) -> faiss.Index:  # noqa: PLR0912
+    def _load_quantized_embeddings(self) -> np.ndarray:
+        """Load the embeddings from disk and quantize them."""
         # Define the worker function for quantization
         func = functools.partial(quantize_dataset, precision=self.precision)
 
@@ -294,6 +290,14 @@ class FaissIndex:
             # Concatenate the quantized embeddings
             embeddings = np.concatenate(quantized_embeddings)
 
+        return embeddings
+
+    def _create_index(self) -> faiss.Index:
+        """Create the FAISS index."""
+        # Load the quantized embeddings
+        embeddings = self._load_quantized_embeddings()
+
+        # Print the index creation parameters
         print(
             f'Creating {self.precision} FAISS index using '
             f'{self.search_algorithm} search with embeddings '
@@ -324,9 +328,6 @@ class FaissIndex:
                 # Use exact search with the binary index for the quantizer
                 dim = embeddings.shape[1] * 8
                 quantizer = faiss.IndexBinaryFlat(dim)
-
-                # Move the quantizer to the GPUs
-                quantizer = self._move_index_to_gpus(quantizer)
 
                 # Create the index (note faiss does not support moving
                 # binary IVF indices to GPUs)
