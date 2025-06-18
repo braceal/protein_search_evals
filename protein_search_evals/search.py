@@ -366,7 +366,10 @@ class FaissIndex:
                     train_embeddings = embeddings
 
                 # Train the index to cluster into cells
+                t_start = time.perf_counter()
                 index.train(train_embeddings)
+                t_end = time.perf_counter()
+                print(f'Index training time: {t_end - t_start:.6f} seconds')
             else:
                 # Use the HNSW algorithm for approximate search
                 index = faiss.IndexBinaryHNSW(embeddings.shape[1] * 8, 16)
@@ -375,7 +378,10 @@ class FaissIndex:
 
         # Add the embeddings to the index
         print('Adding the embeddings to the index...')
+        t_start = time.perf_counter()
         index.add(embeddings)
+        t_end = time.perf_counter()
+        print(f'Vector addition time: {t_end - t_start:.6f} seconds')
 
         # Save the index to disk
         print('Writing the index to disk...')
