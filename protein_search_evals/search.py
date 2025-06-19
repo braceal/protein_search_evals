@@ -239,6 +239,11 @@ class FaissIndex:
         ):
             self.faiss_index = self._move_index_to_gpus(self.faiss_index)
 
+        # In the case of IVF index, set the nprobe value
+        if self.search_algorithm == 'ivf':
+            print(f'Setting FAISS index nprobe to {self.ivf_nprobe}')
+            self.faiss_index.nprobe = self.ivf_nprobe
+
     def _move_index_to_gpus(self, index: faiss.Index) -> faiss.Index:
         """Move the FAISS index to the specified GPUs."""
         if self.search_gpus is not None:
