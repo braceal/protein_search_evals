@@ -19,7 +19,7 @@ First, build the required indices using the `build_index.py` script:
 ```sh
 mkdir -p faiss_indices
 python build_index.py --npoints 1000000 --ivf_max_train_size 100000 --nlist 1024 --output faiss_indices/speed-test-1M-index.bin
-python build_index.py --npoints 10000000 --ivf_max_train_size 100000 --nlist 4096 --output faiss_indices/speed-test-10M-index.bin
+python build_index.py --npoints 10000000 --ivf_max_train_size 200000 --nlist 4096 --output faiss_indices/speed-test-10M-index.bin
 python build_index.py --npoints 100000000 --ivf_max_train_size 1000000 --nlist 16384 --output faiss_indices/speed-test-100M-index.bin
 python build_index.py --npoints 1000000000 --ivf_max_train_size 2000000 --nlist 32768 --output faiss_indices/speed-test-1B-index.bin
 ```
