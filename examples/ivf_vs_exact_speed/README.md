@@ -17,10 +17,11 @@ This section provides commands to benchmark search time as a function of `nprobe
 First, build the required indices using the `build_index.py` script:
 
 ```sh
-python build_index.py --npoints 1000000 --nlist 1024 --output speed-test-1M-index.bin
-python build_index.py --npoints 10000000 --nlist 4096 --output speed-test-10M-index.bin
-python build_index.py --npoints 100000000 --nlist 16384 --output speed-test-100M-index.bin
-python build_index.py --npoints 1000000000 --nlist 32768 --output speed-test-1B-index.bin
+mkdir -p faiss_indices
+python build_index.py --npoints 1000000 --nlist 1024 --output faiss_indices/speed-test-1M-index.bin
+python build_index.py --npoints 10000000 --nlist 4096 --output faiss_indices/speed-test-10M-index.bin
+python build_index.py --npoints 100000000 --nlist 16384 --output faiss_indices/speed-test-100M-index.bin
+python build_index.py --npoints 1000000000 --nlist 32768 --output faiss_indices/speed-test-1B-index.bin
 ```
 
 **Note:** The `nlist` parameter is set to the closest power of 2 to the square root of the number of points.
@@ -30,10 +31,10 @@ python build_index.py --npoints 1000000000 --nlist 32768 --output speed-test-1B-
 The speed test script automatically runs experiments for all nprobe values (1, 2, 4, 8, 16, 32, 64, 128, 256) and both n_queries values (1, 4402):
 
 ```sh
-python speed_test.py --index_path speed-test-1M-index.bin --size 1M --output_dir results
-python speed_test.py --index_path speed-test-10M-index.bin --size 10M --output_dir results
-python speed_test.py --index_path speed-test-100M-index.bin --size 100M --output_dir results
-python speed_test.py --index_path speed-test-1B-index.bin --size 1B --output_dir results
+python speed_test.py --index_path faiss_indices/speed-test-1M-index.bin --size 1M --output_dir results
+python speed_test.py --index_path faiss_indices/speed-test-10M-index.bin --size 10M --output_dir results
+python speed_test.py --index_path faiss_indices/speed-test-100M-index.bin --size 100M --output_dir results
+python speed_test.py --index_path faiss_indices/speed-test-1B-index.bin --size 1B --output_dir results
 ```
 
 Results will be saved to the `results/` directory with filenames like `results_size_1M_nprobe_16_nq_4402.json`.
