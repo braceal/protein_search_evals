@@ -18,13 +18,15 @@ First, build the required indices using the `build_index.py` script:
 
 ```sh
 mkdir -p faiss_indices
-python build_index.py --npoints 1000000 --nlist 1024 --output faiss_indices/speed-test-1M-index.bin
-python build_index.py --npoints 10000000 --nlist 4096 --output faiss_indices/speed-test-10M-index.bin
-python build_index.py --npoints 100000000 --nlist 16384 --output faiss_indices/speed-test-100M-index.bin
-python build_index.py --npoints 1000000000 --nlist 32768 --output faiss_indices/speed-test-1B-index.bin
+python build_index.py --npoints 1000000 --ivf_max_train_size 100000 --nlist 1024 --output faiss_indices/speed-test-1M-index.bin
+python build_index.py --npoints 10000000 --ivf_max_train_size 100000 --nlist 4096 --output faiss_indices/speed-test-10M-index.bin
+python build_index.py --npoints 100000000 --ivf_max_train_size 1000000 --nlist 16384 --output faiss_indices/speed-test-100M-index.bin
+python build_index.py --npoints 1000000000 --ivf_max_train_size 2000000 --nlist 32768 --output faiss_indices/speed-test-1B-index.bin
 ```
 
 **Note:** The `nlist` parameter is set to the closest power of 2 to the square root of the number of points.
+
+**Note:** The `ivf_max_train_size` parameter is set relatively small to make running the script faster.
 
 **Note:** The indices are saved in the `faiss_indices/` directory, but are not included in this repository,
 since they are too large.
