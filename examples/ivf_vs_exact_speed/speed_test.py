@@ -74,6 +74,7 @@ def run_search_experiment(
 
     mean_time = np.mean(search_times)
     std_time = np.std(search_times)
+    print(f'nprobe: {nprobe}, n_queries: {n_queries}, k: {k}')
     print(
         'Average search time over 5 runs: '
         f'{mean_time:.4f} ± {std_time:.4f} seconds',
