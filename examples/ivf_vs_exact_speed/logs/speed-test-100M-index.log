@@ -1,0 +1,128 @@
+Running search experiments for index: faiss_indices/speed-test-100M-index.bin
+Read index time: 103.9943 seconds
+Run 1: CPU binary IVF search: (1, 20), (1, 20), 0.0543 seconds
+Run 2: CPU binary IVF search: (1, 20), (1, 20), 0.0409 seconds
+Run 3: CPU binary IVF search: (1, 20), (1, 20), 0.0368 seconds
+Run 4: CPU binary IVF search: (1, 20), (1, 20), 0.0372 seconds
+Run 5: CPU binary IVF search: (1, 20), (1, 20), 0.0372 seconds
+nprobe: 1, n_queries: 1, k: 20
+Average search time over 5 runs: 0.0413 ± 0.0067 seconds
+Run 1: CPU binary IVF search: (1, 20), (1, 20), 0.0330 seconds
+Run 2: CPU binary IVF search: (1, 20), (1, 20), 0.0372 seconds
+Run 3: CPU binary IVF search: (1, 20), (1, 20), 0.0372 seconds
+Run 4: CPU binary IVF search: (1, 20), (1, 20), 0.0372 seconds
+Run 5: CPU binary IVF search: (1, 20), (1, 20), 0.0382 seconds
+nprobe: 2, n_queries: 1, k: 20
+Average search time over 5 runs: 0.0365 ± 0.0018 seconds
+Run 1: CPU binary IVF search: (1, 20), (1, 20), 0.0385 seconds
+Run 2: CPU binary IVF search: (1, 20), (1, 20), 0.0379 seconds
+Run 3: CPU binary IVF search: (1, 20), (1, 20), 0.0379 seconds
+Run 4: CPU binary IVF search: (1, 20), (1, 20), 0.0082 seconds
+Run 5: CPU binary IVF search: (1, 20), (1, 20), 0.0064 seconds
+nprobe: 4, n_queries: 1, k: 20
+Average search time over 5 runs: 0.0258 ± 0.0151 seconds
+Run 1: CPU binary IVF search: (1, 20), (1, 20), 0.0117 seconds
+Run 2: CPU binary IVF search: (1, 20), (1, 20), 0.0103 seconds
+Run 3: CPU binary IVF search: (1, 20), (1, 20), 0.0124 seconds
+Run 4: CPU binary IVF search: (1, 20), (1, 20), 0.0102 seconds
+Run 5: CPU binary IVF search: (1, 20), (1, 20), 0.0102 seconds
+nprobe: 8, n_queries: 1, k: 20
+Average search time over 5 runs: 0.0110 ± 0.0009 seconds
+Run 1: CPU binary IVF search: (1, 20), (1, 20), 0.0167 seconds
+Run 2: CPU binary IVF search: (1, 20), (1, 20), 0.0150 seconds
+Run 3: CPU binary IVF search: (1, 20), (1, 20), 0.0150 seconds
+Run 4: CPU binary IVF search: (1, 20), (1, 20), 0.0151 seconds
+Run 5: CPU binary IVF search: (1, 20), (1, 20), 0.0151 seconds
+nprobe: 16, n_queries: 1, k: 20
+Average search time over 5 runs: 0.0154 ± 0.0007 seconds
+Run 1: CPU binary IVF search: (1, 20), (1, 20), 0.0322 seconds
+Run 2: CPU binary IVF search: (1, 20), (1, 20), 0.0247 seconds
+Run 3: CPU binary IVF search: (1, 20), (1, 20), 0.0246 seconds
+Run 4: CPU binary IVF search: (1, 20), (1, 20), 0.0281 seconds
+Run 5: CPU binary IVF search: (1, 20), (1, 20), 0.0250 seconds
+nprobe: 32, n_queries: 1, k: 20
+Average search time over 5 runs: 0.0269 ± 0.0030 seconds
+Run 1: CPU binary IVF search: (1, 20), (1, 20), 0.0503 seconds
+Run 2: CPU binary IVF search: (1, 20), (1, 20), 0.0439 seconds
+Run 3: CPU binary IVF search: (1, 20), (1, 20), 0.0489 seconds
+Run 4: CPU binary IVF search: (1, 20), (1, 20), 0.0438 seconds
+Run 5: CPU binary IVF search: (1, 20), (1, 20), 0.0450 seconds
+nprobe: 64, n_queries: 1, k: 20
+Average search time over 5 runs: 0.0464 ± 0.0027 seconds
+Run 1: CPU binary IVF search: (1, 20), (1, 20), 0.1289 seconds
+Run 2: CPU binary IVF search: (1, 20), (1, 20), 0.0890 seconds
+Run 3: CPU binary IVF search: (1, 20), (1, 20), 0.0823 seconds
+Run 4: CPU binary IVF search: (1, 20), (1, 20), 0.0938 seconds
+Run 5: CPU binary IVF search: (1, 20), (1, 20), 0.0823 seconds
+nprobe: 128, n_queries: 1, k: 20
+Average search time over 5 runs: 0.0952 ± 0.0174 seconds
+Run 1: CPU binary IVF search: (1, 20), (1, 20), 0.2193 seconds
+Run 2: CPU binary IVF search: (1, 20), (1, 20), 0.2004 seconds
+Run 3: CPU binary IVF search: (1, 20), (1, 20), 0.1879 seconds
+Run 4: CPU binary IVF search: (1, 20), (1, 20), 0.1954 seconds
+Run 5: CPU binary IVF search: (1, 20), (1, 20), 0.1885 seconds
+nprobe: 256, n_queries: 1, k: 20
+Average search time over 5 runs: 0.1983 ± 0.0115 seconds
+Run 1: CPU binary IVF search: (4402, 20), (4402, 20), 0.6930 seconds
+Run 2: CPU binary IVF search: (4402, 20), (4402, 20), 1.6234 seconds
+Run 3: CPU binary IVF search: (4402, 20), (4402, 20), 2.8703 seconds
+Run 4: CPU binary IVF search: (4402, 20), (4402, 20), 1.6133 seconds
+Run 5: CPU binary IVF search: (4402, 20), (4402, 20), 0.5527 seconds
+nprobe: 1, n_queries: 4402, k: 20
+Average search time over 5 runs: 1.4705 ± 0.8307 seconds
+Run 1: CPU binary IVF search: (4402, 20), (4402, 20), 1.8608 seconds
+Run 2: CPU binary IVF search: (4402, 20), (4402, 20), 1.6913 seconds
+Run 3: CPU binary IVF search: (4402, 20), (4402, 20), 0.8100 seconds
+Run 4: CPU binary IVF search: (4402, 20), (4402, 20), 1.5636 seconds
+Run 5: CPU binary IVF search: (4402, 20), (4402, 20), 1.5566 seconds
+nprobe: 2, n_queries: 4402, k: 20
+Average search time over 5 runs: 1.4965 ± 0.3606 seconds
+Run 1: CPU binary IVF search: (4402, 20), (4402, 20), 4.3579 seconds
+Run 2: CPU binary IVF search: (4402, 20), (4402, 20), 2.6019 seconds
+Run 3: CPU binary IVF search: (4402, 20), (4402, 20), 1.7761 seconds
+Run 4: CPU binary IVF search: (4402, 20), (4402, 20), 2.3546 seconds
+Run 5: CPU binary IVF search: (4402, 20), (4402, 20), 2.9713 seconds
+nprobe: 4, n_queries: 4402, k: 20
+Average search time over 5 runs: 2.8124 ± 0.8650 seconds
+Run 1: CPU binary IVF search: (4402, 20), (4402, 20), 2.0072 seconds
+Run 2: CPU binary IVF search: (4402, 20), (4402, 20), 4.3103 seconds
+Run 3: CPU binary IVF search: (4402, 20), (4402, 20), 1.6758 seconds
+Run 4: CPU binary IVF search: (4402, 20), (4402, 20), 3.9332 seconds
+Run 5: CPU binary IVF search: (4402, 20), (4402, 20), 2.1990 seconds
+nprobe: 8, n_queries: 4402, k: 20
+Average search time over 5 runs: 2.8251 ± 1.0785 seconds
+Run 1: CPU binary IVF search: (4402, 20), (4402, 20), 2.9171 seconds
+Run 2: CPU binary IVF search: (4402, 20), (4402, 20), 2.4284 seconds
+Run 3: CPU binary IVF search: (4402, 20), (4402, 20), 2.5438 seconds
+Run 4: CPU binary IVF search: (4402, 20), (4402, 20), 2.5285 seconds
+Run 5: CPU binary IVF search: (4402, 20), (4402, 20), 2.7129 seconds
+nprobe: 16, n_queries: 4402, k: 20
+Average search time over 5 runs: 2.6261 ± 0.1718 seconds
+Run 1: CPU binary IVF search: (4402, 20), (4402, 20), 4.5556 seconds
+Run 2: CPU binary IVF search: (4402, 20), (4402, 20), 5.7107 seconds
+Run 3: CPU binary IVF search: (4402, 20), (4402, 20), 3.2879 seconds
+Run 4: CPU binary IVF search: (4402, 20), (4402, 20), 7.4257 seconds
+Run 5: CPU binary IVF search: (4402, 20), (4402, 20), 4.7872 seconds
+nprobe: 32, n_queries: 4402, k: 20
+Average search time over 5 runs: 5.1534 ± 1.3744 seconds
+Run 1: CPU binary IVF search: (4402, 20), (4402, 20), 5.6258 seconds
+Run 2: CPU binary IVF search: (4402, 20), (4402, 20), 6.8711 seconds
+Run 3: CPU binary IVF search: (4402, 20), (4402, 20), 7.4543 seconds
+Run 4: CPU binary IVF search: (4402, 20), (4402, 20), 7.0588 seconds
+Run 5: CPU binary IVF search: (4402, 20), (4402, 20), 6.9424 seconds
+nprobe: 64, n_queries: 4402, k: 20
+Average search time over 5 runs: 6.7905 ± 0.6163 seconds
+Run 1: CPU binary IVF search: (4402, 20), (4402, 20), 12.1670 seconds
+Run 2: CPU binary IVF search: (4402, 20), (4402, 20), 14.7225 seconds
+Run 3: CPU binary IVF search: (4402, 20), (4402, 20), 11.9466 seconds
+Run 4: CPU binary IVF search: (4402, 20), (4402, 20), 12.5284 seconds
+Run 5: CPU binary IVF search: (4402, 20), (4402, 20), 11.1874 seconds
+nprobe: 128, n_queries: 4402, k: 20
+Average search time over 5 runs: 12.5104 ± 1.1900 seconds
+Run 1: CPU binary IVF search: (4402, 20), (4402, 20), 20.1397 seconds
+Run 2: CPU binary IVF search: (4402, 20), (4402, 20), 20.9616 seconds
+Run 3: CPU binary IVF search: (4402, 20), (4402, 20), 22.9354 seconds
+Run 4: CPU binary IVF search: (4402, 20), (4402, 20), 21.5139 seconds
+Run 5: CPU binary IVF search: (4402, 20), (4402, 20), 20.4403 seconds
+nprobe: 256, n_queries: 4402, k: 20
+Average search time over 5 runs: 21.1982 ± 0.9867 seconds
