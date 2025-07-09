@@ -97,4 +97,5 @@ def main() -> None:
     elapsed = time.perf_counter() - start
     print(f'add time: {elapsed}')
 
+    print(f'Writing index to {args.output}')
     faiss.write_index_binary(cpu_idx, args.output)

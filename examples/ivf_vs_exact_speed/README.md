@@ -26,6 +26,9 @@ python build_index.py --npoints 1000000000 --nlist 32768 --output faiss_indices/
 
 **Note:** The `nlist` parameter is set to the closest power of 2 to the square root of the number of points.
 
+**Note:** The indices are saved in the `faiss_indices/` directory, but are not included in this repository,
+since they are too large.
+
 ## Run Benchmarks
 
 The speed test script automatically runs experiments for all nprobe values (1, 2, 4, 8, 16, 32, 64, 128, 256) and both n_queries values (1, 4402):
