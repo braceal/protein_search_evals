@@ -1,0 +1,9 @@
+{
+  "index_path": "faiss_indices/speed-test-10M-exact-index.bin",
+  "k": 100,
+  "n_queries": 4402,
+  "embedding_dim": 2560,
+  "mean_search_time": 423.2570368695539,
+  "std_search_time": 14.160369584723831,
+  "index_type": "exact"
+}
