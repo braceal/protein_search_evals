@@ -47,20 +47,27 @@ Results will be saved to the `results/` directory with filenames like `results_s
 
 ### Building Exact Index
 
-
-
 To build the exact index, run the following command:
 ```sh
 mkdir -p faiss_indices
-python build_exact_index.py --npoints 1000000 --output faiss_indices/speed-test-1M-exact-index.bin
-python build_exact_index.py --npoints 10000000 --output faiss_indices/speed-test-10M-exact-index.bin
-python build_exact_index.py --npoints 100000000 --output faiss_indices/speed-test-100M-exact-index.bin
-python build_exact_index.py --npoints 1000000000 --output faiss_indices/speed-test-1B-exact-index.bin
+python build_index_exact.py --npoints 1000000 --output faiss_indices/speed-test-1M-exact-index.bin
+python build_index_exact.py --npoints 10000000 --output faiss_indices/speed-test-10M-exact-index.bin
+python build_index_exact.py --npoints 100000000 --batch_size 5000000 --output faiss_indices/speed-test-100M-exact-index.bin
+python build_index_exact.py --npoints 1000000000 --batch_size 50000000 --output faiss_indices/speed-test-1B-exact-index.bin
 ```
 
 **Note:** The exact index is saved in the `faiss_indices/` directory, but is not included in this repository, since it is too large.
 
+### Run Benchmarks
 
+```sh
+python speed_test_exact.py --index_path faiss_indices/speed-test-1M-exact-index.bin --size 1M --output_dir results_exact
+python speed_test_exact.py --index_path faiss_indices/speed-test-10M-exact-index.bin --size 10M --output_dir results_exact
+python speed_test_exact.py --index_path faiss_indices/speed-test-100M-exact-index.bin --size 100M --output_dir results_exact
+python speed_test_exact.py --index_path faiss_indices/speed-test-1B-exact-index.bin --size 1B --output_dir results_exact
+```
+
+Results will be saved to the `results_exact/` directory with filenames like `results_exact_size_1M_k_1_nq_4402.json`.
 
 ## Plotting Results
 
