@@ -112,16 +112,16 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     # Run the search experiment for each k and n_queries value
-    for k in k_values:
-        for n_queries in n_queries_values:
-            # Generate random queries
-            xq = np.random.randint(
-                0,
-                256,
-                size=(n_queries, args.dim // 8),
-                dtype='uint8',
-            )
-
+    for n_queries in n_queries_values:
+        # Generate random queries
+        xq = np.random.randint(
+            0,
+            256,
+            size=(n_queries, args.dim // 8),
+            dtype='uint8',
+        )
+        # Put k values in the inner loop since they are faster to run
+        for k in k_values:
             # Set the output file name
             filename = (
                 f'results_exact_size_{args.size}_k_{k}_nq_{n_queries}.json'
