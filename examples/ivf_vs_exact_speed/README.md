@@ -2,9 +2,6 @@
 
 This directory contains scripts for benchmarking FAISS IVF search performance.
 
-## Benchmarking Search Time vs. nprobe
-
-This section provides commands to benchmark search time as a function of `nprobe` for two different values of `n_queries` (1 and 4402), with `k=20` for all runs, and for multiple index sizes. Each run saves its results to a separate JSON file for easy plotting.
 
 ## Index Sizes
 - 1M:   `speed-test-1M-index.bin`
@@ -12,7 +9,11 @@ This section provides commands to benchmark search time as a function of `nprobe
 - 100M: `speed-test-100M-index.bin`
 - 1B:   `speed-test-1B-index.bin`
 
-## Building Indices
+## Benchmarking Search Time vs. nprobe
+
+This section provides commands to benchmark search time as a function of `nprobe` for two different values of `n_queries` (1 and 4402), with `k=20` for all runs, and for multiple index sizes. Each run saves its results to a separate JSON file for easy plotting.
+
+### Building Indices
 
 First, build the required indices using the `build_index.py` script:
 
@@ -31,7 +32,7 @@ python build_index.py --npoints 1000000000 --ivf_max_train_size 2000000 --nlist 
 **Note:** The indices are saved in the `faiss_indices/` directory, but are not included in this repository,
 since they are too large.
 
-## Run Benchmarks
+### Run Benchmarks
 
 The speed test script automatically runs experiments for all nprobe values (1, 2, 4, 8, 16, 32, 64, 128, 256) and both n_queries values (1, 4402):
 
@@ -43,6 +44,23 @@ python speed_test.py --index_path faiss_indices/speed-test-1B-index.bin --size 1
 ```
 
 Results will be saved to the `results/` directory with filenames like `results_size_1M_nprobe_16_nq_4402.json`.
+
+### Building Exact Index
+
+
+
+To build the exact index, run the following command:
+```sh
+mkdir -p faiss_indices
+python build_exact_index.py --npoints 1000000 --output faiss_indices/speed-test-1M-exact-index.bin
+python build_exact_index.py --npoints 10000000 --output faiss_indices/speed-test-10M-exact-index.bin
+python build_exact_index.py --npoints 100000000 --output faiss_indices/speed-test-100M-exact-index.bin
+python build_exact_index.py --npoints 1000000000 --output faiss_indices/speed-test-1B-exact-index.bin
+```
+
+**Note:** The exact index is saved in the `faiss_indices/` directory, but is not included in this repository, since it is too large.
+
+
 
 ## Plotting Results
 
