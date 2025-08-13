@@ -66,6 +66,9 @@ class EsmCambrianEncoder(Encoder):
         # Set the model max length for proper truncation
         tokenizer.model_max_length = 2048
 
+        # Configure the pad token
+        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+
         # Get the embedding size from the model
         # ESM-Cambrian doesn't provide the embedding size in the config
         # so we need to set it manually based on the model
