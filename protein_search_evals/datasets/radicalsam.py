@@ -29,6 +29,7 @@ class RadicalSamDataset:
         data_dir: str | Path,
         partition: str,
         length_cutoff: int = 1022,
+        min_cluster_size: int = 2,
     ) -> None:
         """Initialize the Radical SAM dataset.
 
@@ -42,6 +43,9 @@ class RadicalSamDataset:
         length_cutoff : int, optional
             The maximum length of the sequences to include in the dataset,
             by default 1022.
+        min_cluster_size : int, optional
+            The minimum size of the clusters to include in the dataset,
+            by default 2.
         """
         # Check if the partition is valid
         if partition not in PARTITIONS:
@@ -53,6 +57,7 @@ class RadicalSamDataset:
         self._data_dir = Path(data_dir)
         self.partition = partition
         self.length_cutoff = length_cutoff
+        self.min_cluster_size = min_cluster_size
 
         # File containing all sequences from which the partitions are derived
         self._all_seqs_file = self._data_dir / 'RSS.2024_05.UniRef50.fasta'
@@ -143,6 +148,22 @@ class RadicalSamDataset:
             cluster: [x for x in uids if x in valid_uids]
             for cluster, uids in clusters.items()
         }
+
+        # Filter out clusters with fewer than 2 sequences
+        print('Filtering clusters by size (minimum 2 sequences)...')
+        original_cluster_count = len(clusters)
+        clusters = {  # type: ignore[assignment]
+            cluster: uids
+            for cluster, uids in clusters.items()
+            if len(uids) >= self.min_cluster_size
+        }
+        filtered_cluster_count = len(clusters)
+        removed_count = original_cluster_count - filtered_cluster_count
+        print(
+            f'Filtered from {original_cluster_count} to '
+            f'{filtered_cluster_count} clusters '
+            f'({removed_count} clusters removed)',
+        )
 
         # Save the clusters to disk
         print(f'Saving Radical SAM clusters to {self.clusters_path}')
