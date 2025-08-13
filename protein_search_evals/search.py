@@ -90,13 +90,14 @@ class FaissIndexConfig(BaseModel):
 
 
 class FaissIndex:
-    """FAISS index using sentence transformers.
+    """FAISS index using an extended version of sentence transformers.
 
     Supported FAISS indexes:
         - IndexFlatIP
         - IndexHNSWFlat
         - IndexBinaryFlat
         - IndexBinaryHNSW
+        - IndexBinaryIVF
 
     Supported embedding precision:
         - float32
@@ -104,13 +105,20 @@ class FaissIndex:
 
     Supported search algorithms:
         - exact
+        - ivf
         - hnsw
 
     If the FAISS index does not exist, it will be created and saved to disk.
+    Note: The binary IVF index is not supported for saving to disk, it is
+        recomputed each time the index is created.
+
     Supports parallel quantization of HF dataset chunks using a process pool.
 
     For more information, see:
     https://github.com/UKPLab/sentence-transformers/blob/master/examples/applications/embedding-quantization/semantic_search_faiss.py
+
+    For more information on Inverted File Index (IVF) search, see:
+    https://www.pinecone.io/learn/series/faiss/vector-indexes/
     """
 
     def __init__(
@@ -122,6 +130,9 @@ class FaissIndex:
         search_algorithm: str = 'exact',
         rescore_multiplier: int = 2,
         num_quantization_workers: int = 1,
+        ivf_nlist: int = 512,
+        ivf_nprobe: int = 8,
+        ivf_max_train_size: int = 1_000_000,
         search_gpus: int | list[int] | None = None,
         scale_mode: bool = False,
     ) -> None:
@@ -149,13 +160,26 @@ class FaissIndex:
             format, which is more memory efficient than 'float32'.
         search_algorithm : str, optional
             Whether to use exact search or approximate FAISS search,
-            by default 'exact'. Supported options are 'exact' and 'hnsw'.
+            by default 'exact'. Supported options are 'exact', 'ivf', and
+            'hnsw'. 'ivf' is only supported for 'ubinary' embeddings. If
+            'ivf' is used, the index will be trained to cluster into
+            `ivf_nlist` clusters with `ivf_nprobe` clusters probed for
+            each search.
         rescore_multiplier : int, optional
             Oversampling factor for rescoring. The code will now search
             `top_k * rescore_multiplier` samples and then rescore to only
             keep `top_k`, by default 2.
         num_quantization_workers : int, optional
             The number of quantization process workers, by default 1.
+        ivf_nlist : int, optional
+            The number of clusters for the IVF index, by default 512.
+            Only used if `search_algorithm` is 'ivf'.
+        ivf_nprobe : int, optional
+            The number of clusters to probe for each search, by default 8.
+            Only used if `search_algorithm` is 'ivf'.
+        ivf_max_train_size : int, optional
+            The maximum number of embeddings to use for training the IVF index,
+            by default 1_000_000. Only used if `search_algorithm` is 'ivf'.
         search_gpus : int | list[int], optional
             The list of GPUs to use for searching, by default None
             (uses CPU by default).
@@ -175,6 +199,10 @@ class FaissIndex:
         self.search_algorithm = search_algorithm
         self.rescore_multiplier = rescore_multiplier
         self.num_workers = num_quantization_workers
+        self.search_gpus = search_gpus
+        self.ivf_nlist = ivf_nlist
+        self.ivf_nprobe = ivf_nprobe
+        self.ivf_max_train_size = ivf_max_train_size
         self.scale_mode = scale_mode
 
         # Validate the precision and search algorithm
@@ -183,10 +211,14 @@ class FaissIndex:
                 f'Invalid precision {precision}. '
                 'Options: ["float32" and "ubinary"]',
             )
-        if self.search_algorithm not in ('exact', 'hnsw'):
+        if self.search_algorithm not in ('exact', 'ivf', 'hnsw'):
             raise ValueError(
                 f'Invalid search_algorithm {search_algorithm}. '
-                'Options: ["exact" and "hnsw"]',
+                'Options: ["exact", "ivf", and "hnsw"]',
+            )
+        if self.search_algorithm == 'ivf' and self.precision == 'float32':
+            raise NotImplementedError(
+                'IVF is not currently supported for float32 embeddings',
             )
 
         # Load the dataset from disk and set format to numpy
@@ -196,31 +228,53 @@ class FaissIndex:
         # Initialize the FAISS index
         if self.faiss_index_path.exists():
             print(f'Loading FAISS index from {self.faiss_index_path}')
-            self.faiss_index = self._load_index_from_disk()
+            self.faiss_index = self._read_index_from_disk()
         else:
             print(f'Creating FAISS index at {self.faiss_index_path}')
             self.faiss_index = self._create_index()
 
         # Move the index to the GPU if available
-        if search_gpus is not None:
+        if not (
+            self.search_algorithm == 'ivf' and self.precision == 'ubinary'
+        ):
+            self.faiss_index = self._move_index_to_gpus(self.faiss_index)
+
+        # In the case of IVF index, set the nprobe value
+        if self.search_algorithm == 'ivf':
+            print(f'Setting FAISS index nprobe to {self.ivf_nprobe}')
+            self.faiss_index.nprobe = self.ivf_nprobe
+
+    def _move_index_to_gpus(self, index: faiss.Index) -> faiss.Index:
+        """Move the FAISS index to the specified GPUs."""
+        if self.search_gpus is not None:
             # Handle single GPU
-            if isinstance(search_gpus, int):
-                search_gpus = [search_gpus]
+            if isinstance(self.search_gpus, int):
+                self.search_gpus = [self.search_gpus]
 
             # Move the index to the specified GPUs
-            self.faiss_index = faiss.index_cpu_to_gpus_list(
-                self.faiss_index,
-                gpus=search_gpus,
+            index = faiss.index_cpu_to_gpus_list(
+                index,
+                gpus=self.search_gpus,
             )
 
-    def _load_index_from_disk(self) -> faiss.Index:
+        return index
+
+    def _read_index_from_disk(self) -> faiss.Index:
         """Load the FAISS index from disk."""
         if self.precision in ('float32', 'uint8'):
             return faiss.read_index(str(self.faiss_index_path))
         else:
             return faiss.read_index_binary(str(self.faiss_index_path))
 
-    def _create_index(self) -> faiss.Index:
+    def _write_index_to_disk(self, index: faiss.Index) -> None:
+        """Save the FAISS index to disk."""
+        if self.precision in ('float32', 'uint8'):
+            faiss.write_index(index, str(self.faiss_index_path))
+        else:
+            faiss.write_index_binary(index, str(self.faiss_index_path))
+
+    def _load_quantized_embeddings(self) -> np.ndarray:
+        """Load the embeddings from disk and quantize them."""
         # Define the worker function for quantization
         func = functools.partial(quantize_dataset, precision=self.precision)
 
@@ -241,18 +295,30 @@ class FaissIndex:
             # Concatenate the quantized embeddings
             embeddings = np.concatenate(quantized_embeddings)
 
+        return embeddings
+
+    def _create_index(self) -> faiss.Index:
+        """Create the FAISS index."""
+        # Load the quantized embeddings
+        embeddings = self._load_quantized_embeddings()
+
+        # Print the index creation parameters
         print(
             f'Creating {self.precision} FAISS index using '
             f'{self.search_algorithm} search with embeddings '
             f'shape: {embeddings.shape}',
         )
 
-        # Build the FAISS index (logic borrowed from
+        # Build the FAISS index (logic adapted from
         # sentence_transformers.quantization.semantic_search_faiss)
         if self.precision in ('float32', 'uint8'):
             if self.search_algorithm == 'exact':
                 # Use the inner product similarity for float32
                 index = faiss.IndexFlatIP(embeddings.shape[1])
+            elif self.search_algorithm == 'ivf':
+                raise NotImplementedError(
+                    'IVF is not currently supported for float32 embeddings',
+                )
             else:
                 # Use the HNSW algorithm for approximate search
                 index = faiss.IndexHNSWFlat(embeddings.shape[1], 16)
@@ -261,6 +327,54 @@ class FaissIndex:
             if self.search_algorithm == 'exact':
                 # Use exact search with the binary index
                 index = faiss.IndexBinaryFlat(embeddings.shape[1] * 8)
+            elif self.search_algorithm == 'ivf':
+                print('Using IndexBinaryIVF FAISS index')
+
+                # Use exact search with the binary index for the quantizer
+                dim = embeddings.shape[1] * 8
+                quantizer = faiss.IndexBinaryFlat(dim)
+
+                # Create the index (note faiss does not support moving
+                # binary IVF indices to GPUs)
+                index = faiss.IndexBinaryIVF(quantizer, dim, self.ivf_nlist)
+
+                # Initialize the direct map for reconstruction
+                index.set_direct_map_type(faiss.DirectMap.Array)
+
+                # TODO: nprobe could be configured dynamically along
+                # with top_k
+
+                # Set the number of nearest cells/clusters to search
+                index.nprobe = self.ivf_nprobe
+
+                print(
+                    f'Training IndexBinaryIVF to cluster into '
+                    f'{self.ivf_nlist} cells with '
+                    f'nprobe={self.ivf_nprobe}...',
+                )
+
+                # Limit the number of embeddings used for training
+                train_size = min(len(embeddings), self.ivf_max_train_size)
+                if train_size < len(embeddings):
+                    print(
+                        f'Using {train_size:,} embeddings for training '
+                        f'(randomly sampled from {len(embeddings):,})',
+                    )
+                    # Randomly sample embeddings for training
+                    indices = np.random.choice(
+                        len(embeddings),
+                        size=train_size,
+                        replace=False,
+                    )
+                    train_embeddings = embeddings[indices]
+                else:
+                    train_embeddings = embeddings
+
+                # Train the index to cluster into cells
+                t_start = time.perf_counter()
+                index.train(train_embeddings)
+                t_end = time.perf_counter()
+                print(f'Index training time: {t_end - t_start:.6f} seconds')
             else:
                 # Use the HNSW algorithm for approximate search
                 index = faiss.IndexBinaryHNSW(embeddings.shape[1] * 8, 16)
@@ -268,15 +382,15 @@ class FaissIndex:
             raise ValueError(f'Invalid precision {self.precision}')
 
         # Add the embeddings to the index
+        print('Adding the embeddings to the index...')
+        t_start = time.perf_counter()
         index.add(embeddings)
-
-        print('Writing the index to disk...')
+        t_end = time.perf_counter()
+        print(f'Vector addition time: {t_end - t_start:.6f} seconds')
 
         # Save the index to disk
-        if self.precision in ('float32', 'uint8'):
-            faiss.write_index(index, str(self.faiss_index_path))
-        else:
-            faiss.write_index_binary(index, str(self.faiss_index_path))
+        print('Writing the index to disk...')
+        self._write_index_to_disk(index)
 
         return index
 

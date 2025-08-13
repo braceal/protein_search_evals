@@ -1,0 +1,9 @@
+{
+  "index_path": "faiss_indices/speed-test-1M-index.bin",
+  "nprobe": 16,
+  "k": 20,
+  "n_queries": 4402,
+  "embedding_dim": 2560,
+  "mean_search_time": 2.707038239017129,
+  "std_search_time": 1.2490448047652554
+}
