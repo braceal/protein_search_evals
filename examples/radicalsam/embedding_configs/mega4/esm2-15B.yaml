@@ -9,7 +9,7 @@ glob_patterns:
   - "*.fasta"
 
 # Whether to store the token embeddings.
-store_token_embeddings: true
+store_token_embeddings: false
 token_embedding_buffer_size: 50_000
 
 # Configuration for the encoder.
@@ -24,6 +24,8 @@ encoder_config:
   normalize_pooled_embeddings: true
   # The batch size to use for embedding
   dataloader_batch_size: 1
+  # Set verbose to true to see the progress bar
+  verbose: true
 
 # Compute settings can be configured by referring to protein_search_evals/parsl.py
 # The `name` field specifies what type of system to run on and the subsequent

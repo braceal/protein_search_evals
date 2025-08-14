@@ -18,6 +18,8 @@ pip install faiss-gpu-cu12
 
 For ESMC, you can install the following packages and model weights:
 ```bash
+pip uninstall transformers
+pip install 'transformers<4.48.2'
 pip install esm
 pip install "huggingface_hub[hf_transfer]"
 HF_HUB_ENABLE_HF_TRANSFER=1 huggingface-cli download EvolutionaryScale/esmc-300m-2024-12

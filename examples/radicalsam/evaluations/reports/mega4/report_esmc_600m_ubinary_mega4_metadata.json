@@ -1,8 +1,8 @@
 {
   "name": "",
-  "sequence_level_mean_accuracy": 0.9426371989073752,
-  "cluster_level_mean_accuracy": 0.6114204662470444,
-  "cluster_level_median_accuracy": 0.9247787610619469,
+  "sequence_level_mean_accuracy": 0.9430773054934128,
+  "cluster_level_mean_accuracy": 0.7918149824490806,
+  "cluster_level_median_accuracy": 0.9349397590361446,
   "precision": "ubinary",
   "model": "esmc_600m",
   "model_directory": "examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4",
