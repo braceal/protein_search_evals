@@ -265,6 +265,48 @@ EvaluationMetadata(
 	Dataset: data/radicalsam
 	Index Path: examples/radicalsam/embeddings/all/esmc-600M_radicalsam_all/ubinary-faiss.index
 )
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/all/prottrans_radicalsam_all, precision: float32, partition: all
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/all/prottrans_radicalsam_all/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (87276, 1024)
+Writing the index to disk...
+Search time: 1.509767 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.97%
+	Cluster-level mean Accuracy: 97.56%
+	Cluster-level median Accuracy: 98.14%
+	Precision: float32
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/all/prottrans_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/prottrans_radicalsam_all/float32-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/all/prottrans_radicalsam_all, precision: ubinary, partition: all
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/all/prottrans_radicalsam_all/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (87276, 128)
+Writing the index to disk...
+Search time: 8.887040 seconds
+Retrieved 87276 results
+Loading Radical SAM sequences from data/radicalsam/all/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Loading Radical SAM clusters from data/radicalsam/all/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.96%
+	Cluster-level mean Accuracy: 97.66%
+	Cluster-level median Accuracy: 98.18%
+	Precision: ubinary
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/all/prottrans_radicalsam_all
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/all/prottrans_radicalsam_all/ubinary-faiss.index
+)
 Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega2/esm2-8M_radicalsam_mega2, precision: float32, partition: mega2
 Creating FAISS index at examples/radicalsam/embeddings/mega2/esm2-8M_radicalsam_mega2/float32-faiss.index
 Creating float32 FAISS index using exact search with embeddings shape: (33644, 320)
@@ -552,6 +594,48 @@ EvaluationMetadata(
 	Dataset: data/radicalsam
 	Index Path: examples/radicalsam/embeddings/mega2/esmc-600M_radicalsam_mega2/ubinary-faiss.index
 )
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2, precision: float32, partition: mega2
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (33644, 1024)
+Writing the index to disk...
+Search time: 0.327259 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.56%
+	Cluster-level mean Accuracy: 99.16%
+	Cluster-level median Accuracy: 99.45%
+	Precision: float32
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2/float32-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2, precision: ubinary, partition: mega2
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (33644, 128)
+Writing the index to disk...
+Search time: 2.701477 seconds
+Retrieved 33644 results
+Loading Radical SAM sequences from data/radicalsam/mega2/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega2/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.58%
+	Cluster-level mean Accuracy: 99.22%
+	Cluster-level median Accuracy: 99.47%
+	Precision: ubinary
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega2/prottrans_radicalsam_mega2/ubinary-faiss.index
+)
 Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega3/esm2-8M_radicalsam_mega3, precision: float32, partition: mega3
 Creating FAISS index at examples/radicalsam/embeddings/mega3/esm2-8M_radicalsam_mega3/float32-faiss.index
 Creating float32 FAISS index using exact search with embeddings shape: (7472, 320)
@@ -838,20 +922,64 @@ EvaluationMetadata(
 	Dataset: data/radicalsam
 	Index Path: examples/radicalsam/embeddings/mega3/esmc-600M_radicalsam_mega3/ubinary-faiss.index
 )
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3, precision: float32, partition: mega3
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (7472, 1024)
+Writing the index to disk...
+Search time: 0.045870 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 98.10%
+	Cluster-level mean Accuracy: 86.64%
+	Cluster-level median Accuracy: 97.91%
+	Precision: float32
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3/float32-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3, precision: ubinary, partition: mega3
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (7472, 128)
+Writing the index to disk...
+Search time: 0.554319 seconds
+Retrieved 7472 results
+Loading Radical SAM sequences from data/radicalsam/mega3/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega3/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.90%
+	Cluster-level mean Accuracy: 86.05%
+	Cluster-level median Accuracy: 97.65%
+	Precision: ubinary
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega3/prottrans_radicalsam_mega3/ubinary-faiss.index
+)
 Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4, precision: float32, partition: mega4
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4/float32-faiss.index
-Creating float32 FAISS index using exact search with embeddings shape: (4027, 320)
+Creating float32 FAISS index using exact search with embeddings shape: (4023, 320)
+Adding the embeddings to the index...
+Vector addition time: 0.011199 seconds
 Writing the index to disk...
-Search time: 0.019049 seconds
-Retrieved 4027 results
+Search time: 0.117401 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 77.33%
-	Cluster-level mean Accuracy: 50.37%
-	Cluster-level median Accuracy: 66.75%
+	Sequence-level mean Accuracy: 77.58%
+	Cluster-level mean Accuracy: 65.96%
+	Cluster-level median Accuracy: 67.70%
 	Precision: float32
 	Model: facebook/esm2_t6_8M_UR50D
 	Model Directory: examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4
@@ -860,18 +988,20 @@ EvaluationMetadata(
 )
 Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4, precision: ubinary, partition: mega4
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4/ubinary-faiss.index
-Creating ubinary FAISS index using exact search with embeddings shape: (4027, 40)
+Creating ubinary FAISS index using exact search with embeddings shape: (4023, 40)
+Adding the embeddings to the index...
+Vector addition time: 0.001011 seconds
 Writing the index to disk...
-Search time: 0.298579 seconds
-Retrieved 4027 results
+Search time: 0.265098 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 71.52%
-	Cluster-level mean Accuracy: 46.60%
-	Cluster-level median Accuracy: 59.26%
+	Sequence-level mean Accuracy: 71.79%
+	Cluster-level mean Accuracy: 61.77%
+	Cluster-level median Accuracy: 60.48%
 	Precision: ubinary
 	Model: facebook/esm2_t6_8M_UR50D
 	Model Directory: examples/radicalsam/embeddings/mega4/esm2-8M_radicalsam_mega4
@@ -880,18 +1010,20 @@ EvaluationMetadata(
 )
 Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4, precision: float32, partition: mega4
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4/float32-faiss.index
-Creating float32 FAISS index using exact search with embeddings shape: (4027, 480)
+Creating float32 FAISS index using exact search with embeddings shape: (4023, 480)
+Adding the embeddings to the index...
+Vector addition time: 0.005847 seconds
 Writing the index to disk...
-Search time: 0.019272 seconds
-Retrieved 4027 results
+Search time: 0.022622 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 86.96%
-	Cluster-level mean Accuracy: 57.22%
-	Cluster-level median Accuracy: 81.20%
+	Sequence-level mean Accuracy: 87.25%
+	Cluster-level mean Accuracy: 74.74%
+	Cluster-level median Accuracy: 84.85%
 	Precision: float32
 	Model: facebook/esm2_t12_35M_UR50D
 	Model Directory: examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4
@@ -900,18 +1032,20 @@ EvaluationMetadata(
 )
 Running evaluation with model: facebook/esm2_t12_35M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4, precision: ubinary, partition: mega4
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4/ubinary-faiss.index
-Creating ubinary FAISS index using exact search with embeddings shape: (4027, 60)
+Creating ubinary FAISS index using exact search with embeddings shape: (4023, 60)
+Adding the embeddings to the index...
+Vector addition time: 0.000076 seconds
 Writing the index to disk...
-Search time: 0.314718 seconds
-Retrieved 4027 results
+Search time: 0.277173 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 85.15%
-	Cluster-level mean Accuracy: 52.21%
-	Cluster-level median Accuracy: 75.42%
+	Sequence-level mean Accuracy: 85.56%
+	Cluster-level mean Accuracy: 72.49%
+	Cluster-level median Accuracy: 81.45%
 	Precision: ubinary
 	Model: facebook/esm2_t12_35M_UR50D
 	Model Directory: examples/radicalsam/embeddings/mega4/esm2-35M_radicalsam_mega4
@@ -920,18 +1054,20 @@ EvaluationMetadata(
 )
 Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4, precision: float32, partition: mega4
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4/float32-faiss.index
-Creating float32 FAISS index using exact search with embeddings shape: (4027, 640)
+Creating float32 FAISS index using exact search with embeddings shape: (4023, 640)
+Adding the embeddings to the index...
+Vector addition time: 0.006239 seconds
 Writing the index to disk...
-Search time: 0.026463 seconds
-Retrieved 4027 results
+Search time: 0.027273 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 90.76%
-	Cluster-level mean Accuracy: 62.42%
-	Cluster-level median Accuracy: 85.78%
+	Sequence-level mean Accuracy: 91.05%
+	Cluster-level mean Accuracy: 81.72%
+	Cluster-level median Accuracy: 92.07%
 	Precision: float32
 	Model: facebook/esm2_t30_150M_UR50D
 	Model Directory: examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4
@@ -940,18 +1076,20 @@ EvaluationMetadata(
 )
 Running evaluation with model: facebook/esm2_t30_150M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4, precision: ubinary, partition: mega4
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4/ubinary-faiss.index
-Creating ubinary FAISS index using exact search with embeddings shape: (4027, 80)
+Creating ubinary FAISS index using exact search with embeddings shape: (4023, 80)
+Adding the embeddings to the index...
+Vector addition time: 0.000213 seconds
 Writing the index to disk...
-Search time: 0.273223 seconds
-Retrieved 4027 results
+Search time: 0.285489 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 89.97%
-	Cluster-level mean Accuracy: 60.69%
-	Cluster-level median Accuracy: 81.69%
+	Sequence-level mean Accuracy: 89.98%
+	Cluster-level mean Accuracy: 78.66%
+	Cluster-level median Accuracy: 86.64%
 	Precision: ubinary
 	Model: facebook/esm2_t30_150M_UR50D
 	Model Directory: examples/radicalsam/embeddings/mega4/esm2-150M_radicalsam_mega4
@@ -960,18 +1098,20 @@ EvaluationMetadata(
 )
 Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4, precision: float32, partition: mega4
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4/float32-faiss.index
-Creating float32 FAISS index using exact search with embeddings shape: (4027, 1280)
+Creating float32 FAISS index using exact search with embeddings shape: (4023, 1280)
+Adding the embeddings to the index...
+Vector addition time: 0.005590 seconds
 Writing the index to disk...
-Search time: 0.034709 seconds
-Retrieved 4027 results
+Search time: 0.035396 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 95.43%
-	Cluster-level mean Accuracy: 66.75%
-	Cluster-level median Accuracy: 93.39%
+	Sequence-level mean Accuracy: 95.53%
+	Cluster-level mean Accuracy: 87.50%
+	Cluster-level median Accuracy: 95.90%
 	Precision: float32
 	Model: facebook/esm2_t33_650M_UR50D
 	Model Directory: examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4
@@ -980,18 +1120,20 @@ EvaluationMetadata(
 )
 Running evaluation with model: facebook/esm2_t33_650M_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4, precision: ubinary, partition: mega4
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4/ubinary-faiss.index
-Creating ubinary FAISS index using exact search with embeddings shape: (4027, 160)
+Creating ubinary FAISS index using exact search with embeddings shape: (4023, 160)
+Adding the embeddings to the index...
+Vector addition time: 0.000493 seconds
 Writing the index to disk...
-Search time: 0.335260 seconds
-Retrieved 4027 results
+Search time: 0.361282 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 96.13%
-	Cluster-level mean Accuracy: 64.79%
-	Cluster-level median Accuracy: 95.18%
+	Sequence-level mean Accuracy: 96.20%
+	Cluster-level mean Accuracy: 84.91%
+	Cluster-level median Accuracy: 95.83%
 	Precision: ubinary
 	Model: facebook/esm2_t33_650M_UR50D
 	Model Directory: examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4
@@ -999,21 +1141,22 @@ EvaluationMetadata(
 	Index Path: examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4/ubinary-faiss.index
 )
 Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4, precision: float32, partition: mega4
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.15it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.51it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.23it/s]
-Error during conversion: ChunkedEncodingError(ProtocolError('Response ended prematurely'))
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.22it/s]
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4/float32-faiss.index
-Creating float32 FAISS index using exact search with embeddings shape: (4027, 2560)
+Creating float32 FAISS index using exact search with embeddings shape: (4023, 2560)
+Adding the embeddings to the index...
+Vector addition time: 0.036642 seconds
 Writing the index to disk...
-Search time: 0.047869 seconds
-Retrieved 4027 results
+Search time: 0.050727 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 98.04%
-	Cluster-level mean Accuracy: 68.73%
-	Cluster-level median Accuracy: 96.97%
+	Sequence-level mean Accuracy: 98.16%
+	Cluster-level mean Accuracy: 90.05%
+	Cluster-level median Accuracy: 98.31%
 	Precision: float32
 	Model: facebook/esm2_t36_3B_UR50D
 	Model Directory: examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4
@@ -1021,20 +1164,22 @@ EvaluationMetadata(
 	Index Path: examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4/float32-faiss.index
 )
 Running evaluation with model: facebook/esm2_t36_3B_UR50D, model_dir: examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4, precision: ubinary, partition: mega4
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.15it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.21it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  4.01it/s]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.11it/s]
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4/ubinary-faiss.index
-Creating ubinary FAISS index using exact search with embeddings shape: (4027, 320)
+Creating ubinary FAISS index using exact search with embeddings shape: (4023, 320)
+Adding the embeddings to the index...
+Vector addition time: 0.000356 seconds
 Writing the index to disk...
-Search time: 0.489694 seconds
-Retrieved 4027 results
+Search time: 0.538604 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 98.53%
-	Cluster-level mean Accuracy: 69.39%
-	Cluster-level median Accuracy: 98.31%
+	Sequence-level mean Accuracy: 98.73%
+	Cluster-level mean Accuracy: 91.18%
+	Cluster-level median Accuracy: 98.89%
 	Precision: ubinary
 	Model: facebook/esm2_t36_3B_UR50D
 	Model Directory: examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4
@@ -1042,20 +1187,22 @@ EvaluationMetadata(
 	Index Path: examples/radicalsam/embeddings/mega4/esm2-3B_radicalsam_mega4/ubinary-faiss.index
 )
 Running evaluation with model: esmc_300m, model_dir: examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4, precision: float32, partition: mega4
-Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 56871.92it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 121.57it/s]
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4/float32-faiss.index
-Creating float32 FAISS index using exact search with embeddings shape: (4027, 960)
+Creating float32 FAISS index using exact search with embeddings shape: (4023, 960)
+Adding the embeddings to the index...
+Vector addition time: 0.004155 seconds
 Writing the index to disk...
-Search time: 0.021335 seconds
-Retrieved 4027 results
+Search time: 0.020750 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 92.05%
-	Cluster-level mean Accuracy: 62.03%
-	Cluster-level median Accuracy: 89.16%
+	Sequence-level mean Accuracy: 91.77%
+	Cluster-level mean Accuracy: 76.33%
+	Cluster-level median Accuracy: 91.28%
 	Precision: float32
 	Model: esmc_300m
 	Model Directory: examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4
@@ -1063,20 +1210,22 @@ EvaluationMetadata(
 	Index Path: examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4/float32-faiss.index
 )
 Running evaluation with model: esmc_300m, model_dir: examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4, precision: ubinary, partition: mega4
-Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 64527.75it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 73584.28it/s]
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4/ubinary-faiss.index
-Creating ubinary FAISS index using exact search with embeddings shape: (4027, 120)
+Creating ubinary FAISS index using exact search with embeddings shape: (4023, 120)
+Adding the embeddings to the index...
+Vector addition time: 0.000387 seconds
 Writing the index to disk...
-Search time: 0.298876 seconds
-Retrieved 4027 results
+Search time: 0.316421 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 94.81%
-	Cluster-level mean Accuracy: 67.34%
-	Cluster-level median Accuracy: 93.81%
+	Sequence-level mean Accuracy: 94.51%
+	Cluster-level mean Accuracy: 79.61%
+	Cluster-level median Accuracy: 94.70%
 	Precision: ubinary
 	Model: esmc_300m
 	Model Directory: examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4
@@ -1084,20 +1233,22 @@ EvaluationMetadata(
 	Index Path: examples/radicalsam/embeddings/mega4/esmc-300M_radicalsam_mega4/ubinary-faiss.index
 )
 Running evaluation with model: esmc_600m, model_dir: examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4, precision: float32, partition: mega4
-Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 42048.16it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 25771.45it/s]
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4/float32-faiss.index
-Creating float32 FAISS index using exact search with embeddings shape: (4027, 1152)
+Creating float32 FAISS index using exact search with embeddings shape: (4023, 1152)
+Adding the embeddings to the index...
+Vector addition time: 0.005903 seconds
 Writing the index to disk...
-Search time: 0.022019 seconds
-Retrieved 4027 results
+Search time: 0.023598 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 89.60%
-	Cluster-level mean Accuracy: 57.92%
-	Cluster-level median Accuracy: 84.62%
+	Sequence-level mean Accuracy: 90.41%
+	Cluster-level mean Accuracy: 76.35%
+	Cluster-level median Accuracy: 90.12%
 	Precision: float32
 	Model: esmc_600m
 	Model Directory: examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4
@@ -1105,25 +1256,73 @@ EvaluationMetadata(
 	Index Path: examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4/float32-faiss.index
 )
 Running evaluation with model: esmc_600m, model_dir: examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4, precision: ubinary, partition: mega4
-Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 62836.01it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 55738.26it/s]
 Creating FAISS index at examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4/ubinary-faiss.index
-Creating ubinary FAISS index using exact search with embeddings shape: (4027, 144)
+Creating ubinary FAISS index using exact search with embeddings shape: (4023, 144)
+Adding the embeddings to the index...
+Vector addition time: 0.000175 seconds
 Writing the index to disk...
-Search time: 0.306934 seconds
-Retrieved 4027 results
+Search time: 0.340983 seconds
+Retrieved 4023 results
 Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
 Evaluation Summary:
 EvaluationMetadata(
-	Sequence-level mean Accuracy: 94.26%
-	Cluster-level mean Accuracy: 61.14%
-	Cluster-level median Accuracy: 92.48%
+	Sequence-level mean Accuracy: 94.31%
+	Cluster-level mean Accuracy: 79.18%
+	Cluster-level median Accuracy: 93.49%
 	Precision: ubinary
 	Model: esmc_600m
 	Model Directory: examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4
 	Dataset: data/radicalsam
 	Index Path: examples/radicalsam/embeddings/mega4/esmc-600M_radicalsam_mega4/ubinary-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4, precision: float32, partition: mega4
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (4023, 1024)
+Adding the embeddings to the index...
+Vector addition time: 0.004797 seconds
+Writing the index to disk...
+Search time: 0.023174 seconds
+Retrieved 4023 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.81%
+	Cluster-level mean Accuracy: 89.92%
+	Cluster-level median Accuracy: 97.57%
+	Precision: float32
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4/float32-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4, precision: ubinary, partition: mega4
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (4023, 128)
+Adding the embeddings to the index...
+Vector addition time: 0.000404 seconds
+Writing the index to disk...
+Search time: 0.319938 seconds
+Retrieved 4023 results
+Loading Radical SAM sequences from data/radicalsam/mega4/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega4/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 97.61%
+	Cluster-level mean Accuracy: 89.54%
+	Cluster-level median Accuracy: 97.98%
+	Precision: ubinary
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4/ubinary-faiss.index
 )
 Running evaluation with model: facebook/esm2_t6_8M_UR50D, model_dir: examples/radicalsam/embeddings/mega5/esm2-8M_radicalsam_mega5, precision: float32, partition: mega5
 Creating FAISS index at examples/radicalsam/embeddings/mega5/esm2-8M_radicalsam_mega5/float32-faiss.index
@@ -1410,4 +1609,46 @@ EvaluationMetadata(
 	Model Directory: examples/radicalsam/embeddings/mega5/esmc-600M_radicalsam_mega5
 	Dataset: data/radicalsam
 	Index Path: examples/radicalsam/embeddings/mega5/esmc-600M_radicalsam_mega5/ubinary-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5, precision: float32, partition: mega5
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5/float32-faiss.index
+Creating float32 FAISS index using exact search with embeddings shape: (3292, 1024)
+Writing the index to disk...
+Search time: 0.019278 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.42%
+	Cluster-level mean Accuracy: 98.90%
+	Cluster-level median Accuracy: 99.20%
+	Precision: float32
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5/float32-faiss.index
+)
+Running evaluation with model: Rostlab/prot_t5_xl_half_uniref50-enc, model_dir: examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5, precision: ubinary, partition: mega5
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+Creating FAISS index at examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5/ubinary-faiss.index
+Creating ubinary FAISS index using exact search with embeddings shape: (3292, 128)
+Writing the index to disk...
+Search time: 0.242349 seconds
+Retrieved 3292 results
+Loading Radical SAM sequences from data/radicalsam/mega5/sequences.fasta
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Loading Radical SAM clusters from data/radicalsam/mega5/clusters.json
+Evaluation Summary:
+EvaluationMetadata(
+	Sequence-level mean Accuracy: 99.45%
+	Cluster-level mean Accuracy: 99.24%
+	Cluster-level median Accuracy: 99.11%
+	Precision: ubinary
+	Model: Rostlab/prot_t5_xl_half_uniref50-enc
+	Model Directory: examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5
+	Dataset: data/radicalsam
+	Index Path: examples/radicalsam/embeddings/mega5/prottrans_radicalsam_mega5/ubinary-faiss.index
 )
