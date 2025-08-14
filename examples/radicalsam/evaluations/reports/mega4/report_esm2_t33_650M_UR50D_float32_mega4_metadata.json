@@ -1,8 +1,8 @@
 {
   "name": "",
-  "sequence_level_mean_accuracy": 0.9543084181773032,
-  "cluster_level_mean_accuracy": 0.6675477968949389,
-  "cluster_level_median_accuracy": 0.9338959212376934,
+  "sequence_level_mean_accuracy": 0.9552572706935123,
+  "cluster_level_mean_accuracy": 0.8749844120256995,
+  "cluster_level_median_accuracy": 0.9590361445783132,
   "precision": "float32",
   "model": "facebook/esm2_t33_650M_UR50D",
   "model_directory": "examples/radicalsam/embeddings/mega4/esm2-650M_radicalsam_mega4",

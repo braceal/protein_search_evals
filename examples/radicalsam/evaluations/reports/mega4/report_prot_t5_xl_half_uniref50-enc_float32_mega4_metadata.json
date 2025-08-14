@@ -1,8 +1,8 @@
 {
   "name": "",
-  "sequence_level_mean_accuracy": 0.9774025329029054,
-  "cluster_level_mean_accuracy": 0.6878913892806168,
-  "cluster_level_median_accuracy": 0.9712389380530974,
+  "sequence_level_mean_accuracy": 0.9781257767834949,
+  "cluster_level_mean_accuracy": 0.8992154933077321,
+  "cluster_level_median_accuracy": 0.9757085020242915,
   "precision": "float32",
   "model": "Rostlab/prot_t5_xl_half_uniref50-enc",
   "model_directory": "examples/radicalsam/embeddings/mega4/prottrans_radicalsam_mega4",
