@@ -81,6 +81,7 @@ class Esm2Encoder(Encoder):
                     'faesm is not installed. Falling back to transformers.',
                     stacklevel=2,
                 )
+                enable_faesm = False
                 from transformers import EsmForMaskedLM
         else:
             from transformers import EsmForMaskedLM
