@@ -28,6 +28,7 @@ HF_HUB_ENABLE_HF_TRANSFER=1 huggingface-cli download EvolutionaryScale/esmc-600m
 
 For ESM2 with faesm, you can install the following package:
 ```bash
+pip install transformers==4.48.1
 pip install flash-attn --no-build-isolation
 pip install faesm[flash_attn]
 ```
