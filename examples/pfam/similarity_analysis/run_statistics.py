@@ -1,0 +1,60 @@
+"""Compute statistics for the similarity analysis."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+
+def compute_statistics(csv_file: Path) -> dict[str, float]:
+    """Compute statistics for the similarity analysis."""
+    # Read the dataframe
+    df = pd.read_csv(csv_file)
+
+    # Get the percent identity values
+    data = np.array(df['pident'])
+
+    # Remove the 100% identity entries (self hits)
+    data = data[data != 100]
+
+    # Compute the mean, median, std, max, and min of the pident values
+    results = {
+        'mean': float(np.mean(data)),
+        'median': float(np.median(data)),
+        'std': float(np.std(data)),
+        'max': float(np.max(data)),
+        'min': float(np.min(data)),
+    }
+
+    return results
+
+
+def main() -> None:
+    """Run the statistics computation."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--csv_dir', type=Path, required=True)
+    parser.add_argument('--output_file', type=Path, required=True)
+    args = parser.parse_args()
+
+    # Get all the csv files in the directory
+    csv_files = list(args.csv_dir.glob('*.csv'))
+
+    # Test it on a few files
+    csv_files = csv_files[:2]
+
+    # Compute the statistics for each csv file
+    results = {f.stem: compute_statistics(f) for f in csv_files}
+
+    # Write the results to a dataframe with the format:
+    # pfam_id,mean,median,std,max,min
+    df = pd.DataFrame(results).T
+    df.columns = ['mean', 'median', 'std', 'max', 'min']
+    df.index.name = 'pfam_id'
+    df.to_csv(args.output_file, index=False)
+
+
+if __name__ == '__main__':
+    main()
