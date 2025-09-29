@@ -44,11 +44,10 @@ def main() -> None:
     # Get all the csv files in the directory
     csv_files = list(args.csv_dir.glob('*.csv'))
 
-    # Test it on a few files
-    csv_files = csv_files[:2]
-
     # Compute the statistics for each csv file
-    results = {f.stem: compute_statistics(f) for f in csv_files}
+    # The file name is of the format {pfam_id}_blastp.csv
+    # So we need to extract the pfam_id from the file name
+    results = {f.stem.split('_')[0]: compute_statistics(f) for f in csv_files}
 
     # Save the results to a json file
     with open(args.output_file, 'w') as f:
