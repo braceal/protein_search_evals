@@ -8,6 +8,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
 
 def compute_statistics(csv_file: Path) -> dict[str, float]:
@@ -47,7 +48,9 @@ def main() -> None:
     # Compute the statistics for each csv file
     # The file name is of the format {pfam_id}_blastp.csv
     # So we need to extract the pfam_id from the file name
-    results = {f.stem.split('_')[0]: compute_statistics(f) for f in csv_files}
+    results = {
+        f.stem.split('_')[0]: compute_statistics(f) for f in tqdm(csv_files)
+    }
 
     # Save the results to a json file
     with open(args.output_file, 'w') as f:
