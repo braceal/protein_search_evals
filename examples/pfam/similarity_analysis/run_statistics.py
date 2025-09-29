@@ -54,7 +54,7 @@ def main() -> None:
 
     # Save the results to a json file
     with open(args.output_file, 'w') as f:
-        json.dump(results, f)
+        json.dump(results, f, indent=2)
 
 
 if __name__ == '__main__':
