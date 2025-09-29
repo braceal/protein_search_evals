@@ -30,6 +30,9 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    # Create the output directory if it doesn't exist
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+
     # Load the Pfam20 dataset
     dataset = Pfam20Dataset(args.data_dir)
     sequences = dataset.load_sequences()
