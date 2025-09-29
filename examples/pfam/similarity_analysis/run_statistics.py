@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 import numpy as np
@@ -21,12 +22,13 @@ def compute_statistics(csv_file: Path) -> dict[str, float]:
     data = data[data != 100]
 
     # Compute the mean, median, std, max, and min of the pident values
+    # (rounded to 2 decimal places)
     results = {
-        'mean': float(np.mean(data)),
-        'median': float(np.median(data)),
-        'std': float(np.std(data)),
-        'max': float(np.max(data)),
-        'min': float(np.min(data)),
+        'mean': round(np.mean(data), 2),
+        'median': round(np.median(data), 2),
+        'std': round(np.std(data), 2),
+        'max': round(np.max(data), 2),
+        'min': round(np.min(data), 2),
     }
 
     return results
@@ -48,12 +50,9 @@ def main() -> None:
     # Compute the statistics for each csv file
     results = {f.stem: compute_statistics(f) for f in csv_files}
 
-    # Write the results to a dataframe with the format:
-    # pfam_id,mean,median,std,max,min
-    df = pd.DataFrame(results).T
-    df.columns = ['mean', 'median', 'std', 'max', 'min']
-    df.index.name = 'pfam_id'
-    df.to_csv(args.output_file, index=False)
+    # Save the results to a json file
+    with open(args.output_file, 'w') as f:
+        json.dump(results, f)
 
 
 if __name__ == '__main__':
