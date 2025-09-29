@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import tempfile
 from argparse import ArgumentParser
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 import pandas as pd
@@ -44,7 +45,6 @@ def run_blast(fasta_file: Path, output_dir: Path) -> None:
 
         # Parse the blastp output
         blastp_output = result.stdout.decode('utf-8').splitlines()
-        blastp_output = blastp_output[1:]
         blastp_data = [line.split('\t') for line in blastp_output]
         blastp_df = pd.DataFrame(
             blastp_data,
@@ -63,7 +63,10 @@ def run_blast(fasta_file: Path, output_dir: Path) -> None:
                 'bitscore',
             ],
         )
-        blastp_df.to_csv(temp_run_dir / 'blastp.csv', index=False)
+        blastp_df.to_csv(
+            temp_run_dir / f'{fasta_file.stem}_blastp.csv',
+            index=False,
+        )
 
         # Move the entire temporary run directory to the persistent output dir
         final_run_dir = output_dir / fasta_file.stem
@@ -88,6 +91,12 @@ def main() -> None:
         required=True,
         help='The directory to write the BLAST results to.',
     )
+    parser.add_argument(
+        '--num_workers',
+        type=int,
+        required=True,
+        help='The number of workers to use for the BLAST search.',
+    )
     args = parser.parse_args()
 
     # Create the output directory if it doesn't exist
@@ -96,9 +105,13 @@ def main() -> None:
     # Fasta input files
     fasta_files = list(args.input_dir.glob('*.fasta'))
 
-    # Run BLAST for each FASTA file
-    for fasta_file in tqdm(fasta_files, desc='Running BLAST'):
-        run_blast(fasta_file, args.output_dir)
+    # Run BLAST for each FASTA file in parallel
+    with ProcessPoolExecutor(max_workers=args.num_workers) as pool:
+        for _ in tqdm(
+            pool.map(run_blast, fasta_files, args.output_dir),
+            desc='Running BLAST',
+        ):
+            pass
 
 
 if __name__ == '__main__':
