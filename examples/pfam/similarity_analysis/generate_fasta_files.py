@@ -5,6 +5,8 @@ from __future__ import annotations
 from argparse import ArgumentParser
 from pathlib import Path
 
+from tqdm import tqdm
+
 from protein_search_evals.datasets.pfam import Pfam20Dataset
 
 
@@ -37,7 +39,10 @@ def main() -> None:
     uniprot_to_sequence = {seq.tag: seq for seq in sequences}
 
     # Write a fasta file for each family
-    for family, uniprot_ids in families.items():
+    for family, uniprot_ids in tqdm(
+        families.items(),
+        desc='Writing FASTA files',
+    ):
         # Get the sequences for the family
         sequences = [uniprot_to_sequence[x] for x in uniprot_ids]
 
