@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import functools
 import shutil
 import subprocess
 import tempfile
@@ -105,10 +106,13 @@ def main() -> None:
     # Fasta input files
     fasta_files = list(args.input_dir.glob('*.fasta'))
 
+    # Setup a partial worker function
+    worker_fn = functools.partial(run_blast, output_dir=args.output_dir)
+
     # Run BLAST for each FASTA file in parallel
     with ProcessPoolExecutor(max_workers=args.num_workers) as pool:
         for _ in tqdm(
-            pool.map(run_blast, fasta_files, args.output_dir),
+            pool.map(worker_fn, fasta_files),
             desc='Running BLAST',
         ):
             pass
