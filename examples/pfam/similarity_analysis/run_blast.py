@@ -30,7 +30,15 @@ def run_blast(fasta_file: Path, output_dir: Path) -> None:
             f'makeblastdb -in {fasta_file} -dbtype prot '
             f'-out {temp_target_db_dir}'
         )
-        subprocess.run(command.split(), check=False)
+        result = subprocess.run(
+            command.split(),
+            check=False,
+            capture_output=True,
+        )
+
+        # Log the makeblastdb output
+        makeblastdb_log_file = temp_run_dir / 'makeblastdb.log'
+        makeblastdb_log_file.write_text(result.stdout.decode('utf-8'))
 
         # Run the blastp command
         command = (
