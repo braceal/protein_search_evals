@@ -32,6 +32,12 @@ def parse_args() -> argparse.Namespace:
         required=True,
         help='The directory containing the dataset.',
     )
+    parser.add_argument(
+        '--output_file',
+        type=Path,
+        required=True,
+        help='The file to write the results to.',
+    )
     return parser.parse_args()
 
 
