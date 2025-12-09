@@ -16,9 +16,9 @@ from protein_search_evals.datasets.pfam import Pfam20Dataset
 # this file)
 PATH = os.path.dirname(os.path.abspath(__file__))
 print(PATH)
-sys.path.append(PATH)
+sys.path.append(f'{PATH}/AIUPred')
 
-import aiupred_lib
+import aiupred_lib  # noqa: E402
 
 
 def parse_args() -> argparse.Namespace:
