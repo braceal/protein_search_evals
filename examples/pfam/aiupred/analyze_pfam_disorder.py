@@ -14,7 +14,9 @@ from protein_search_evals.datasets.pfam import Pfam20Dataset
 
 # Add the AIUPred library to the path (it should be in the same directory as
 # this file)
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+PATH = os.path.dirname(os.path.abspath(__file__))
+print(PATH)
+sys.path.append(PATH)
 
 import aiupred_lib
 
