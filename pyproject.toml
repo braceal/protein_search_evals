@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "protein_search_evals"
-version = "0.0.5"
+version = "2026.01.30"
 authors = [
     {name = "Alexander Brace", email = "abrace@anl.gov"},
 ]
@@ -158,7 +158,7 @@ quote-style = "single"
 
 [tool.ruff.isort]
 force-single-line = true
-known-first-party = ["deepdrivewe", "test", "testing"]
+known-first-party = ["protein_search_evals", "test", "testing"]
 order-by-type = false
 required-imports = ["from __future__ import annotations"]
 

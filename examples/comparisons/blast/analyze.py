@@ -10,6 +10,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from protein_search_evals.evaluate import EvaluatorOutput
 from protein_search_evals.evaluate import get_dataset
 
 if __name__ == '__main__':
@@ -26,6 +27,12 @@ if __name__ == '__main__':
         type=Path,
         required=True,
         help='The directory containing the dataset.',
+    )
+    parser.add_argument(
+        '--output_file',
+        type=Path,
+        required=True,
+        help='The JSON file to write the output to.',
     )
     parser.add_argument(
         '--dataset_partition',
@@ -117,21 +124,40 @@ if __name__ == '__main__':
         cluster_to_correct[cluster].append(correct_)
 
     # Map the cluster id to the accuracy
-    accuracies = {
-        cluster: np.mean(correct_)
+    accuracy_by_cluster = {
+        cluster: float(np.mean(correct_))
         for cluster, correct_ in cluster_to_correct.items()
     }
 
+    # Compute the accuracy by sequence
+    accuracy_by_seq = dict(zip(top_hits['qseqid'], correct))
+
     # Compute the mean accuracy statistics
     sequence_level_mean_accuracy = float(np.mean(correct))
-    cluster_level_mean_accuracy = float(np.mean(list(accuracies.values())))
+    cluster_level_mean_accuracy = float(
+        np.mean(list(accuracy_by_cluster.values())),
+    )
 
     # Compute the median accuracy statistics
     sequence_level_median_accuracy = float(np.median(correct))
-    cluster_level_median_accuracy = float(np.median(list(accuracies.values())))
+    cluster_level_median_accuracy = float(
+        np.median(list(accuracy_by_cluster.values())),
+    )
 
     # Print the results
     print('Sequence level mean accuracy:', sequence_level_mean_accuracy)
     print('Cluster level mean accuracy:', cluster_level_mean_accuracy)
     print('Sequence level median accuracy:', sequence_level_median_accuracy)
     print('Cluster level median accuracy:', cluster_level_median_accuracy)
+
+    # Create the evaluation output
+    output = EvaluatorOutput(
+        sequence_level_mean_accuracy=sequence_level_mean_accuracy,
+        cluster_level_mean_accuracy=cluster_level_mean_accuracy,
+        cluster_level_median_accuracy=cluster_level_median_accuracy,
+        accuracy_by_seq=accuracy_by_seq,
+        accuracy_by_cluster=accuracy_by_cluster,
+    )
+
+    # Save the output to a file
+    output.write_json(args.output_file)
