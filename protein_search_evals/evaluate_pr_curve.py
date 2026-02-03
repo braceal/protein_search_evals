@@ -27,6 +27,7 @@ import numpy as np
 from pydantic import Field
 from sklearn.metrics import average_precision_score
 from sklearn.metrics import precision_recall_curve
+from tqdm import tqdm
 
 from protein_search_evals.datasets.pfam import Pfam20Dataset
 from protein_search_evals.datasets.radicalsam import RadicalSamDataset
@@ -90,6 +91,7 @@ def run_pr_curve_evaluation(
     method_name: str,
     precision_type: str,
     dataset_dir: str | Path,
+    batch_size: int = 1,
 ) -> PRCurveOutput:
     """Build (y_true, y_scores) from retrieval results and compute PR curve.
 
@@ -99,6 +101,9 @@ def run_pr_curve_evaluation(
     (higher = more similar). For E-value-based methods you would use
     y_scores = -np.log10(e_values + 1e-300) so that smaller E-values become
     larger scores before calling precision_recall_curve.
+
+    Search is run in small batches (default one query at a time) to avoid
+    memory blow-up in FAISS/semantic_search_faiss when top_k is large.
 
     Parameters
     ----------
@@ -114,6 +119,9 @@ def run_pr_curve_evaluation(
         FAISS precision (e.g. float32, ubinary).
     dataset_dir : str | Path
         Path to dataset directory (for metadata).
+    batch_size : int
+        Number of queries per search call (1 = minimal memory; increase
+        if memory allows for speed).
 
     Returns
     -------
@@ -127,30 +135,40 @@ def run_pr_curve_evaluation(
     query_embeddings = retriever.get(query_keys, key='embeddings')
     sequences = retriever.get(query_keys, key='sequences').tolist()
 
-    results, _ = retriever.search(
-        query=sequences,
-        query_embedding=query_embeddings,
-        top_k=top_k,
-    )
-
     uid_to_cluster = dataset.uniprot_to_cluster
+    y_true_list: list[int] = []
+    y_scores_list: list[float] = []
 
-    y_true_list, y_scores_list = [], []
-
-    for i, (indices, scores) in enumerate(
-        zip(results.total_indices, results.total_scores),
+    for start in tqdm(
+        range(0, num_sequences, batch_size),
+        desc='PR curve search',
+        unit='query_batch',
     ):
-        query_uid = query_tags[i]
-        query_cluster = uid_to_cluster[query_uid]
+        end = min(start + batch_size, num_sequences)
+        sequences_batch = sequences[start:end]
+        query_embeddings_batch = query_embeddings[start:end]
 
-        for retrieved_idx, score in zip(indices, scores):
-            if retrieved_idx == i:
-                continue
-            retrieved_uid = query_tags[retrieved_idx]
-            retrieved_cluster = uid_to_cluster[retrieved_uid]
-            label = 1 if query_cluster == retrieved_cluster else 0
-            y_true_list.append(label)
-            y_scores_list.append(float(score))
+        results, _ = retriever.search(
+            query=sequences_batch,
+            query_embedding=query_embeddings_batch,
+            top_k=top_k,
+        )
+
+        for local_i, (indices, scores) in enumerate(
+            zip(results.total_indices, results.total_scores),
+        ):
+            global_i = start + local_i
+            query_uid = query_tags[global_i]
+            query_cluster = uid_to_cluster[query_uid]
+
+            for retrieved_idx, score in zip(indices, scores):
+                if retrieved_idx == global_i:
+                    continue
+                retrieved_uid = query_tags[retrieved_idx]
+                retrieved_cluster = uid_to_cluster[retrieved_uid]
+                label = 1 if query_cluster == retrieved_cluster else 0
+                y_true_list.append(label)
+                y_scores_list.append(float(score))
 
     y_true = np.array(y_true_list, dtype=np.int64)
     y_scores = np.array(y_scores_list, dtype=np.float64)
@@ -226,6 +244,13 @@ if __name__ == '__main__':
         default=0,
         help='Number of GPUs for FAISS search.',
     )
+    parser.add_argument(
+        '--batch_size',
+        type=int,
+        default=1,
+        help='Queries per search call (1 = minimal memory; increase if '
+        'memory allows for speed).',
+    )
     args = parser.parse_args()
 
     embedding_dataset_dir = next((args.model_dir / 'embeddings').glob('*'))
@@ -254,6 +279,7 @@ if __name__ == '__main__':
         method_name=args.model_name,
         precision_type=args.precision,
         dataset_dir=args.dataset_dir,
+        batch_size=args.batch_size,
     )
 
     print(f'AUPRC: {output.auprc:.4f}')
