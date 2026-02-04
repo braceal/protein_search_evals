@@ -124,7 +124,18 @@ def compute_cluster_variances(
     ds = load_from_disk(str(embedding_dir))
     ds.set_format('numpy')
 
-    uid_to_index = {ds['tags'][i]: i for i in range(len(ds))}
+    # Load full columns in one go for efficiency
+    n_sequences = len(ds)
+    indices_full = np.arange(n_sequences)
+    tags = ds['tags'][indices_full]
+    embeddings_full = np.asarray(
+        ds['embeddings'][indices_full],
+        dtype=np.float32,
+    )
+
+    print(f'Loaded {n_sequences} sequences')
+
+    uid_to_index = {tags[i]: i for i in range(n_sequences)}
 
     clusters = dataset_pfam.load_clusters()
     cluster_to_indices: dict[str, list[int]] = {}
@@ -132,10 +143,6 @@ def compute_cluster_variances(
         indices = [uid_to_index[uid] for uid in uids if uid in uid_to_index]
         if len(indices) >= 2:
             cluster_to_indices[cid] = indices
-
-    embeddings_full = np.array(ds['embeddings'][:], dtype=np.float64)
-    n_sequences = len(embeddings_full)
-
     cosine_per_cluster: dict[str, dict[str, float | int]] = {}
     hamming_per_cluster: dict[str, dict[str, float | int]] = {}
 
