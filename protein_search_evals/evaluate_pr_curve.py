@@ -1,5 +1,10 @@
 """Compute precision-recall curves for homology detection on the benchmark.
 
+Uses macro-averaging (class-balanced): precision and recall are computed
+per query (each query's cluster is one "class"), then the unweighted mean
+across queries is taken. This treats all clusters equally and prevents
+majority classes from dominating the metric.
+
 Offline plotting example (after saving JSON with this script):
 
     import json
@@ -10,7 +15,7 @@ Offline plotting example (after saving JSON with this script):
     plt.figure(figsize=(8, 6))
     plt.plot(data['recall'], data['precision'], marker='.',
              label=f"{data['method']} (AUPRC = {data['auprc']:.2f})")
-    plt.title('Precision-Recall Curve for Homology Detection')
+    plt.title('Precision-Recall Curve for Homology Detection (macro)')
     plt.xlabel('Recall (Sensitivity)')
     plt.ylabel('Precision (PPV)')
     plt.legend()
@@ -37,6 +42,9 @@ from protein_search_evals.search import FaissIndexConfig
 from protein_search_evals.search import Retriever
 from protein_search_evals.search import RetrieverConfig
 from protein_search_evals.utils import BaseConfig
+
+# Number of recall levels for macro PR curve interpolation
+MACRO_RECALL_LEVELS = 101
 
 
 class PRCurveOutput(BaseConfig):
@@ -82,6 +90,27 @@ class PRCurveOutput(BaseConfig):
         description='Number of homologous pairs (same cluster) in the '
         'evaluated set.',
     )
+    averaging: str = Field(
+        default='macro',
+        description='Averaging method used (macro = class-balanced, '
+        'unweighted mean over queries).',
+    )
+
+
+def _interpolate_precision_at_recall(
+    precision: np.ndarray,
+    recall: np.ndarray,
+    recall_levels: np.ndarray,
+) -> np.ndarray:
+    """Interpolate precision at fixed recall levels (max over recall >= r)."""
+    # precision_recall_curve returns recall non-decreasing; for each r we want
+    # max{ precision[i] : recall[i] >= r }
+    out = np.zeros_like(recall_levels, dtype=np.float64)
+    for i, r in enumerate(recall_levels):
+        mask = recall >= r
+        if np.any(mask):
+            out[i] = np.max(precision[mask])
+    return out
 
 
 def run_pr_curve_evaluation(
@@ -136,8 +165,9 @@ def run_pr_curve_evaluation(
     sequences = retriever.get(query_keys, key='sequences').tolist()
 
     uid_to_cluster = dataset.uniprot_to_cluster
-    y_true_list: list[int] = []
-    y_scores_list: list[float] = []
+    # Per-query (y_true, y_scores) for macro-averaging (one "class" per query)
+    per_query_true: list[list[int]] = []
+    per_query_scores: list[list[float]] = []
 
     for start in tqdm(
         range(0, num_sequences, batch_size),
@@ -161,31 +191,62 @@ def run_pr_curve_evaluation(
             query_uid = query_tags[global_i]
             query_cluster = uid_to_cluster[query_uid]
 
+            y_true_q: list[int] = []
+            y_scores_q: list[float] = []
             for retrieved_idx, score in zip(indices, scores):
                 if retrieved_idx == global_i:
                     continue
                 retrieved_uid = query_tags[retrieved_idx]
                 retrieved_cluster = uid_to_cluster[retrieved_uid]
                 label = 1 if query_cluster == retrieved_cluster else 0
-                y_true_list.append(label)
-                y_scores_list.append(float(score))
+                y_true_q.append(label)
+                y_scores_q.append(float(score))
 
-    y_true = np.array(y_true_list, dtype=np.int64)
-    y_scores = np.array(y_scores_list, dtype=np.float64)
+            per_query_true.append(y_true_q)
+            per_query_scores.append(y_scores_q)
 
-    precision, recall, thresholds = precision_recall_curve(y_true, y_scores)
-    auprc = average_precision_score(y_true, y_scores)
+    # Macro-averaging: compute PR and AUPRC per query, then unweighted mean
+    recall_levels = np.linspace(0, 1, MACRO_RECALL_LEVELS)
+    precision_at_recall = np.zeros((len(per_query_true), MACRO_RECALL_LEVELS))
+
+    auprc_list: list[float] = []
+    for q, (true_q, scores_q) in enumerate(
+        zip(per_query_true, per_query_scores),
+    ):
+        y_true_q = np.array(true_q, dtype=np.int64)
+        y_scores_q = np.array(scores_q, dtype=np.float64)
+        if len(y_true_q) == 0:
+            auprc_list.append(0.0)
+            continue
+        prec_q, rec_q, _ = precision_recall_curve(y_true_q, y_scores_q)
+        auprc_list.append(
+            float(average_precision_score(y_true_q, y_scores_q)),
+        )
+        precision_at_recall[q] = _interpolate_precision_at_recall(
+            prec_q,
+            rec_q,
+            recall_levels,
+        )
+
+    auprc = float(np.mean(auprc_list))
+    precision_macro = np.mean(precision_at_recall, axis=0)
+    # Macro has no single threshold; use placeholder to match output length.
+    thresholds_macro = [0.0] * (len(recall_levels) - 1)
+
+    n_pairs = sum(len(yt) for yt in per_query_true)
+    n_positive = sum(sum(yt) for yt in per_query_true)
 
     return PRCurveOutput(
-        precision=precision.tolist(),
-        recall=recall.tolist(),
-        thresholds=thresholds.tolist(),
-        auprc=float(auprc),
+        precision=precision_macro.tolist(),
+        recall=recall_levels.tolist(),
+        thresholds=thresholds_macro,
+        auprc=auprc,
         method=method_name,
         precision_type=precision_type,
         dataset=str(dataset_dir),
-        n_pairs=len(y_true),
-        n_positive=int(y_true.sum()),
+        n_pairs=n_pairs,
+        n_positive=n_positive,
+        averaging='macro',
     )
 
 
