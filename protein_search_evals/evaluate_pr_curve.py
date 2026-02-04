@@ -205,31 +205,36 @@ def run_pr_curve_evaluation(
             per_query_true.append(y_true_q)
             per_query_scores.append(y_scores_q)
 
-    # Macro-averaging: compute PR and AUPRC per query, then unweighted mean
+    # Macro-averaging: compute PR and AUPRC per query, then unweighted mean.
+    # Only include queries that have at least one positive (same-cluster) hit,
+    # to avoid sklearn "No positive class" warnings and undefined PR.
     recall_levels = np.linspace(0, 1, MACRO_RECALL_LEVELS)
-    precision_at_recall = np.zeros((len(per_query_true), MACRO_RECALL_LEVELS))
-
+    valid_precision_rows: list[np.ndarray] = []
     auprc_list: list[float] = []
-    for q, (true_q, scores_q) in enumerate(
-        zip(per_query_true, per_query_scores),
-    ):
+
+    for true_q, scores_q in zip(per_query_true, per_query_scores):
         y_true_q = np.array(true_q, dtype=np.int64)
         y_scores_q = np.array(scores_q, dtype=np.float64)
-        if len(y_true_q) == 0:
-            auprc_list.append(0.0)
+        if len(y_true_q) == 0 or np.sum(y_true_q) == 0:
             continue
         prec_q, rec_q, _ = precision_recall_curve(y_true_q, y_scores_q)
         auprc_list.append(
             float(average_precision_score(y_true_q, y_scores_q)),
         )
-        precision_at_recall[q] = _interpolate_precision_at_recall(
-            prec_q,
-            rec_q,
-            recall_levels,
+        valid_precision_rows.append(
+            _interpolate_precision_at_recall(
+                prec_q,
+                rec_q,
+                recall_levels,
+            ),
         )
 
-    auprc = float(np.mean(auprc_list))
-    precision_macro = np.mean(precision_at_recall, axis=0)
+    if auprc_list:
+        auprc = float(np.mean(auprc_list))
+        precision_macro = np.mean(valid_precision_rows, axis=0)
+    else:
+        auprc = 0.0
+        precision_macro = np.zeros_like(recall_levels)
     # Macro has no single threshold; use placeholder to match output length.
     thresholds_macro = [0.0] * (len(recall_levels) - 1)
 
