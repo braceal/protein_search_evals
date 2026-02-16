@@ -334,14 +334,13 @@ class Evaluator:
             accuracy_by_seq=accuracy_by_seq,
         )
 
-        # Compute the average sequence/cluster level mean accuracies
+        # Compute the average sequence/cluster level mean/median accuracies
         sequence_level_acc = self._compute_avg_accuracy(accuracy_by_seq)
         cluster_level_acc = self._compute_avg_accuracy(accuracy_by_cluster)
-
-        # Compute the average cluster level median accuracies
         cluster_level_median_acc = self._compute_median_accuracy(
             accuracy_by_cluster,
         )
+
         # Create the evaluation output
         return EvaluatorOutput(
             sequence_level_mean_accuracy=sequence_level_acc,
