@@ -20,6 +20,9 @@ MODELS=(
 # Define precision types
 PRECISIONS=("float32" "ubinary")
 
+# The number of search operations to perform at a time
+BATCH_SIZE=2048
+
 # Number of neighbors per query for building PR curve pairs
 TOP_K=500
 
@@ -48,6 +51,7 @@ run_pr_curve_evaluation() {
                 --model_name "$MODEL_NAME" \
                 --precision "$PRECISION" \
                 --top_k "$TOP_K" \
+                --batch_size "$BATCH_SIZE" \
                 --gpus 2
         done
     done

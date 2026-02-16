@@ -4,7 +4,7 @@
 # for each model's Pfam embeddings. No GPU required.
 
 DATASET_DIR="data/pfam/"
-BASE_REPORTS_DIR="examples/pfam/evaluations/reports-cluster-variance"
+BASE_REPORTS_DIR="examples/pfam/evaluations/pr_curve/reports-cluster-variance"
 PARTITION="seed-42"
 
 MODELS=(
