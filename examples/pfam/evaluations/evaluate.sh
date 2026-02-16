@@ -2,7 +2,7 @@
 
 # Define input data and output report directories
 DATASET_DIR="data/pfam/"
-BASE_REPORTS_DIR="examples/pfam/evaluations/reports-v2"
+BASE_REPORTS_DIR="examples/pfam/evaluations/reports"
 
 # Define model names
 MODELS=(
