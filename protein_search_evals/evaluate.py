@@ -94,18 +94,6 @@ class EvaluationMetadata(BaseConfig):
         ...,
         description='The cluster level median accuracy of the model.',
     )
-    sequence_level_mean_recall: float = Field(
-        ...,
-        description='The sequence level mean recall of the model.',
-    )
-    cluster_level_mean_recall: float = Field(
-        ...,
-        description='The cluster level mean recall of the model.',
-    )
-    cluster_level_median_recall: float = Field(
-        ...,
-        description='The cluster level median recall of the model.',
-    )
     precision: str = Field(
         ...,
         description='The precision of the faiss index [float32, ubinary].',
@@ -135,9 +123,6 @@ class EvaluationMetadata(BaseConfig):
             f'\tSequence-level mean Accuracy: {self.sequence_level_mean_accuracy * 100:.2f}%\n'  # noqa E501
             f'\tCluster-level mean Accuracy: {self.cluster_level_mean_accuracy * 100:.2f}%\n'  # noqa E501
             f'\tCluster-level median Accuracy: {self.cluster_level_median_accuracy * 100:.2f}%\n'  # noqa E501
-            f'\tSequence-level mean Recall: {self.sequence_level_mean_recall * 100:.2f}%\n'  # noqa E501
-            f'\tCluster-level mean Recall: {self.cluster_level_mean_recall * 100:.2f}%\n'  # noqa E501
-            f'\tCluster-level median Recall: {self.cluster_level_median_recall * 100:.2f}%\n'  # noqa E501
             f'\tPrecision: {self.precision}\n'
             f'\tModel: {self.model}\n'
             f'\tModel Directory: {self.model_directory}\n'
@@ -162,18 +147,6 @@ class EvaluatorOutput(BaseConfig):
         ...,
         description='The cluster level median accuracy of the model.',
     )
-    sequence_level_mean_recall: float = Field(
-        ...,
-        description='The sequence level mean recall of the model.',
-    )
-    cluster_level_mean_recall: float = Field(
-        ...,
-        description='The cluster level mean recall of the model.',
-    )
-    cluster_level_median_recall: float = Field(
-        ...,
-        description='The cluster level median recall of the model.',
-    )
     accuracy_by_seq: dict[str, float] = Field(
         ...,
         description='The accuracy of the model for each sequence.',
@@ -181,14 +154,6 @@ class EvaluatorOutput(BaseConfig):
     accuracy_by_cluster: dict[str, float] = Field(
         ...,
         description='The accuracy of the model for each cluster.',
-    )
-    recall_by_seq: dict[str, float] = Field(
-        ...,
-        description='The recall of the model for each sequence.',
-    )
-    recall_by_cluster: dict[str, float] = Field(
-        ...,
-        description='The recall of the model for each cluster.',
     )
 
 
@@ -272,55 +237,6 @@ class Evaluator:
 
         return accuracy_by_seq
 
-    def _compute_recall_by_seq(
-        self,
-        query_tags: np.ndarray,
-        predicted_indices: list[list[int]],
-    ) -> dict[str, float]:
-        """Compute recall for each sequence (Uniprot ID).
-
-        For each query, recall is the fraction of other sequences in the
-        same cluster that appear in the top-k hits (excluding self).
-        Singleton clusters (no other relevant items) get recall 1.0.
-
-        Parameters
-        ----------
-        query_tags : np.ndarray
-            The query tags (Uniprot IDs).
-        predicted_indices : list[list[int]]
-            The predicted indices.
-
-        Returns
-        -------
-        dict[str, float]
-            A mapping from Uniprot ID to recall.
-        """
-        sequences = self.dataset.load_sequences()
-        uid_to_cluster = self.dataset.uniprot_to_cluster
-        clusters = self.dataset.load_clusters()
-
-        recall_by_seq = {}
-        for query_sequence, indices in zip(sequences, predicted_indices):
-            query_uid = query_sequence.tag
-            correct_cluster = uid_to_cluster[query_uid]
-
-            predicted_uids = [
-                query_tags[i] for i in indices if query_tags[i] != query_uid
-            ]
-            predicted_clusters = [
-                uid_to_cluster[uid] for uid in predicted_uids
-            ]
-            hits_in_top_k = sum(
-                1 for c in predicted_clusters if c == correct_cluster
-            )
-
-            # Minus one to exclude the self-hit
-            num_relevant = len(clusters[correct_cluster]) - 1
-            recall = 1.0 if num_relevant == 0 else hits_in_top_k / num_relevant
-            recall_by_seq[query_uid] = float(recall)
-
-        return recall_by_seq
-
     def compute_cluster_level_accuracy(
         self,
         accuracy_by_seq: dict[str, float],
@@ -342,23 +258,6 @@ class Evaluator:
         }
 
         return accuracy_by_cluster
-
-    def compute_cluster_level_recall(
-        self,
-        recall_by_seq: dict[str, float],
-    ) -> dict[str, float]:
-        """Compute the average recall@k within each cluster.
-
-        Returns
-        -------
-        dict[str, float]
-            The recall@k of the model for each cluster.
-        """
-        clusters = self.dataset.load_clusters()
-        return {
-            cluster: float(np.mean([recall_by_seq[uid] for uid in uids]))
-            for cluster, uids in clusters.items()
-        }
 
     def _compute_avg_accuracy(self, accuracies: dict[str, float]) -> float:
         """Compute the average accuracy.
@@ -430,18 +329,9 @@ class Evaluator:
             predicted_indices=predicted_indices,
         )
 
-        # Compute recall@k by Uniprot ID
-        recall_by_seq = self._compute_recall_by_seq(
-            query_tags=query_tags,
-            predicted_indices=predicted_indices,
-        )
-
-        # Compute the cluster level accuracy and recall
+        # Compute the cluster level accuracy
         accuracy_by_cluster = self.compute_cluster_level_accuracy(
             accuracy_by_seq=accuracy_by_seq,
-        )
-        recall_by_cluster = self.compute_cluster_level_recall(
-            recall_by_seq=recall_by_seq,
         )
 
         # Compute the average sequence/cluster level mean accuracies
@@ -451,25 +341,13 @@ class Evaluator:
             accuracy_by_cluster,
         )
 
-        # Compute the average sequence/cluster level mean recall
-        sequence_level_recall = self._compute_avg_accuracy(recall_by_seq)
-        cluster_level_recall = self._compute_avg_accuracy(recall_by_cluster)
-        cluster_level_median_recall = self._compute_median_accuracy(
-            recall_by_cluster,
-        )
-
         # Create the evaluation output
         return EvaluatorOutput(
             sequence_level_mean_accuracy=sequence_level_acc,
             cluster_level_mean_accuracy=cluster_level_acc,
             cluster_level_median_accuracy=cluster_level_median_acc,
-            sequence_level_mean_recall=sequence_level_recall,
-            cluster_level_mean_recall=cluster_level_recall,
-            cluster_level_median_recall=cluster_level_median_recall,
             accuracy_by_seq=accuracy_by_seq,
             accuracy_by_cluster=accuracy_by_cluster,
-            recall_by_seq=recall_by_seq,
-            recall_by_cluster=recall_by_cluster,
         )
 
 
@@ -571,9 +449,6 @@ if __name__ == '__main__':
         sequence_level_mean_accuracy=output.sequence_level_mean_accuracy,
         cluster_level_mean_accuracy=output.cluster_level_mean_accuracy,
         cluster_level_median_accuracy=output.cluster_level_median_accuracy,
-        sequence_level_mean_recall=output.sequence_level_mean_recall,
-        cluster_level_mean_recall=output.cluster_level_mean_recall,
-        cluster_level_median_recall=output.cluster_level_median_recall,
         precision=args.precision,
         model=args.model_name,
         model_directory=str(args.model_dir),
