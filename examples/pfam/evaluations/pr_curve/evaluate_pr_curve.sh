@@ -43,7 +43,7 @@ run_pr_curve_evaluation() {
 
             echo "Running PR curve evaluation: model=$MODEL_NAME, model_dir=$MODEL_DIR, precision=$PRECISION, partition=$partition"
 
-            python -m protein_search_evals.evaluate_pr_curve \
+            python -m genslm_embeddings.evaluate_pr_curve \
                 --output "$OUTPUT_JSON" \
                 --dataset_dir "$DATASET_DIR" \
                 --dataset_partition "$partition" \

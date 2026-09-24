@@ -10,7 +10,7 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from protein_search_evals.datasets.pfam import Pfam20Dataset
+from genslm_embeddings.datasets.pfam import Pfam20Dataset
 
 # Add the AIUPred library to the path (it should be in the same directory as
 # this file)
