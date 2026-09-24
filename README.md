@@ -1,6 +1,15 @@
 # protein_search_evals
 
+[![CI](https://github.com/ramanathanlab/genslm-embeddings/actions/workflows/ci.yml/badge.svg)](https://github.com/ramanathanlab/genslm-embeddings/actions/workflows/ci.yml)
+[![Docs](https://github.com/ramanathanlab/genslm-embeddings/actions/workflows/docs.yml/badge.svg?branch=main)](https://ramanathanlab.github.io/genslm-embeddings/)
+[![Release](https://img.shields.io/github/v/release/ramanathanlab/genslm-embeddings?include_prereleases&sort=semver)](https://github.com/ramanathanlab/genslm-embeddings/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 Protein search project.
+
+📖 **Documentation:** https://ramanathanlab.github.io/genslm-embeddings/
 
 ## Installation
 
@@ -8,8 +17,8 @@ Install [uv](https://docs.astral.sh/uv/getting-started/installation/), clone the
 repository, and synchronize the locked environment:
 
 ```bash
-git clone git@github.com:braceal/protein_search_evals.git
-cd protein_search_evals
+git clone git@github.com:ramanathanlab/genslm-embeddings.git
+cd genslm-embeddings
 uv sync --locked
 ```
 
@@ -73,8 +82,8 @@ conda activate protein_search_evals_03_25
 
 Then install the package and dependencies:
 ```bash
-git clone git@github.com:braceal/protein_search_evals.git
-cd protein_search_evals
+git clone git@github.com:ramanathanlab/genslm-embeddings.git
+cd genslm-embeddings
 uv sync --locked
 uv pip install flash-attn --no-build-isolation
 uv pip install 'faesm[flash_attn]' faiss-gpu-cu12
