@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.0](https://github.com/ramanathanlab/genslm-embeddings/compare/v0.1.3...v0.2.0) (2026-09-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename python package to genslm embeddings ([#33](https://github.com/ramanathanlab/genslm-embeddings/issues/33))
+
+### Tests
+
+* add core module coverage ([#35](https://github.com/ramanathanlab/genslm-embeddings/issues/35)) ([dddc22d](https://github.com/ramanathanlab/genslm-embeddings/commit/dddc22d156f02d9adf25bae2315385fff27d3a55))
+
+
+### Code Refactoring
+
+* rename python package to genslm embeddings ([#33](https://github.com/ramanathanlab/genslm-embeddings/issues/33)) ([377b741](https://github.com/ramanathanlab/genslm-embeddings/commit/377b7416dc53c89a54fba2005edb1311bcc6381c))
+
 ## [0.1.3](https://github.com/ramanathanlab/genslm-embeddings/compare/v0.1.2...v0.1.3) (2026-09-24)
 
 
