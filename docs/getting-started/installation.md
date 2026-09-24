@@ -2,7 +2,7 @@
 
 ## Base package
 
-Protein Search Evals supports Python 3.10 and newer. Install uv, then
+GenSLM Embeddings supports Python 3.10 and newer. Install uv, then
 synchronize the locked environment:
 
 ```bash

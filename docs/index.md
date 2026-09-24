@@ -1,9 +1,9 @@
-# Protein Search Evals
+# GenSLM Embeddings
 
-Protein Search Evals benchmarks protein language model embeddings for protein
-sequence search. It provides a configurable pipeline for computing embeddings,
-building FAISS indexes, and measuring retrieval quality on biological benchmark
-datasets.
+GenSLM Embeddings generates and evaluates biological foundation model
+embeddings at scale. It provides a configurable pipeline for computing
+embeddings, building FAISS indexes, and measuring retrieval quality on
+biological benchmark datasets.
 
 ## What it provides
 

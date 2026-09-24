@@ -1,6 +1,6 @@
 # Architecture Overview
 
-Protein Search Evals separates model inference, persisted embeddings, search,
+GenSLM Embeddings separates model inference, persisted embeddings, search,
 and evaluation so large embedding collections can be generated once and reused
 across search experiments.
 
