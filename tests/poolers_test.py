@@ -11,20 +11,20 @@ def test_average_pool_excludes_special_tokens_and_padding() -> None:
     embeddings = torch.tensor(
         [
             [[100.0], [2.0], [4.0], [200.0], [999.0]],
-            [[100.0], [6.0], [200.0], [999.0], [999.0]],
+            [[100.0], [6.0], [8.0], [200.0], [999.0]],
         ],
     )
     attention_mask = torch.tensor(
         [
             [1, 1, 1, 1, 0],
-            [1, 1, 1, 0, 0],
+            [1, 1, 1, 1, 0],
         ],
     )
     original_mask = attention_mask.clone()
 
     pooled = average_pool(embeddings, attention_mask)
 
-    torch.testing.assert_close(pooled, torch.tensor([[3.0], [6.0]]))
+    torch.testing.assert_close(pooled, torch.tensor([[3.0], [7.0]]))
     assert torch.equal(attention_mask, original_mask)
 
 

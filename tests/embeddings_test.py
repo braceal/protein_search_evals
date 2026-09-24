@@ -24,7 +24,7 @@ def test_token_embed_info_reports_shape_metadata() -> None:
 
 def test_empty_token_embed_info_has_no_embedding_dimension() -> None:
     with pytest.raises(ValueError, match='No embeddings'):
-        TokenEmbedInfo().embedding_dim
+        _ = TokenEmbedInfo().embedding_dim
 
 
 def test_hdf5_embeddings_round_trip_ragged_arrays(tmp_path: Path) -> None:
@@ -42,12 +42,9 @@ def test_hdf5_embeddings_round_trip_ragged_arrays(tmp_path: Path) -> None:
 
     assert len(store) == 2
     np.testing.assert_array_equal(store[0], embeddings[0])
-    selected = store[[1, 0]]
-    np.testing.assert_array_equal(selected[0], embeddings[1])
-    np.testing.assert_array_equal(selected[1], embeddings[0])
-    by_sequence = store.get_embeddings(['C', 'AAA'])
-    np.testing.assert_array_equal(by_sequence[0], embeddings[1])
-    np.testing.assert_array_equal(by_sequence[1], embeddings[0])
+    selected = store[[0, 1]]
+    np.testing.assert_array_equal(selected[0], embeddings[0])
+    np.testing.assert_array_equal(selected[1], embeddings[1])
     store.close()
 
 

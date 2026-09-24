@@ -7,10 +7,10 @@ from pathlib import Path
 from Bio.SeqRecord import SeqRecord
 
 from genslm_embeddings.utils import BaseConfig
-from genslm_embeddings.utils import Sequence
 from genslm_embeddings.utils import batch_data
 from genslm_embeddings.utils import chunk_fasta_file
 from genslm_embeddings.utils import read_fasta
+from genslm_embeddings.utils import Sequence
 from genslm_embeddings.utils import write_fasta
 
 
