@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/ramanathanlab/genslm-embeddings/compare/v0.1.2...v0.1.3) (2026-09-24)
+
+
+### Documentation
+
+* fix readme badges ([#30](https://github.com/ramanathanlab/genslm-embeddings/issues/30)) ([9738404](https://github.com/ramanathanlab/genslm-embeddings/commit/9738404c76c99f4680fdb23f779a5adce16ef8d0))
+
 ## [0.1.2](https://github.com/ramanathanlab/genslm-embeddings/compare/v0.1.1...v0.1.2) (2026-09-24)
 
 
