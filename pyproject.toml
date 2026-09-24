@@ -59,7 +59,7 @@ docs = [
     "mkdocs-literate-nav",
     "mkdocs-material==9.4.7",
     "mkdocs-section-index",
-    "mkdocstrings==0.23.0",
+    "mkdocstrings==1.0.6",
     "mkdocstrings-python==1.8.0",
     "mike",
 ]
