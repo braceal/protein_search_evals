@@ -1,0 +1,30 @@
+name: Release
+
+# Runs on every push to develop (which happens when a PR is squash-merged).
+#
+# Release Please inspects conventional commits since the previous release and
+# opens or updates a release PR that bumps the version in pyproject.toml and
+# updates CHANGELOG.md. Merging that release PR creates the git tag and GitHub
+# Release.
+
+on:
+  push:
+    branches: [develop]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v5
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          target-branch: develop
