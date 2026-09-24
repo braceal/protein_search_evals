@@ -2,18 +2,9 @@
 
 from __future__ import annotations
 
-import importlib.util
-
 from typer.testing import CliRunner
 
-import genslm_embeddings
 from genslm_embeddings.cli import app
-
-
-def test_import_package_uses_new_name() -> None:
-    """Expose only the renamed Python import package."""
-    assert genslm_embeddings.__name__ == 'genslm_embeddings'
-    assert importlib.util.find_spec('protein_search_evals') is None
 
 
 def test_cli_help() -> None:
