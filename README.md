@@ -7,7 +7,7 @@
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-Generate and evaluate biological foundation model embeddings at scale.
+Generate biological foundation model embeddings at scale.
 
 📖 **Documentation:** https://ramanathanlab.github.io/genslm-embeddings/
 
