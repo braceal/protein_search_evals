@@ -13,25 +13,24 @@ retrieval quality on protein-family datasets such as Pfam and Radical SAM.
 
 ```bash
 # Install
-pip install -e '.[dev]'
+uv sync --locked --extra dev
 
 # Lint and format
-pre-commit run --all-files
-ruff check .
-ruff format .
+uv run pre-commit run --all-files
+uv run ruff check .
+uv run ruff format .
 
 # Type check
-mypy protein_search_evals/
+uv run mypy protein_search_evals/
 
 # Tests
-tox -e py310
-pytest
+uv run pytest
 
 # Generate distributed embeddings from a YAML configuration
-python -m protein_search_evals.distributed_embeddings --config path/to/config.yaml
+uv run python -m protein_search_evals.distributed_embeddings --config path/to/config.yaml
 
 # Use the package CLI
-protein_search_evals --help
+uv run protein_search_evals --help
 ```
 
 FAISS and model-specific acceleration packages are installed separately; see
