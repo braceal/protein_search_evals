@@ -239,12 +239,19 @@ class HDF5TokenEmbeddings:
             # Single index
             return embeddings[idx, : lengths[idx], :]
 
-        elif isinstance(idx, (slice, list, np.ndarray)):
+        elif isinstance(idx, slice):
             # Slice or list/array of indices
             # Trim padding based on lengths
             token_embeddings = [
                 emb[:length]
                 for emb, length in zip(embeddings[idx], lengths[idx])
+            ]
+            return np.array(token_embeddings, dtype=object)
+        elif isinstance(idx, (list, np.ndarray)):
+            # HDF5 fancy indexing requires indices in increasing order. Read
+            # items individually to preserve the caller's requested order.
+            token_embeddings = [
+                embeddings[index, : lengths[index], :] for index in idx
             ]
             return np.array(token_embeddings, dtype=object)
         else:
@@ -262,8 +269,8 @@ class HDF5TokenEmbeddings:
             The mapping from sequence to index in the dataset.
         """
         file_handle = self._get_file_handle()
-        sequences = file_handle['sequences']
-        return {str(seq): idx for idx, seq in enumerate(sequences)}
+        sequences = file_handle['sequences'].asstr()
+        return {seq: idx for idx, seq in enumerate(sequences)}
 
     def get_embeddings(self, sequences: list[str]) -> list[np.ndarray]:
         """Get the embeddings for the given sequences.
