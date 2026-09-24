@@ -17,6 +17,8 @@ from scipy.spatial.distance import pdist
 from tqdm import tqdm
 
 from genslm_embeddings.datasets.pfam import Pfam20Dataset
+from genslm_embeddings.embed.writers import load_embedding_metadata
+from genslm_embeddings.embed.writers import select_embedding_layer
 from genslm_embeddings.evaluate import get_dataset
 from genslm_embeddings.utils import BaseConfig
 
@@ -44,6 +46,10 @@ class ClusterVarianceOutput(BaseConfig):
     model: str = Field(..., description='Model name.')
     dataset: str = Field(..., description='Dataset directory.')
     embedding_dir: str = Field(..., description='Embedding dataset path used.')
+    embedding_layer: int | None = Field(
+        default=None,
+        description='Transformer block selected from stored embeddings.',
+    )
     n_sequences: int = Field(
         ...,
         description='Total sequences in embedding set.',
@@ -94,6 +100,7 @@ def compute_cluster_variances(
     dataset_dir: Path,
     dataset_partition: str,
     model_name: str,
+    embedding_layer: int | None = None,
 ) -> ClusterVarianceOutput:
     """Compute variance per cluster for both metrics.
 
@@ -108,6 +115,8 @@ def compute_cluster_variances(
         Dataset partition (e.g. '' for Pfam, or 'seed-42' style for subset).
     model_name : str
         Model name for the output metadata.
+    embedding_layer : int | None, optional
+        Transformer block to select from multi-layer embeddings.
 
     Returns
     -------
@@ -128,9 +137,10 @@ def compute_cluster_variances(
     n_sequences = len(ds)
     indices_full = np.arange(n_sequences)
     tags = ds['tags'][indices_full]
-    embeddings_full = np.asarray(
-        ds['embeddings'][indices_full],
-        dtype=np.float32,
+    embeddings_full = select_embedding_layer(
+        np.asarray(ds['embeddings'][indices_full], dtype=np.float32),
+        embedding_layer,
+        load_embedding_metadata(embedding_dir),
     )
 
     print(f'Loaded {n_sequences} sequences')
@@ -172,6 +182,7 @@ def compute_cluster_variances(
         model=model_name,
         dataset=str(dataset_dir),
         embedding_dir=str(embedding_dir),
+        embedding_layer=embedding_layer,
         n_sequences=n_sequences,
         n_clusters=len(cluster_to_indices),
         cosine_similarity=_summary(cosine_per_cluster),
@@ -214,6 +225,12 @@ if __name__ == '__main__':
         required=True,
         help='Model name (for output metadata).',
     )
+    parser.add_argument(
+        '--embedding_layer',
+        type=int,
+        default=None,
+        help='Transformer block to use from multi-layer embeddings.',
+    )
     args = parser.parse_args()
 
     embedding_dir = next((args.model_dir / 'embeddings').glob('*'))
@@ -223,6 +240,7 @@ if __name__ == '__main__':
         dataset_dir=args.dataset_dir,
         dataset_partition=args.dataset_partition,
         model_name=args.model_name,
+        embedding_layer=args.embedding_layer,
     )
 
     print(f'Model: {result.model}')

@@ -14,6 +14,7 @@ from genslm_embeddings.embed.encoders import EncoderConfigs
 from genslm_embeddings.embed.encoders import Esm2EncoderConfig
 from genslm_embeddings.embed.encoders import EsmCambrianEncoderConfig
 from genslm_embeddings.embed.encoders import ProtTransEncoderConfig
+from genslm_embeddings.embed.encoders.base import PooledLayers
 from genslm_embeddings.search import FaissIndexConfig
 from genslm_embeddings.search import Retriever
 from genslm_embeddings.search import RetrieverConfig
@@ -46,13 +47,18 @@ def get_dataset(
         raise ValueError(f'Unknown dataset: {dataset_dir}')
 
 
-def get_encoder_config(model_name: str) -> EncoderConfigs:
+def get_encoder_config(
+    model_name: str,
+    pooled_layers: PooledLayers = 'last',
+) -> EncoderConfigs:
     """Get the encoder configuration.
 
     Parameters
     ----------
     model_name : str
         The model name to use for the encoder.
+    pooled_layers : PooledLayers, optional
+        Transformer layers to pool, by default ``'last'``.
 
     Returns
     -------
@@ -63,16 +69,19 @@ def get_encoder_config(model_name: str) -> EncoderConfigs:
     if 'esm2' in model_name:
         return Esm2EncoderConfig(
             normalize_pooled_embeddings=True,
+            pooled_layers=pooled_layers,
             pretrained_model_name_or_path=model_name,
         )
     elif 'esmc' in model_name:
         return EsmCambrianEncoderConfig(
             normalize_pooled_embeddings=True,
+            pooled_layers=pooled_layers,
             pretrained_model_name_or_path=model_name,
         )
     elif 'prot_t5' in model_name:
         return ProtTransEncoderConfig(
             normalize_pooled_embeddings=True,
+            pooled_layers=pooled_layers,
             pretrained_model_name_or_path=model_name,
         )
     else:
@@ -114,6 +123,10 @@ class EvaluationMetadata(BaseConfig):
     index_path: str = Field(
         ...,
         description='The path to the faiss index.',
+    )
+    embedding_layer: int | None = Field(
+        default=None,
+        description='Transformer block selected for retrieval.',
     )
 
     def __str__(self) -> str:
@@ -398,6 +411,12 @@ if __name__ == '__main__':
         default=0,
         help='The number of GPUs to use for searching the faiss index.',
     )
+    parser.add_argument(
+        '--embedding_layer',
+        type=int,
+        default=None,
+        help='Transformer block to use from multi-layer embeddings.',
+    )
     args = parser.parse_args()
 
     # Get the dataset directory (a single directory named with a UUID
@@ -405,7 +424,14 @@ if __name__ == '__main__':
     embedding_dataset_dir = next((args.model_dir / 'embeddings').glob('*'))
 
     # Will automatically create the faiss index if it does not exist
-    faiss_index_path = args.model_dir / f'{args.precision}-faiss.index'
+    layer_suffix = (
+        f'-layer-{args.embedding_layer}'
+        if args.embedding_layer is not None
+        else ''
+    )
+    faiss_index_path = (
+        args.model_dir / f'{args.precision}{layer_suffix}-faiss.index'
+    )
 
     # The encoder model always gets placed on GPU:0 relative
     # to CUDA_VISIBLE_DEVICES. If `gpus` > 0, then the faiss index
@@ -421,10 +447,14 @@ if __name__ == '__main__':
         precision=args.precision,
         search_algorithm='exact',
         search_gpus=search_gpus,
+        embedding_layer=args.embedding_layer,
     )
 
     # Get the encoder configuration
-    encoder_config = get_encoder_config(args.model_name)
+    pooled_layers: PooledLayers = (
+        [args.embedding_layer] if args.embedding_layer is not None else 'last'
+    )
+    encoder_config = get_encoder_config(args.model_name, pooled_layers)
 
     # Initialize retriever configuration
     retriever_config = RetrieverConfig(
@@ -454,6 +484,7 @@ if __name__ == '__main__':
         model_directory=str(args.model_dir),
         dataset=str(args.dataset_dir),
         index_path=str(faiss_index_path),
+        embedding_layer=args.embedding_layer,
     )
 
     # Print the evaluation summary

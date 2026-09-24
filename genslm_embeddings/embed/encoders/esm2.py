@@ -1,4 +1,5 @@
 """Encoder for the ESM-2 model."""
+# ruff: noqa: PLC0415
 
 from __future__ import annotations
 
@@ -138,6 +139,16 @@ class Esm2Encoder(Encoder):
         """Get the tokenizer of the encoder."""
         return self._tokenizer
 
+    @property
+    def supports_layer_pooling(self) -> bool:
+        """Whether intermediate transformer layers are available."""
+        return not self.enable_faesm
+
+    @property
+    def num_layers(self) -> int:
+        """Get the number of transformer blocks in the encoder."""
+        return self.model.config.num_hidden_layers
+
     def encode(self, batch_encoding: BatchEncoding) -> torch.Tensor:
         """Encode the sequence.
 
@@ -164,3 +175,22 @@ class Esm2Encoder(Encoder):
             return outputs['last_hidden_state']
 
         return outputs.hidden_states[-1]
+
+    def encode_layers(
+        self,
+        batch_encoding: BatchEncoding,
+        layer_indices: tuple[int, ...],
+    ) -> tuple[torch.Tensor, tuple[torch.Tensor, ...]]:
+        """Encode the final and selected transformer hidden states."""
+        if self.enable_faesm:
+            return super().encode_layers(batch_encoding, layer_indices)
+
+        outputs = self.model(
+            **batch_encoding,
+            output_hidden_states=True,
+        )
+        hidden_states = outputs.hidden_states
+        assert hidden_states is not None
+        return hidden_states[-1], tuple(
+            hidden_states[layer + 1] for layer in layer_indices
+        )

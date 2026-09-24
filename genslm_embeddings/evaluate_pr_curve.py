@@ -36,6 +36,7 @@ from tqdm import tqdm
 
 from genslm_embeddings.datasets.pfam import Pfam20Dataset
 from genslm_embeddings.datasets.radicalsam import RadicalSamDataset
+from genslm_embeddings.embed.encoders.base import PooledLayers
 from genslm_embeddings.evaluate import get_dataset
 from genslm_embeddings.evaluate import get_encoder_config
 from genslm_embeddings.search import FaissIndexConfig
@@ -75,6 +76,10 @@ class PRCurveOutput(BaseConfig):
     precision_type: str = Field(
         ...,
         description='FAISS index precision (e.g. float32, ubinary).',
+    )
+    embedding_layer: int | None = Field(
+        default=None,
+        description='Transformer block selected for retrieval.',
     )
     dataset: str = Field(
         ...,
@@ -248,6 +253,7 @@ def run_pr_curve_evaluation(
         auprc=auprc,
         method=method_name,
         precision_type=precision_type,
+        embedding_layer=retriever.faiss_index.embedding_layer,
         dataset=str(dataset_dir),
         n_pairs=n_pairs,
         n_positive=n_positive,
@@ -317,10 +323,23 @@ if __name__ == '__main__':
         help='Queries per search call (1 = minimal memory; increase if '
         'memory allows for speed).',
     )
+    parser.add_argument(
+        '--embedding_layer',
+        type=int,
+        default=None,
+        help='Transformer block to use from multi-layer embeddings.',
+    )
     args = parser.parse_args()
 
     embedding_dataset_dir = next((args.model_dir / 'embeddings').glob('*'))
-    faiss_index_path = args.model_dir / f'{args.precision}-faiss.index'
+    layer_suffix = (
+        f'-layer-{args.embedding_layer}'
+        if args.embedding_layer is not None
+        else ''
+    )
+    faiss_index_path = (
+        args.model_dir / f'{args.precision}{layer_suffix}-faiss.index'
+    )
     search_gpus = 0 if args.gpus == 0 else list(range(1, args.gpus + 1))
 
     faiss_config = FaissIndexConfig(
@@ -329,8 +348,12 @@ if __name__ == '__main__':
         precision=args.precision,
         search_algorithm='exact',
         search_gpus=search_gpus,
+        embedding_layer=args.embedding_layer,
     )
-    encoder_config = get_encoder_config(args.model_name)
+    pooled_layers: PooledLayers = (
+        [args.embedding_layer] if args.embedding_layer is not None else 'last'
+    )
+    encoder_config = get_encoder_config(args.model_name, pooled_layers)
     retriever_config = RetrieverConfig(
         faiss_config=faiss_config,
         encoder_config=encoder_config,

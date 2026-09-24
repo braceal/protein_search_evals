@@ -131,6 +131,16 @@ class ProtTransEncoder(Encoder):
         """Get the tokenizer of the encoder."""
         return self._tokenizer
 
+    @property
+    def supports_layer_pooling(self) -> bool:
+        """Whether intermediate transformer layers are available."""
+        return True
+
+    @property
+    def num_layers(self) -> int:
+        """Get the number of transformer blocks in the encoder."""
+        return self.model.config.num_layers
+
     def get_dataloader(self, sequences: list[str]) -> DataLoader:
         """Override base functionality to add space between amino aicds.
 
@@ -172,3 +182,19 @@ class ProtTransEncoder(Encoder):
         outputs = self.model(**batch_encoding)
 
         return outputs.last_hidden_state
+
+    def encode_layers(
+        self,
+        batch_encoding: BatchEncoding,
+        layer_indices: tuple[int, ...],
+    ) -> tuple[torch.Tensor, tuple[torch.Tensor, ...]]:
+        """Encode the final and selected transformer hidden states."""
+        outputs = self.model(
+            **batch_encoding,
+            output_hidden_states=True,
+        )
+        hidden_states = outputs.hidden_states
+        assert hidden_states is not None
+        return outputs.last_hidden_state, tuple(
+            hidden_states[layer + 1] for layer in layer_indices
+        )
