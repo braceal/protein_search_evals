@@ -26,6 +26,11 @@ uv run mypy protein_search_evals/
 # Tests
 uv run pytest
 
+# Documentation
+uv sync --locked --only-group docs
+uv run --no-sync properdocs build --strict
+uv run --no-sync properdocs serve
+
 # Generate distributed embeddings from a YAML configuration
 uv run python -m protein_search_evals.distributed_embeddings --config path/to/config.yaml
 

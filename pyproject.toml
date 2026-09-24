@@ -55,19 +55,16 @@ dev = [
     "ruff",
     "types-PyYAML",
 ]
-docs = [
-    "black",
-    "mkdocs-gen-files",
-    "mkdocs-literate-nav",
-    "mkdocs-material==9.4.7",
-    "mkdocs-section-index",
-    "mkdocstrings==0.23.0",
-    "mkdocstrings-python==1.8.0",
-    "mike",
-]
-
 [tool.uv]
 required-version = ">=0.12.8,<0.13"
+
+[dependency-groups]
+docs = [
+    "properdocs",
+    "mkdocs-material",
+    "mkdocstrings[python]",
+    "pymdown-extensions",
+]
 
 [tool.codespell]
 skip = """

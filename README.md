@@ -120,7 +120,7 @@ Synchronize the locked development and documentation dependencies, then install
 the pre-commit hooks:
 
 ```bash
-uv sync --locked --extra dev --extra docs
+uv sync --locked --extra dev --group docs
 uv run pre-commit install
 ```
 
@@ -130,3 +130,16 @@ Run quality checks and tests through the locked environment:
 uv run pre-commit run --all-files
 uv run pytest
 ```
+
+### Documentation
+
+The documentation site is built with ProperDocs. Install the documentation
+dependencies and run a strict local build with:
+
+```bash
+uv sync --locked --only-group docs
+uv run --no-sync properdocs build --strict
+```
+
+For live preview while editing documentation, run
+`uv run --no-sync properdocs serve`.
