@@ -175,10 +175,10 @@ class TimeLogger:
             match = re.findall(regex_pattern, line)
             time_stats.append(
                 TimeStats(
-                    tags=match[1].split(),
-                    elapsed_s=match[2],
-                    start_unix=match[3],
-                    end_unix=match[4],
+                    tags=tuple(match[1].split()),
+                    elapsed_s=float(match[2]),
+                    start_unix=float(match[3]),
+                    end_unix=float(match[4]),
                 ),
             )
 

@@ -39,7 +39,9 @@ def average_pool(
     if sos_token:
         attn_mask[:, 0] = 0
     if eos_token:
-        attn_mask[:, seq_lengths - 1] = 0
+        rows = torch.arange(attn_mask.shape[0], device=attn_mask.device)
+        nonempty = seq_lengths > 0
+        attn_mask[rows[nonempty], seq_lengths[nonempty] - 1] = 0
 
     # Create a mask for the pooling operation (B, SeqLen, HiddenDim)
     pool_mask = attn_mask.unsqueeze(-1).expand(embeddings.shape)
