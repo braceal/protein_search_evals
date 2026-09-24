@@ -22,13 +22,13 @@
   ],
   "packages": {
     ".": {
-      "package-name": "protein_search_evals",
+      "package-name": "genslm-embeddings",
       "changelog-path": "CHANGELOG.md",
       "extra-files": [
         {
           "type": "toml",
           "path": "uv.lock",
-          "jsonpath": "$.package[?(@.name.value=='protein-search-evals')].version"
+          "jsonpath": "$.package[?(@.name.value=='genslm-embeddings')].version"
         }
       ]
     }

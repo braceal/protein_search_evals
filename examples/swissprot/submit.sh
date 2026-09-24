@@ -15,17 +15,17 @@
 source ~/.bashrc
 
 # Load the required modules
-module use /soft/modulefiles; module load conda; conda activate protein_search_evals_03_25
+module use /soft/modulefiles; module load conda; conda activate genslm_embeddings_03_25
 
 # Set the environment variables
 export HF_HOME=/lus/eagle/projects/CVD-Mol-AI/braceal/.cache
 
 # Change to working directory
-PROJECT_DIR=/lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/src/protein_search_evals
+PROJECT_DIR=/lus/eagle/projects/FoundEpidem/braceal/projects/kbase-protein-search/src/genslm_embeddings
 cd $PROJECT_DIR
 
 # Get the config file for this example
 CONFIG_FILE=$PROJECT_DIR/examples/swissprot/esm2-3B-faesm.yaml
 
 # Run the workflow
-python -m protein_search_evals.distributed_embeddings --config $CONFIG_FILE
+python -m genslm_embeddings.distributed_embeddings --config $CONFIG_FILE

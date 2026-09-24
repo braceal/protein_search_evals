@@ -7,7 +7,7 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from protein_search_evals.datasets.pfam import Pfam20Dataset
+from genslm_embeddings.datasets.pfam import Pfam20Dataset
 
 
 def main() -> None:

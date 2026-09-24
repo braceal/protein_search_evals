@@ -8,14 +8,14 @@ across search experiments.
 
 | Area | Location | Responsibility |
 | --- | --- | --- |
-| Encoders | `protein_search_evals/embed/encoders/` | Load protein language models and compute token representations |
-| Pooling | `protein_search_evals/embed/poolers.py` | Convert token representations into sequence embeddings |
-| Storage | `protein_search_evals/embed/writers.py` | Write and merge Hugging Face datasets |
-| Distribution | `protein_search_evals/distributed_embeddings.py` | Submit embedding work through Parsl |
-| Compute backends | `protein_search_evals/parsl.py` | Configure workstation and Polaris execution |
-| Search | `protein_search_evals/search.py` | Quantize embeddings and build or query FAISS indexes |
-| Evaluation | `protein_search_evals/evaluate.py` | Compute sequence- and cluster-level retrieval accuracy |
-| Datasets | `protein_search_evals/datasets/` | Build and load benchmark datasets |
+| Encoders | `genslm_embeddings/embed/encoders/` | Load protein language models and compute token representations |
+| Pooling | `genslm_embeddings/embed/poolers.py` | Convert token representations into sequence embeddings |
+| Storage | `genslm_embeddings/embed/writers.py` | Write and merge Hugging Face datasets |
+| Distribution | `genslm_embeddings/distributed_embeddings.py` | Submit embedding work through Parsl |
+| Compute backends | `genslm_embeddings/parsl.py` | Configure workstation and Polaris execution |
+| Search | `genslm_embeddings/search.py` | Quantize embeddings and build or query FAISS indexes |
+| Evaluation | `genslm_embeddings/evaluate.py` | Compute sequence- and cluster-level retrieval accuracy |
+| Datasets | `genslm_embeddings/datasets/` | Build and load benchmark datasets |
 
 ## Embedding pipeline
 

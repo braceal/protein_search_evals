@@ -7,7 +7,7 @@ conda install bioconda::blast
 
 First, download the Pfam20 dataset, by running:
 ```bash
-python -m protein_search_evals.datasets.pfam
+python -m genslm_embeddings.datasets.pfam
 ```
 
 Then, set up the BLAST input files:

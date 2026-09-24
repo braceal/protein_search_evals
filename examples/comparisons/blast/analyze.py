@@ -10,8 +10,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from protein_search_evals.evaluate import EvaluatorOutput
-from protein_search_evals.evaluate import get_dataset
+from genslm_embeddings.evaluate import EvaluatorOutput
+from genslm_embeddings.evaluate import get_dataset
 
 if __name__ == '__main__':
     # Parse arguments from the command line

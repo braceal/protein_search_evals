@@ -4,10 +4,10 @@ This file provides guidance to coding agents working in this repository.
 
 ## Project Overview
 
-Protein Search Evals benchmarks protein language model embeddings for sequence
-search. It computes embeddings locally or with Parsl, stores them as Hugging
-Face datasets, builds exact or approximate FAISS indexes, and evaluates
-retrieval quality on protein-family datasets such as Pfam and Radical SAM.
+GenSLM Embeddings generates biological foundation model embeddings locally or
+with Parsl, stores them as Hugging Face datasets, builds exact or approximate
+FAISS indexes, and evaluates retrieval quality on protein-family datasets such
+as Pfam and Radical SAM.
 
 ## Commands
 
@@ -21,7 +21,7 @@ uv run ruff check .
 uv run ruff format .
 
 # Type check
-uv run mypy protein_search_evals/
+uv run mypy genslm_embeddings/
 
 # Tests
 uv run pytest
@@ -32,10 +32,10 @@ uv run --no-sync properdocs build --strict
 uv run --no-sync properdocs serve
 
 # Generate distributed embeddings from a YAML configuration
-uv run python -m protein_search_evals.distributed_embeddings --config path/to/config.yaml
+uv run python -m genslm_embeddings.distributed_embeddings --config path/to/config.yaml
 
 # Use the package CLI
-uv run protein_search_evals --help
+uv run genslm-embeddings --help
 ```
 
 FAISS and model-specific acceleration packages are installed separately; see
@@ -88,30 +88,30 @@ The package follows Semantic Versioning (`MAJOR.MINOR.PATCH`), starting from
 
 ### Embedding pipeline
 
-- `protein_search_evals/embed/encoders/` defines model-specific encoders and
+- `genslm_embeddings/embed/encoders/` defines model-specific encoders and
   their Pydantic configurations.
-- `protein_search_evals/embed/poolers.py` converts token representations into
+- `genslm_embeddings/embed/poolers.py` converts token representations into
   sequence-level embeddings.
-- `protein_search_evals/embed/writers.py` persists and merges embedding outputs
+- `genslm_embeddings/embed/writers.py` persists and merges embedding outputs
   as Hugging Face datasets.
-- `protein_search_evals/distributed_embeddings.py` loads a YAML configuration
+- `genslm_embeddings/distributed_embeddings.py` loads a YAML configuration
   and distributes embedding jobs through Parsl.
 
 ### Search and evaluation
 
-- `protein_search_evals/search.py` builds and queries FAISS indexes. It supports
+- `genslm_embeddings/search.py` builds and queries FAISS indexes. It supports
   float32 and unsigned-binary embeddings with exact, IVF, and HNSW search.
-- `protein_search_evals/evaluate.py` evaluates retrieval accuracy on Pfam and
+- `genslm_embeddings/evaluate.py` evaluates retrieval accuracy on Pfam and
   Radical SAM datasets.
-- `protein_search_evals/evaluate_pr_curve.py` computes precision-recall results.
-- `protein_search_evals/rerankers/` contains optional post-retrieval rerankers,
+- `genslm_embeddings/evaluate_pr_curve.py` computes precision-recall results.
+- `genslm_embeddings/rerankers/` contains optional post-retrieval rerankers,
   including the PLM-BLAST implementation.
 
 ### Data and configuration
 
-- `protein_search_evals/datasets/` builds and loads benchmark datasets.
-- `protein_search_evals/parsl.py` contains local and HPC execution providers.
-- `protein_search_evals/utils.py` provides the shared Pydantic configuration
+- `genslm_embeddings/datasets/` builds and loads benchmark datasets.
+- `genslm_embeddings/parsl.py` contains local and HPC execution providers.
+- `genslm_embeddings/utils.py` provides the shared Pydantic configuration
   base and FASTA utilities.
 - `examples/` contains benchmark notebooks, YAML configurations, and scheduler
   scripts. Large generated datasets and model outputs should not be committed.
