@@ -16,7 +16,6 @@ across search experiments.
 | Search | `protein_search_evals/search.py` | Quantize embeddings and build or query FAISS indexes |
 | Evaluation | `protein_search_evals/evaluate.py` | Compute sequence- and cluster-level retrieval accuracy |
 | Datasets | `protein_search_evals/datasets/` | Build and load benchmark datasets |
-| Reranking | `protein_search_evals/rerankers/` | Refine retrieved candidates with optional rerankers |
 
 ## Embedding pipeline
 
@@ -29,7 +28,7 @@ The CLI can merge the resulting shards without recomputing embeddings.
 
 `FaissIndex` loads stored embeddings, optionally quantizes them, and constructs
 an exact, IVF, or HNSW index. `Retriever` embeds queries with the configured
-encoder, searches the index, and can pass candidates through a reranker.
+encoder and searches the index for nearest-neighbor matches.
 
 ## Evaluation pipeline
 

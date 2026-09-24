@@ -12,7 +12,6 @@ datasets.
 - Exact, IVF, and HNSW FAISS search
 - Float32 and unsigned-binary embedding indexes
 - Pfam and Radical SAM evaluation datasets
-- Optional PLM-BLAST reranking
 
 ## Evaluation workflow
 
