@@ -36,7 +36,7 @@ run_evaluation() {
 
             echo "Running evaluation with model: $MODEL_NAME, model_dir: $MODEL_DIR, precision: $PRECISION, partition: $partition"
 
-            python -m protein_search_evals.evaluate \
+            python -m genslm_embeddings.evaluate \
                 --report_name "$REPORT_NAME" \
                 --dataset_dir "$DATASET_DIR" \
                 --dataset_partition "$partition" \

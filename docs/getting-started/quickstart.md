@@ -5,14 +5,14 @@
 Build one of the included benchmark datasets:
 
 ```bash
-python -m protein_search_evals.datasets.pfam
+python -m genslm_embeddings.datasets.pfam
 ```
 
 For Radical SAM, extract the bundled source data first:
 
 ```bash
 tar -xzf data/radicalsam.tar.gz -C data
-python -m protein_search_evals.datasets.radicalsam
+python -m genslm_embeddings.datasets.radicalsam
 ```
 
 ## Compute embeddings
@@ -40,7 +40,7 @@ compute_config:
 Run the distributed embedding entry point with that configuration:
 
 ```bash
-python -m protein_search_evals.distributed_embeddings \
+python -m genslm_embeddings.distributed_embeddings \
   --config examples/pfam/embedding_configs/esm2-150M.yaml
 ```
 
@@ -50,9 +50,9 @@ Distributed jobs write one Hugging Face dataset per worker. Merge those shards
 with the package CLI:
 
 ```bash
-protein_search_evals merge \
+genslm-embeddings merge \
   --dataset_dir /path/to/embedding-shards \
   --output_dir /path/to/merged-embeddings
 ```
 
-Use `protein_search_evals --help` to see all CLI commands and options.
+Use `genslm-embeddings --help` to see all CLI commands and options.

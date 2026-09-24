@@ -10,8 +10,8 @@ from pydantic import Field
 from transformers import BatchEncoding
 from transformers import PreTrainedTokenizer
 
-from protein_search_evals.embed.encoders.base import Encoder
-from protein_search_evals.embed.encoders.base import EncoderConfig
+from genslm_embeddings.embed.encoders.base import Encoder
+from genslm_embeddings.embed.encoders.base import EncoderConfig
 
 
 class EsmCambrianEncoderConfig(EncoderConfig):

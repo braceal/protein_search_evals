@@ -1,1 +1,0 @@
-"""Protein search package."""

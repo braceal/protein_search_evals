@@ -13,9 +13,9 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from protein_search_evals.utils import read_fasta
-from protein_search_evals.utils import Sequence
-from protein_search_evals.utils import write_fasta
+from genslm_embeddings.utils import read_fasta
+from genslm_embeddings.utils import Sequence
+from genslm_embeddings.utils import write_fasta
 
 
 def download_and_unzip(url: str, output_dir: str | Path) -> Path:

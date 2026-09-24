@@ -23,6 +23,9 @@ cd genslm-embeddings
 uv sync --locked
 ```
 
+The distribution is named `genslm-embeddings`, its Python import package is
+`genslm_embeddings`, and its command-line entry point is `genslm-embeddings`.
+
 To install Faiss, for GPU support with CUDA 12, run the following command:
 ```bash
 uv pip install faiss-gpu-cu12
@@ -53,20 +56,20 @@ uv pip install faesm
 
 The Pfam20 benchmark dataset can be built using the following command:
 ```bash
-uv run python -m protein_search_evals.datasets.pfam
+uv run python -m genslm_embeddings.datasets.pfam
 ```
 
 The Radical SAM benchmark dataset can be built using the following command:
 ```bash
 tar -zxvf data/radicalsam.tar.gz -C data
-uv run python -m protein_search_evals.datasets.radicalsam
+uv run python -m genslm_embeddings.datasets.radicalsam
 ```
 
 ### Running the embedding computation
 
 To compute the embeddings for the Pfam20 dataset using ESM2-3B with faesm, run the following command:
 ```bash
-nohup uv run python -m protein_search_evals.distributed_embeddings --config examples/pfam/embedding_configs/esm2-3B-faesm.yaml &> nohup.log &
+nohup uv run python -m genslm_embeddings.distributed_embeddings --config examples/pfam/embedding_configs/esm2-3B-faesm.yaml &> nohup.log &
 ```
 
 Modify the YAML file to use different models or datasets.
@@ -120,7 +123,7 @@ You can run the command for multiple SRC_DIRs to merge embeddings from multiple 
 Once you have all the embeddings in the same directory, you can run the following command to merge
 them into a single Arrow file:
 ```bash
-uv run protein_search_evals merge --dataset_dir /path/to/combined_embeddings/ --output_dir /path/to/combined_embeddings.merge
+uv run genslm-embeddings merge --dataset_dir /path/to/combined_embeddings/ --output_dir /path/to/combined_embeddings.merge
 ```
 
 ## Contributing

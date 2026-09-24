@@ -19,8 +19,8 @@ from tqdm import tqdm
 from transformers import BatchEncoding
 from transformers import PreTrainedTokenizer
 
-from protein_search_evals.embed.embeddings import HDF5TokenEmbeddings
-from protein_search_evals.embed.poolers import average_pool
+from genslm_embeddings.embed.embeddings import HDF5TokenEmbeddings
+from genslm_embeddings.embed.poolers import average_pool
 
 
 class InMemoryDataset(Dataset):

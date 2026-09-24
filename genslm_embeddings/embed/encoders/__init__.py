@@ -7,15 +7,13 @@ from typing import Union
 
 from parsl_object_registry import registry
 
-from protein_search_evals.embed.encoders.base import Encoder
-from protein_search_evals.embed.encoders.esm2 import Esm2Encoder
-from protein_search_evals.embed.encoders.esm2 import Esm2EncoderConfig
-from protein_search_evals.embed.encoders.esmc import EsmCambrianEncoder
-from protein_search_evals.embed.encoders.esmc import EsmCambrianEncoderConfig
-from protein_search_evals.embed.encoders.prottrans import ProtTransEncoder
-from protein_search_evals.embed.encoders.prottrans import (
-    ProtTransEncoderConfig,
-)
+from genslm_embeddings.embed.encoders.base import Encoder
+from genslm_embeddings.embed.encoders.esm2 import Esm2Encoder
+from genslm_embeddings.embed.encoders.esm2 import Esm2EncoderConfig
+from genslm_embeddings.embed.encoders.esmc import EsmCambrianEncoder
+from genslm_embeddings.embed.encoders.esmc import EsmCambrianEncoderConfig
+from genslm_embeddings.embed.encoders.prottrans import ProtTransEncoder
+from genslm_embeddings.embed.encoders.prottrans import ProtTransEncoderConfig
 
 EncoderConfigs = Union[
     Esm2EncoderConfig,

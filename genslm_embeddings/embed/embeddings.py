@@ -12,7 +12,7 @@ from typing import Sequence
 import h5py
 import numpy as np
 
-from protein_search_evals.timer import timeit_decorator
+from genslm_embeddings.timer import timeit_decorator
 
 
 @dataclass

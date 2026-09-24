@@ -44,7 +44,7 @@ class Timer:
 
     Example:
         ```python
-        from protein_search_evals.timer import Timer
+        from genslm_embeddings.timer import Timer
 
         with Timer() as timer:
             ...
@@ -54,7 +54,7 @@ class Timer:
 
     Example:
         ```python
-        from protein_search_evals.timer import Timer
+        from genslm_embeddings.timer import Timer
 
         timer = Timer("my_run")
         timer.start()

@@ -3,12 +3,12 @@ requires = ["setuptools>=64.0", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "protein_search_evals"
-version = "0.1.3"
+name = "genslm-embeddings"
+version = "0.2.0"
 authors = [
     {name = "Alexander Brace", email = "abrace@anl.gov"},
 ]
-description = "Protein search project."
+description = "Generate biological foundation model embeddings at scale."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -42,7 +42,7 @@ documentation = "https://ramanathanlab.github.io/genslm-embeddings/"
 repository = "https://github.com/ramanathanlab/genslm-embeddings"
 
 [project.scripts]
-protein_search_evals = "protein_search_evals.cli:main"
+genslm-embeddings = "genslm_embeddings.cli:main"
 
 [project.optional-dependencies]
 dev = [
@@ -90,6 +90,9 @@ no_implicit_optional = true
 warn_redundant_casts = true
 warn_unused_configs = true
 warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [[tool.mypy.overrides]]
 module = "testing.*"
@@ -160,7 +163,7 @@ quote-style = "single"
 
 [tool.ruff.isort]
 force-single-line = true
-known-first-party = ["protein_search_evals", "test", "testing"]
+known-first-party = ["genslm_embeddings", "test", "testing"]
 order-by-type = false
 required-imports = ["from __future__ import annotations"]
 

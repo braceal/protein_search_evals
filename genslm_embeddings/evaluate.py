@@ -8,16 +8,16 @@ from pathlib import Path
 import numpy as np
 from pydantic import Field
 
-from protein_search_evals.datasets.pfam import Pfam20Dataset
-from protein_search_evals.datasets.radicalsam import RadicalSamDataset
-from protein_search_evals.embed.encoders import EncoderConfigs
-from protein_search_evals.embed.encoders import Esm2EncoderConfig
-from protein_search_evals.embed.encoders import EsmCambrianEncoderConfig
-from protein_search_evals.embed.encoders import ProtTransEncoderConfig
-from protein_search_evals.search import FaissIndexConfig
-from protein_search_evals.search import Retriever
-from protein_search_evals.search import RetrieverConfig
-from protein_search_evals.utils import BaseConfig
+from genslm_embeddings.datasets.pfam import Pfam20Dataset
+from genslm_embeddings.datasets.radicalsam import RadicalSamDataset
+from genslm_embeddings.embed.encoders import EncoderConfigs
+from genslm_embeddings.embed.encoders import Esm2EncoderConfig
+from genslm_embeddings.embed.encoders import EsmCambrianEncoderConfig
+from genslm_embeddings.embed.encoders import ProtTransEncoderConfig
+from genslm_embeddings.search import FaissIndexConfig
+from genslm_embeddings.search import Retriever
+from genslm_embeddings.search import RetrieverConfig
+from genslm_embeddings.utils import BaseConfig
 
 
 def get_dataset(

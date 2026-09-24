@@ -11,9 +11,9 @@ from parsl.concurrent import ParslPoolExecutor
 from pydantic import Field
 from pydantic import field_validator
 
-from protein_search_evals.embed import EncoderConfigs
-from protein_search_evals.parsl import ComputeConfigs
-from protein_search_evals.utils import BaseConfig
+from genslm_embeddings.embed import EncoderConfigs
+from genslm_embeddings.parsl import ComputeConfigs
+from genslm_embeddings.utils import BaseConfig
 
 
 def embedding_worker(
@@ -28,11 +28,11 @@ def embedding_worker(
 
     from uuid import uuid4
 
-    from protein_search_evals.embed import get_encoder
-    from protein_search_evals.embed.embeddings import HDF5TokenEmbeddings
-    from protein_search_evals.embed.writers import HuggingFaceWriter
-    from protein_search_evals.timer import Timer
-    from protein_search_evals.utils import read_fasta
+    from genslm_embeddings.embed import get_encoder
+    from genslm_embeddings.embed.embeddings import HDF5TokenEmbeddings
+    from genslm_embeddings.embed.writers import HuggingFaceWriter
+    from genslm_embeddings.timer import Timer
+    from genslm_embeddings.utils import read_fasta
 
     # Time the worker function
     timer = Timer('finished-embedding', input_path).start()

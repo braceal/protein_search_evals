@@ -17,10 +17,10 @@ from sentence_transformers.quantization import quantize_embeddings
 from sentence_transformers.quantization import semantic_search_faiss
 from tqdm import tqdm
 
-from protein_search_evals.embed import Encoder
-from protein_search_evals.embed import EncoderConfigs
-from protein_search_evals.embed import get_encoder
-from protein_search_evals.rerankers import Reranker
+from genslm_embeddings.embed import Encoder
+from genslm_embeddings.embed import EncoderConfigs
+from genslm_embeddings.embed import get_encoder
+from genslm_embeddings.rerankers import Reranker
 
 
 def quantize_dataset(dataset_path: Path, precision: str) -> np.ndarray:

@@ -1,29 +1,31 @@
-"""Encoder for the ESM-2 model."""
+"""Encoder for the ProtTrans model."""
 
 from __future__ import annotations
 
-import warnings
+import re
 from typing import Any
 from typing import Literal
 
 import torch
 from pydantic import Field
+from torch.utils.data import DataLoader
 from transformers import BatchEncoding
-from transformers import EsmTokenizer
 from transformers import PreTrainedTokenizer
+from transformers import T5EncoderModel
+from transformers import T5Tokenizer
 
-from protein_search_evals.embed.encoders.base import Encoder
-from protein_search_evals.embed.encoders.base import EncoderConfig
+from genslm_embeddings.embed.encoders.base import Encoder
+from genslm_embeddings.embed.encoders.base import EncoderConfig
 
 
-class Esm2EncoderConfig(EncoderConfig):
-    """Config for the ESM-2 encoder."""
+class ProtTransEncoderConfig(EncoderConfig):
+    """Config for the ProtTrans encoder."""
 
     # The name of the encoder
-    name: Literal['esm2'] = 'esm2'
+    name: Literal['prottrans'] = 'prottrans'
 
     pretrained_model_name_or_path: str = Field(
-        default='facebook/esm2_t6_8M_UR50D',
+        default='Rostlab/prot_t5_xl_half_uniref50-enc',
         description='The model id.',
     )
     tokenizer_path: str | None = Field(
@@ -34,24 +36,25 @@ class Esm2EncoderConfig(EncoderConfig):
         default=True,
         description='Whether to use half precision for the model.',
     )
-    enable_faesm: bool = Field(
-        default=False,
-        description='Whether to use the faesm implementation (faster).',
-    )
 
 
-class Esm2Encoder(Encoder):
-    """Encoder for the ESM-2 model."""
+class ProtTransEncoder(Encoder):
+    """Encoder for the ProtTrans model.
+
+    For more information, see the ProtTrans paper:
+    "ProtTrans: Toward Understanding the Language of Life Through
+    Self-Supervised Learning", Elnaggar et al. (2021).
+    https://ieeexplore.ieee.org/document/9477085
+    """
 
     def __init__(
         self,
         pretrained_model_name_or_path: str,
         tokenizer_path: str | None = None,
         half_precision: bool = True,
-        enable_faesm: bool = False,
         **kwargs: Any,
     ):
-        """Initialize the ESM-2 encoder.
+        """Initialize the ProtTrans encoder.
 
         Parameters
         ----------
@@ -62,40 +65,23 @@ class Esm2Encoder(Encoder):
             by default None.
         half_precision : bool, optional
             Whether to use half precision for the model, by default True.
-        enable_faesm : bool, optional
-            Whether to use the faesm implementation (faster), by default False.
         **kwargs : Any
             Additional base arguments, see `Encoder`.
         """
         # Initialize the base encoder
         super().__init__(**kwargs)
 
-        # Check if faesm is enabled
-        if enable_faesm:
-            try:
-                from faesm.esm import FAEsmForMaskedLM as EsmForMaskedLM
-
-                print('Using faesm implementation.')
-            except ImportError:
-                warnings.warn(
-                    'faesm is not installed. Falling back to transformers.',
-                    stacklevel=2,
-                )
-                enable_faesm = False
-                from transformers import EsmForMaskedLM
-        else:
-            from transformers import EsmForMaskedLM
-
-        # Load model and tokenizer
-        model = EsmForMaskedLM.from_pretrained(pretrained_model_name_or_path)
+        # Load the model
+        model = T5EncoderModel.from_pretrained(pretrained_model_name_or_path)
 
         # Load the tokenizer
-        if tokenizer_path is None:
-            tokenizer_path = pretrained_model_name_or_path
-        tokenizer = EsmTokenizer.from_pretrained(tokenizer_path)
+        tokenizer = T5Tokenizer.from_pretrained(
+            tokenizer_path or pretrained_model_name_or_path,
+            do_lower_case=False,
+        )
 
         # Set the model max length for proper truncation
-        tokenizer.model_max_length = model.config.max_position_embeddings
+        tokenizer.model_max_length = model.config.n_positions
 
         # Convert the model to half precision
         if half_precision:
@@ -109,9 +95,15 @@ class Esm2Encoder(Encoder):
         model.to(device)
 
         # Set persistent attributes
-        self.enable_faesm = enable_faesm
         self.model = model
         self._tokenizer = tokenizer
+
+    @property
+    def sos_token(self) -> bool:
+        """Whether the encoder has a start of sequence token."""
+        # ProtTrans does not have a start of sequence token,
+        # but it does have a end of sequence token.
+        return False
 
     @property
     def dtype(self) -> torch.dtype:
@@ -126,17 +118,40 @@ class Esm2Encoder(Encoder):
     @property
     def max_length(self) -> int:
         """Get the maximum sequence length of the encoder."""
-        return self.model.config.max_position_embeddings
+        return self.model.config.n_positions
 
     @property
     def embedding_size(self) -> int:
         """Get the embedding size of the encoder."""
-        return self.model.config.hidden_size
+        # It's 512 for Rostlab/prot_t5_xl_half_uniref50-enc
+        return self.model.config.d_model
 
     @property
     def tokenizer(self) -> PreTrainedTokenizer:
         """Get the tokenizer of the encoder."""
         return self._tokenizer
+
+    def get_dataloader(self, sequences: list[str]) -> DataLoader:
+        """Override base functionality to add space between amino aicds.
+
+        Parameters
+        ----------
+        sequences : list[str]
+            The list of sequences to encode.
+
+        Returns
+        -------
+        DataLoader
+            The dataloader instance.
+        """
+        # Need to make sure amino acids are separated by a space
+        # Also replace 'U', 'Z', 'O', 'B' with 'X' unknown amino acid
+        sequences = [
+            ' '.join(list(re.sub(r'[UZOB]', 'X', seq))) for seq in sequences
+        ]
+
+        # Call the base method
+        return super().get_dataloader(sequences)
 
     def encode(self, batch_encoding: BatchEncoding) -> torch.Tensor:
         """Encode the sequence.
@@ -154,13 +169,6 @@ class Esm2Encoder(Encoder):
             (shape: [num_sequences, sequence_length, embedding_size])
         """
         # Get the model outputs with a forward pass
-        outputs = self.model(
-            **batch_encoding,
-            output_hidden_states=not self.enable_faesm,
-        )
+        outputs = self.model(**batch_encoding)
 
-        # Return the last hidden state
-        if self.enable_faesm:
-            return outputs['last_hidden_state']
-
-        return outputs.hidden_states[-1]
+        return outputs.last_hidden_state

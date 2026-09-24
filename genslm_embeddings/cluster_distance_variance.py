@@ -16,9 +16,9 @@ from pydantic import Field
 from scipy.spatial.distance import pdist
 from tqdm import tqdm
 
-from protein_search_evals.datasets.pfam import Pfam20Dataset
-from protein_search_evals.evaluate import get_dataset
-from protein_search_evals.utils import BaseConfig
+from genslm_embeddings.datasets.pfam import Pfam20Dataset
+from genslm_embeddings.evaluate import get_dataset
+from genslm_embeddings.utils import BaseConfig
 
 
 class ClusterVarianceResult(BaseConfig):

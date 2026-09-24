@@ -7,9 +7,9 @@ from collections import defaultdict
 from functools import cached_property
 from pathlib import Path
 
-from protein_search_evals.utils import read_fasta
-from protein_search_evals.utils import Sequence
-from protein_search_evals.utils import write_fasta
+from genslm_embeddings.utils import read_fasta
+from genslm_embeddings.utils import Sequence
+from genslm_embeddings.utils import write_fasta
 
 # The available cluster partitions for the Radical SAM dataset
 PARTITIONS = {

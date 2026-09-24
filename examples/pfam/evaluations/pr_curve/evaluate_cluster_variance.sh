@@ -40,7 +40,7 @@ for i in "${!MODELS[@]}"; do
     OUTPUT_JSON="${REPORTS_DIR}/cluster_variance_$(basename "$MODEL_NAME")_${PARTITION}.json"
 
     echo "Running cluster variance: model=$MODEL_NAME, model_dir=$MODEL_DIR"
-    python -m protein_search_evals.cluster_distance_variance \
+    python -m genslm_embeddings.cluster_distance_variance \
         --output "$OUTPUT_JSON" \
         --dataset_dir "$DATASET_DIR" \
         --dataset_partition "$PARTITION" \

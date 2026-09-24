@@ -12,15 +12,15 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from protein_search_evals.embed import Encoder
-from protein_search_evals.rerankers import Reranker
-from protein_search_evals.rerankers.plmblast.alignment import gather_all_paths
-from protein_search_evals.rerankers.plmblast.numeric import (
+from genslm_embeddings.embed import Encoder
+from genslm_embeddings.rerankers import Reranker
+from genslm_embeddings.rerankers.plmblast.alignment import gather_all_paths
+from genslm_embeddings.rerankers.plmblast.numeric import (
     embedding_local_similarity,
 )
-from protein_search_evals.rerankers.plmblast.numeric import find_alignment_span
-from protein_search_evals.rerankers.plmblast.numeric import move_mean
-from protein_search_evals.rerankers.plmblast.numeric import signal_enhancement
+from genslm_embeddings.rerankers.plmblast.numeric import find_alignment_span
+from genslm_embeddings.rerankers.plmblast.numeric import move_mean
+from genslm_embeddings.rerankers.plmblast.numeric import signal_enhancement
 
 AVG_EMBEDDING_STD: float = 0.1
 

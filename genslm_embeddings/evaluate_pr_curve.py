@@ -34,14 +34,14 @@ from sklearn.metrics import average_precision_score
 from sklearn.metrics import precision_recall_curve
 from tqdm import tqdm
 
-from protein_search_evals.datasets.pfam import Pfam20Dataset
-from protein_search_evals.datasets.radicalsam import RadicalSamDataset
-from protein_search_evals.evaluate import get_dataset
-from protein_search_evals.evaluate import get_encoder_config
-from protein_search_evals.search import FaissIndexConfig
-from protein_search_evals.search import Retriever
-from protein_search_evals.search import RetrieverConfig
-from protein_search_evals.utils import BaseConfig
+from genslm_embeddings.datasets.pfam import Pfam20Dataset
+from genslm_embeddings.datasets.radicalsam import RadicalSamDataset
+from genslm_embeddings.evaluate import get_dataset
+from genslm_embeddings.evaluate import get_encoder_config
+from genslm_embeddings.search import FaissIndexConfig
+from genslm_embeddings.search import Retriever
+from genslm_embeddings.search import RetrieverConfig
+from genslm_embeddings.utils import BaseConfig
 
 # Number of recall levels for macro PR curve interpolation
 MACRO_RECALL_LEVELS = 101

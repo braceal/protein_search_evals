@@ -11,6 +11,9 @@ cd genslm-embeddings
 uv sync --locked
 ```
 
+The distribution is named `genslm-embeddings`, its Python import package is
+`genslm_embeddings`, and its command-line entry point is `genslm-embeddings`.
+
 ## FAISS
 
 FAISS is installed separately because the appropriate package depends on the

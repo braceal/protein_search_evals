@@ -8,7 +8,7 @@ from pathlib import Path
 
 from Bio.SeqRecord import SeqRecord
 
-from protein_search_evals.utils import chunk_fasta_file
+from genslm_embeddings.utils import chunk_fasta_file
 
 # Define the URLs for the latest UniProt release
 RELEASE_URL = 'ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/RELEASE.metalink'

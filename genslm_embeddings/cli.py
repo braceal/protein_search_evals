@@ -27,7 +27,7 @@ def merge(
     ),
 ) -> None:
     """Merge datasets from multiple directories output by `generate`."""
-    from protein_search_evals.embed.writers import HuggingFaceWriter
+    from genslm_embeddings.embed.writers import HuggingFaceWriter
 
     # Initialize the writer
     writer = HuggingFaceWriter()
@@ -61,7 +61,7 @@ def chunk_fasta_file(
     ),
 ) -> None:
     """Chunk a fasta file into smaller fasta files."""
-    from protein_search_evals.utils import chunk_fasta_file
+    from genslm_embeddings.utils import chunk_fasta_file
 
     # Chunk the fasta file
     chunk_fasta_file(input_file, output_dir, num_seqs_per_file)

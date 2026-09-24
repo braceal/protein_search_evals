@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from protein_search_evals.rerankers.plmblast.numeric import fill_score_matrix
-from protein_search_evals.rerankers.plmblast.numeric import (
+from genslm_embeddings.rerankers.plmblast.numeric import fill_score_matrix
+from genslm_embeddings.rerankers.plmblast.numeric import (
     traceback_from_point_opt2,
 )
 
