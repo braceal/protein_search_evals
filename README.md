@@ -1,62 +1,71 @@
-# protein_search_evals
-Protein search project
+# GenSLM Embeddings
+
+[![CI](https://github.com/ramanathanlab/genslm-embeddings/actions/workflows/ci.yml/badge.svg)](https://github.com/ramanathanlab/genslm-embeddings/actions/workflows/ci.yml)
+[![Docs](https://github.com/ramanathanlab/genslm-embeddings/actions/workflows/docs.yml/badge.svg?branch=main)](https://ramanathanlab.github.io/genslm-embeddings/)
+[![Release](https://img.shields.io/github/v/release/ramanathanlab/genslm-embeddings?include_prereleases&sort=semver)](https://github.com/ramanathanlab/genslm-embeddings/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
+Generate biological foundation model embeddings at scale.
+
+📖 **Documentation:** https://ramanathanlab.github.io/genslm-embeddings/
 
 ## Installation
 
-To install the package, run the following command:
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/), clone the
+repository, and synchronize the locked environment:
+
 ```bash
-git clone git@github.com:braceal/protein_search_evals.git
-cd protein_search_evals
-pip install -U pip setuptools wheel
-pip install -e .
+git clone git@github.com:ramanathanlab/genslm-embeddings.git
+cd genslm-embeddings
+uv sync --locked
 ```
 
 To install Faiss, for GPU support with CUDA 12, run the following command:
 ```bash
-pip install faiss-gpu-cu12
+uv pip install faiss-gpu-cu12
 ```
 
 For ESMC, you can install the following packages and model weights:
 ```bash
-pip uninstall transformers
-pip install 'transformers<4.48.2'
-pip install esm
-pip install "huggingface_hub[hf_transfer]"
-HF_HUB_ENABLE_HF_TRANSFER=1 huggingface-cli download EvolutionaryScale/esmc-300m-2024-12
-HF_HUB_ENABLE_HF_TRANSFER=1 huggingface-cli download EvolutionaryScale/esmc-600m-2024-12
+uv pip uninstall transformers
+uv pip install 'transformers<4.48.2' esm 'huggingface_hub[hf_transfer]'
+HF_HUB_ENABLE_HF_TRANSFER=1 uv run --no-sync huggingface-cli download EvolutionaryScale/esmc-300m-2024-12
+HF_HUB_ENABLE_HF_TRANSFER=1 uv run --no-sync huggingface-cli download EvolutionaryScale/esmc-600m-2024-12
 ```
 
 For ESM2 with faesm, you can install the following package:
 ```bash
-pip install transformers==4.48.1
-pip install flash-attn --no-build-isolation
-pip install faesm[flash_attn]
+uv pip install transformers==4.48.1
+uv pip install flash-attn --no-build-isolation
+uv pip install 'faesm[flash_attn]'
 ```
 Note: requires CUDA 11.7 or later.
 
 Or, if you want to forego flash attention and just use SDPA
 ```bash
-pip install faesm
+uv pip install faesm
 ```
 
 ### Building the datasets
 
 The Pfam20 benchmark dataset can be built using the following command:
 ```bash
-python -m protein_search_evals.datasets.pfam
+uv run python -m protein_search_evals.datasets.pfam
 ```
 
 The Radical SAM benchmark dataset can be built using the following command:
 ```bash
 tar -zxvf data/radicalsam.tar.gz -C data
-python -m protein_search_evals.datasets.radicalsam
+uv run python -m protein_search_evals.datasets.radicalsam
 ```
 
 ### Running the embedding computation
 
 To compute the embeddings for the Pfam20 dataset using ESM2-3B with faesm, run the following command:
 ```bash
-nohup python -m protein_search_evals.distributed_embeddings --config examples/pfam/embedding_configs/esm2-3B-faesm.yaml &> nohup.log &
+nohup uv run python -m protein_search_evals.distributed_embeddings --config examples/pfam/embedding_configs/esm2-3B-faesm.yaml &> nohup.log &
 ```
 
 Modify the YAML file to use different models or datasets.
@@ -67,19 +76,17 @@ Create a new conda environment with the following commands:
 ```bash
 qsub -I -l select=1 -l filesystems=home:eagle -l walltime=1:00:00 -q debug -A FoundEpidem
 module use /soft/modulefiles; module load conda
-conda create -n protein_search_evals_03_25 python=3.12 -y
-conda activate protein_search_evals_03_25
+conda create -n genslm-embeddings python=3.12 -y
+conda activate genslm-embeddings
 ```
 
 Then install the package and dependencies:
 ```bash
-git clone git@github.com:braceal/protein_search_evals.git
-cd protein_search_evals
-pip install -U pip setuptools wheel
-pip install -e .
-pip install flash-attn --no-build-isolation
-pip install faesm[flash_attn]
-pip install faiss-gpu-cu12
+git clone git@github.com:ramanathanlab/genslm-embeddings.git
+cd genslm-embeddings
+uv sync --locked
+uv pip install flash-attn --no-build-isolation
+uv pip install 'faesm[flash_attn]' faiss-gpu-cu12
 ```
 
 Then run the embedding computation for SwissProt:
@@ -112,23 +119,36 @@ You can run the command for multiple SRC_DIRs to merge embeddings from multiple 
 Once you have all the embeddings in the same directory, you can run the following command to merge
 them into a single Arrow file:
 ```bash
-protein_search_evals merge --dataset_dir /path/to/combined_embeddings/ --output_dir /path/to/combined_embeddings.merge
+uv run protein_search_evals merge --dataset_dir /path/to/combined_embeddings/ --output_dir /path/to/combined_embeddings.merge
 ```
 
 ## Contributing
 
-For development, it is recommended to use a virtual environment. The following
-commands will create a virtual environment, install the package in editable
-mode, and install the pre-commit hooks.
+uv creates the `.venv` environment and installs the project in editable mode.
+Synchronize the locked development and documentation dependencies, then install
+the pre-commit hooks:
+
 ```bash
-python -m venv venv
-source venv/bin/activate
-pip install -U pip setuptools wheel
-pip install -e '.[dev,docs]'
-pre-commit install
+uv sync --locked --extra dev --group docs
+uv run pre-commit install
 ```
-To test the code, run the following command:
+
+Run quality checks and tests through the locked environment:
+
 ```bash
-pre-commit run --all-files
-tox -e py310
+uv run pre-commit run --all-files
+uv run pytest
 ```
+
+### Documentation
+
+The documentation site is built with ProperDocs. Install the documentation
+dependencies and run a strict local build with:
+
+```bash
+uv sync --locked --only-group docs
+uv run --no-sync properdocs build --strict
+```
+
+For live preview while editing documentation, run
+`uv run --no-sync properdocs serve`.

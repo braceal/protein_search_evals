@@ -4,17 +4,21 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "protein_search_evals"
-version = "0.1.1"
+version = "0.1.2"
 authors = [
     {name = "Alexander Brace", email = "abrace@anl.gov"},
 ]
 description = "Protein search project."
 readme = "README.md"
-requires-python = ">=3.8"
-license = {text = "MIT"}
+requires-python = ">=3.10"
+license = "MIT"
 classifiers = [
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
 ]
 dependencies = [
     "typer>=0.15.2",
@@ -33,9 +37,9 @@ dependencies = [
     "parsl-object-registry @ git+https://github.com/braceal/parsl_object_registry.git",
 ]
 [project.urls]
-homepage = "https://github.com/braceal/protein_search_evals"
-documentation = "https://github.com/braceal/protein_search_evals"
-repository = "https://github.com/braceal/protein_search_evals"
+homepage = "https://github.com/ramanathanlab/genslm-embeddings"
+documentation = "https://ramanathanlab.github.io/genslm-embeddings/"
+repository = "https://github.com/ramanathanlab/genslm-embeddings"
 
 [project.scripts]
 protein_search_evals = "protein_search_evals.cli:main"
@@ -49,19 +53,17 @@ dev = [
     "pytest",
     "pytest-cov",
     "ruff",
-    "tox",
-    "virtualenv",
     "types-PyYAML",
 ]
+[tool.uv]
+required-version = ">=0.12.8,<0.13"
+
+[dependency-groups]
 docs = [
-    "black",
-    "mkdocs-gen-files",
-    "mkdocs-literate-nav",
-    "mkdocs-material==9.4.7",
-    "mkdocs-section-index",
-    "mkdocstrings==0.23.0",
-    "mkdocstrings-python==1.8.0",
-    "mike",
+    "properdocs",
+    "mkdocs-material",
+    "mkdocstrings[python]",
+    "pymdown-extensions",
 ]
 
 [tool.codespell]
