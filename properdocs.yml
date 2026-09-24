@@ -1,5 +1,5 @@
-site_name: Protein Search Evals Documentation
-site_description: Evaluate protein language model embeddings for sequence search
+site_name: GenSLM Embeddings Documentation
+site_description: Generate and evaluate biological foundation model embeddings at scale
 site_url: https://ramanathanlab.github.io/genslm-embeddings/
 repo_url: https://github.com/ramanathanlab/genslm-embeddings
 repo_name: ramanathanlab/genslm-embeddings

@@ -1,4 +1,4 @@
-# protein_search_evals
+# GenSLM Embeddings
 
 [![CI](https://github.com/ramanathanlab/genslm-embeddings/actions/workflows/ci.yml/badge.svg)](https://github.com/ramanathanlab/genslm-embeddings/actions/workflows/ci.yml)
 [![Docs](https://github.com/ramanathanlab/genslm-embeddings/actions/workflows/docs.yml/badge.svg?branch=main)](https://ramanathanlab.github.io/genslm-embeddings/)
@@ -7,7 +7,8 @@
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-Protein search project.
+Generate and evaluate biological foundation model embeddings at scale, with a
+focus on GenSLM.
 
 📖 **Documentation:** https://ramanathanlab.github.io/genslm-embeddings/
 
@@ -76,8 +77,8 @@ Create a new conda environment with the following commands:
 ```bash
 qsub -I -l select=1 -l filesystems=home:eagle -l walltime=1:00:00 -q debug -A FoundEpidem
 module use /soft/modulefiles; module load conda
-conda create -n protein_search_evals_03_25 python=3.12 -y
-conda activate protein_search_evals_03_25
+conda create -n genslm-embeddings python=3.12 -y
+conda activate genslm-embeddings
 ```
 
 Then install the package and dependencies:
