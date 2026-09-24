@@ -6,8 +6,8 @@ Protein Search Evals supports Python 3.10 and newer. Install uv, then
 synchronize the locked environment:
 
 ```bash
-git clone git@github.com:braceal/protein_search_evals.git
-cd protein_search_evals
+git clone git@github.com:ramanathanlab/genslm-embeddings.git
+cd genslm-embeddings
 uv sync --locked
 ```
 

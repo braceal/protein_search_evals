@@ -37,9 +37,9 @@ dependencies = [
     "parsl-object-registry @ git+https://github.com/braceal/parsl_object_registry.git",
 ]
 [project.urls]
-homepage = "https://github.com/braceal/protein_search_evals"
-documentation = "https://github.com/braceal/protein_search_evals"
-repository = "https://github.com/braceal/protein_search_evals"
+homepage = "https://github.com/ramanathanlab/genslm-embeddings"
+documentation = "https://ramanathanlab.github.io/genslm-embeddings/"
+repository = "https://github.com/ramanathanlab/genslm-embeddings"
 
 [project.scripts]
 protein_search_evals = "protein_search_evals.cli:main"

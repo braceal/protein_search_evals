@@ -1,7 +1,8 @@
 site_name: Protein Search Evals Documentation
 site_description: Evaluate protein language model embeddings for sequence search
-repo_url: https://github.com/braceal/protein_search_evals
-repo_name: braceal/protein_search_evals
+site_url: https://ramanathanlab.github.io/genslm-embeddings/
+repo_url: https://github.com/ramanathanlab/genslm-embeddings
+repo_name: ramanathanlab/genslm-embeddings
 
 theme:
   name: material
