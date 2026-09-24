@@ -20,10 +20,17 @@ from tqdm import tqdm
 from genslm_embeddings.embed import Encoder
 from genslm_embeddings.embed import EncoderConfigs
 from genslm_embeddings.embed import get_encoder
+from genslm_embeddings.embed.encoders.base import select_pooled_embeddings
+from genslm_embeddings.embed.writers import load_embedding_metadata
+from genslm_embeddings.embed.writers import select_embedding_layer
 from genslm_embeddings.rerankers import Reranker
 
 
-def quantize_dataset(dataset_path: Path, precision: str) -> np.ndarray:
+def quantize_dataset(
+    dataset_path: Path,
+    precision: str,
+    embedding_layer: int | None = None,
+) -> np.ndarray:
     """Quantize the embeddings in the dataset to the specified precision.
 
     Parameters
@@ -34,13 +41,25 @@ def quantize_dataset(dataset_path: Path, precision: str) -> np.ndarray:
         The desired precision for the embeddings. Valid options are:
         "float32", "uint8", "int8", "ubinary", and "binary".
         But FAISS only supports "float32", "uint8", and "ubinary".
+    embedding_layer : int | None, optional
+        Transformer block to select from multi-layer embeddings.
     """
     # Load the dataset
     dataset = Dataset.load_from_disk(str(dataset_path))
     dataset.set_format('numpy', columns=['embeddings'])
 
     # Load the pre-computed fp32 embeddings
-    embeddings = dataset['embeddings']
+    raw_embeddings = np.asarray(dataset['embeddings'])
+    metadata = load_embedding_metadata(dataset_path)
+    if metadata is None and raw_embeddings.ndim != 2:
+        raise ValueError(
+            'multi-layer embeddings are missing layer metadata',
+        )
+    embeddings = select_embedding_layer(
+        raw_embeddings,
+        embedding_layer,
+        metadata,
+    )
 
     # Quantize the embeddings
     quantized_embeddings = quantize_embeddings(embeddings, precision=precision)
@@ -87,6 +106,11 @@ class FaissIndexConfig(BaseModel):
         default=None,
         description='The list of GPUs to use for searching.',
     )
+    embedding_layer: int | None = Field(
+        default=None,
+        ge=0,
+        description='Transformer block to index for multi-layer embeddings.',
+    )
 
 
 class FaissIndex:
@@ -121,10 +145,11 @@ class FaissIndex:
     https://www.pinecone.io/learn/series/faiss/vector-indexes/
     """
 
-    def __init__(
+    def __init__(  # noqa: C901
         self,
         dataset_dir: Path,
         faiss_index_path: Path,
+        *,
         dataset_chunk_paths: list[Path] | None = None,
         precision: str = 'float32',
         search_algorithm: str = 'exact',
@@ -135,6 +160,7 @@ class FaissIndex:
         ivf_max_train_size: int = 1_000_000,
         search_gpus: int | list[int] | None = None,
         scale_mode: bool = False,
+        embedding_layer: int | None = None,
     ) -> None:
         """Initialize the FAISS index.
 
@@ -191,6 +217,9 @@ class FaissIndex:
             is loaded into memory. False is useful for small datasets for
             benchmarking. True is useful for large datasets to scale the
             similarity search beyond 1M samples, by default False.
+        embedding_layer : int | None, optional
+            Transformer block to select from multi-layer embeddings,
+            by default None.
         """
         self.dataset_dir = dataset_dir
         self.faiss_index_path = faiss_index_path
@@ -204,6 +233,7 @@ class FaissIndex:
         self.ivf_nprobe = ivf_nprobe
         self.ivf_max_train_size = ivf_max_train_size
         self.scale_mode = scale_mode
+        self.embedding_layer = embedding_layer
 
         # Validate the precision and search algorithm
         if self.precision not in ('float32', 'ubinary'):
@@ -224,6 +254,33 @@ class FaissIndex:
         # Load the dataset from disk and set format to numpy
         self.dataset = Dataset.load_from_disk(str(dataset_dir))
         self.dataset.set_format('numpy')
+        self.embedding_metadata = load_embedding_metadata(dataset_dir)
+        sample_embeddings = (
+            np.asarray(self.dataset[:1]['embeddings'])
+            if len(self.dataset)
+            else None
+        )
+        if self.embedding_metadata is None:
+            if self.embedding_layer is not None:
+                raise ValueError(
+                    'embedding_layer cannot be used with final-layer-only '
+                    'embeddings',
+                )
+            if sample_embeddings is not None and sample_embeddings.ndim == 3:
+                raise ValueError(
+                    'multi-layer embeddings are missing layer metadata',
+                )
+        elif self.embedding_layer is None:
+            raise ValueError(
+                'embedding_layer is required for multi-layer embeddings',
+            )
+        elif len(self.dataset):
+            assert sample_embeddings is not None
+            select_embedding_layer(
+                sample_embeddings,
+                self.embedding_layer,
+                self.embedding_metadata,
+            )
 
         # Initialize the FAISS index
         if self.faiss_index_path.exists():
@@ -277,10 +334,15 @@ class FaissIndex:
         """Load the embeddings from disk and quantize them."""
         # Define the worker function for quantization
         func = functools.partial(quantize_dataset, precision=self.precision)
+        func = functools.partial(func, embedding_layer=self.embedding_layer)
 
         # Check if the dataset is chunked
         if self.dataset_chunk_paths is None:
-            embeddings = quantize_dataset(self.dataset_dir, self.precision)
+            embeddings = quantize_dataset(
+                self.dataset_dir,
+                self.precision,
+                self.embedding_layer,
+            )
 
         else:
             # Quantize the embeddings in each dataset chunk in parallel
@@ -526,10 +588,18 @@ class FaissIndex:
         if scale_mode:
             # Only load the contents for the given indices, helpful
             # for large datasets to avoid loading the full column
-            return self.dataset[indices][key]
+            values = self.dataset[indices][key]
         else:
             # Load the full column into memory, helpful for small datasets
-            return self.dataset[key][indices]
+            values = self.dataset[key][indices]
+
+        if key == 'embeddings':
+            return select_embedding_layer(
+                values,
+                self.embedding_layer,
+                self.embedding_metadata,
+            )
+        return values
 
 
 class RetrieverConfig(BaseModel):
@@ -582,6 +652,17 @@ class Retriever:
         self.encoder = encoder
         self.faiss_index = faiss_index
         self.reranker = reranker
+
+        if self.faiss_index.embedding_layer is not None:
+            layer_indices = self.encoder.resolve_layer_indices()
+            if (
+                layer_indices is None
+                or self.faiss_index.embedding_layer not in layer_indices
+            ):
+                raise ValueError(
+                    'encoder pooled_layers must include indexed embedding '
+                    f'layer {self.faiss_index.embedding_layer}',
+                )
 
     def search(
         self,
@@ -688,8 +769,14 @@ class Retriever:
             normalize_pooled_embeddings=True,
         )
 
+        # Select the same transformer block used by the document index.
+        pool_embeds = select_pooled_embeddings(
+            output,
+            self.faiss_index.embedding_layer,
+        )
+
         # Reorder the embeddings to match the original order
-        pool_embeds = output.pool_embeddings[np.argsort(indices)]
+        pool_embeds = pool_embeds[np.argsort(indices)]
 
         return pool_embeds
 

@@ -7,12 +7,14 @@ from abc import abstractmethod
 from dataclasses import dataclass
 from dataclasses import field
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 import torch
 import torch.nn.functional as F  # noqa: N812
 from pydantic import BaseModel
 from pydantic import Field
+from pydantic import field_validator
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 from tqdm import tqdm
@@ -21,6 +23,8 @@ from transformers import PreTrainedTokenizer
 
 from genslm_embeddings.embed.embeddings import HDF5TokenEmbeddings
 from genslm_embeddings.embed.poolers import average_pool
+
+PooledLayers = Literal['last', 'all'] | list[int]
 
 
 class InMemoryDataset(Dataset):
@@ -69,6 +73,11 @@ class EncoderConfig(BaseModel):
         default=False,
         description='Whether to normalize the pooled embeddings.',
     )
+    pooled_layers: PooledLayers = Field(
+        default='last',
+        description='Transformer layers to pool: last, all, or a list of '
+        'zero-based transformer block indices.',
+    )
     dataloader_pin_memory: bool = Field(
         default=True,
         description='Whether to pin memory for the dataloader.',
@@ -94,6 +103,19 @@ class EncoderConfig(BaseModel):
         description='Whether to print verbose output (progress bar).',
     )
 
+    @field_validator('pooled_layers')
+    @classmethod
+    def validate_pooled_layers(cls, value: PooledLayers) -> PooledLayers:
+        """Validate explicitly requested transformer layer indices."""
+        if isinstance(value, list):
+            if not value:
+                raise ValueError('pooled_layers cannot be empty')
+            if any(layer < 0 for layer in value):
+                raise ValueError('pooled layer indices must be non-negative')
+            if len(value) != len(set(value)):
+                raise ValueError('pooled layer indices must be unique')
+        return value
+
 
 @dataclass
 class EncoderOutput:
@@ -102,10 +124,37 @@ class EncoderOutput:
     pool_embeddings: np.ndarray = field(
         metadata={'description': 'Pooled embeddings.'},
     )
+    layer_pool_embeddings: np.ndarray | None = field(
+        default=None,
+        metadata={'description': 'Pooled embeddings for selected layers.'},
+    )
+    layer_indices: tuple[int, ...] | None = field(
+        default=None,
+        metadata={'description': 'Transformer blocks on the layer axis.'},
+    )
     token_embeddings: list[np.ndarray] | None = field(
         default=None,
         metadata={'description': 'Token embeddings stored as a ragged array.'},
     )
+
+
+def select_pooled_embeddings(
+    output: EncoderOutput,
+    embedding_layer: int | None,
+) -> np.ndarray:
+    """Select a final or intermediate pooled encoder output."""
+    if embedding_layer is None:
+        return output.pool_embeddings
+    if (
+        output.layer_pool_embeddings is None
+        or output.layer_indices is None
+        or embedding_layer not in output.layer_indices
+    ):
+        raise ValueError(
+            f'encoder did not produce embedding layer {embedding_layer}',
+        )
+    layer_position = output.layer_indices.index(embedding_layer)
+    return output.layer_pool_embeddings[:, layer_position, :]
 
 
 class Encoder(ABC):
@@ -113,7 +162,9 @@ class Encoder(ABC):
 
     def __init__(
         self,
+        *,
         normalize_pooled_embeddings: bool = False,
+        pooled_layers: PooledLayers = 'last',
         dataloader_pin_memory: bool = True,
         dataloader_batch_size: int = 8,
         dataloader_num_data_workers: int = 4,
@@ -127,6 +178,8 @@ class Encoder(ABC):
         ----------
         normalize_pooled_embeddings : bool, optional
             Whether to normalize the pooled embeddings, by default False.
+        pooled_layers : PooledLayers, optional
+            Transformer layers to pool, by default ``'last'``.
         dataloader_pin_memory : bool, optional
             Whether to pin memory for the dataloader, by default True.
         dataloader_batch_size : int, optional
@@ -142,6 +195,7 @@ class Encoder(ABC):
             computation), by default False.
         """
         self.normalize_pooled_embeddings = normalize_pooled_embeddings
+        self.pooled_layers = pooled_layers
         self.dataloader_pin_memory = dataloader_pin_memory
         self.dataloader_batch_size = dataloader_batch_size
         self.dataloader_num_data_workers = dataloader_num_data_workers
@@ -201,6 +255,47 @@ class Encoder(ABC):
         """Get the tokenizer of the encoder."""
         ...
 
+    @property
+    def supports_layer_pooling(self) -> bool:
+        """Whether the encoder exposes intermediate transformer layers."""
+        return False
+
+    @property
+    def num_layers(self) -> int:
+        """Get the number of transformer blocks in the encoder."""
+        raise NotImplementedError(
+            f'{type(self).__name__} does not expose transformer layers',
+        )
+
+    def resolve_layer_indices(self) -> tuple[int, ...] | None:
+        """Resolve configured layer selection to transformer block indices."""
+        if self.pooled_layers == 'last':
+            return None
+        if not self.supports_layer_pooling:
+            raise ValueError(
+                f'{type(self).__name__} does not support intermediate-layer '
+                'pooling; use pooled_layers="last"',
+            )
+
+        if self.pooled_layers == 'all':
+            return tuple(range(self.num_layers))
+
+        if not self.pooled_layers:
+            raise ValueError('pooled_layers cannot be empty')
+        if any(layer < 0 for layer in self.pooled_layers):
+            raise ValueError('pooled layer indices must be non-negative')
+        if len(self.pooled_layers) != len(set(self.pooled_layers)):
+            raise ValueError('pooled layer indices must be unique')
+        invalid = [
+            layer for layer in self.pooled_layers if layer >= self.num_layers
+        ]
+        if invalid:
+            raise ValueError(
+                f'pooled layer indices {invalid} are out of range for '
+                f'{self.num_layers} transformer layers',
+            )
+        return tuple(self.pooled_layers)
+
     @abstractmethod
     def encode(self, batch_encoding: BatchEncoding) -> torch.Tensor:
         """Encode the sequence.
@@ -217,6 +312,17 @@ class Encoder(ABC):
             (shape: [num_sequences, sequence_length, embedding_size])
         """
         ...
+
+    def encode_layers(
+        self,
+        batch_encoding: BatchEncoding,
+        layer_indices: tuple[int, ...],
+    ) -> tuple[torch.Tensor, tuple[torch.Tensor, ...]]:
+        """Encode the final and selected transformer hidden states."""
+        raise ValueError(
+            f'{type(self).__name__} does not support intermediate-layer '
+            'pooling; use pooled_layers="last"',
+        )
 
     def pool(
         self,
@@ -342,7 +448,7 @@ class Encoder(ABC):
             )
 
     @torch.no_grad()
-    def compute_embeddings(
+    def compute_embeddings(  # noqa: C901, PLR0912, PLR0915
         self,
         sequences: list[str],
         normalize_pooled_embeddings: bool | None = None,
@@ -372,6 +478,19 @@ class Encoder(ABC):
         if normalize_pooled_embeddings is None:
             normalize_pooled_embeddings = self.normalize_pooled_embeddings
 
+        # Resolve layer indices before using a final-layer token cache.
+        layer_indices = self.resolve_layer_indices()
+        final_layer_index = self.num_layers - 1 if layer_indices else None
+        if (
+            self.cached_token_embeddings_path is not None
+            and layer_indices is not None
+            and layer_indices != (final_layer_index,)
+        ):
+            raise ValueError(
+                'cached token embeddings contain only the final layer; '
+                'model inference is required for the requested pooled layers',
+            )
+
         # If a cached token embedding reader is provided, use it
         if self.cached_token_embeddings_path is not None:
             cached_output = self._embeddings_from_cache(
@@ -382,6 +501,11 @@ class Encoder(ABC):
             # If the embeddings are found in the cache, return them
             # otherwise, we compute embeddings as usual
             if cached_output is not None:
+                if layer_indices is not None:
+                    cached_output.layer_pool_embeddings = (
+                        cached_output.pool_embeddings[:, None, :]
+                    )
+                    cached_output.layer_indices = layer_indices
                 return cached_output
 
         # Create a dataloader for the sequences
@@ -392,6 +516,16 @@ class Encoder(ABC):
             (len(sequences), self.embedding_size),
             dtype=self.dtype,
         )
+        all_layer_embeddings = None
+        if layer_indices is not None:
+            all_layer_embeddings = torch.empty(
+                (
+                    len(sequences),
+                    len(layer_indices),
+                    self.embedding_size,
+                ),
+                dtype=self.dtype,
+            )
         token_embeddings = []
 
         # Index for storing embeddings
@@ -406,20 +540,59 @@ class Encoder(ABC):
             inputs = batch.to(self.device)
 
             # Get the model outputs with a forward pass
-            embeds = self.encode(inputs)
+            if layer_indices is None:
+                embeds = self.encode(inputs)
+                pooled_embeds = self.pool(embeds, inputs.attention_mask)
+                if normalize_pooled_embeddings:
+                    pooled_embeds = F.normalize(pooled_embeds, p=2, dim=-1)
+                layer_pooled_embeds = None
+            else:
+                embeds, layer_embeds = self.encode_layers(
+                    inputs,
+                    layer_indices,
+                )
+                layer_pooled_embeds = torch.stack(
+                    [
+                        self.pool(layer_embed, inputs.attention_mask)
+                        for layer_embed in layer_embeds
+                    ],
+                    dim=1,
+                )
+                if normalize_pooled_embeddings:
+                    layer_pooled_embeds = F.normalize(
+                        layer_pooled_embeds,
+                        p=2,
+                        dim=-1,
+                    )
 
-            # Compute the pooled embeddings
-            pooled_embeds = self.pool(embeds, inputs.attention_mask)
-
-            # Normalize the embeddings
-            if normalize_pooled_embeddings:
-                pooled_embeds = F.normalize(pooled_embeds, p=2, dim=-1)
+                assert final_layer_index is not None
+                if final_layer_index in layer_indices:
+                    final_position = layer_indices.index(final_layer_index)
+                    pooled_embeds = layer_pooled_embeds[:, final_position, :]
+                else:
+                    pooled_embeds = self.pool(
+                        embeds,
+                        inputs.attention_mask,
+                    )
+                    if normalize_pooled_embeddings:
+                        pooled_embeds = F.normalize(
+                            pooled_embeds,
+                            p=2,
+                            dim=-1,
+                        )
 
             # Get the batch size
             batch_size = inputs.attention_mask.shape[0]
 
             # Store the pooled embeddings in the output buffer
             all_embeddings[idx : idx + batch_size, :] = pooled_embeds.cpu()
+            if all_layer_embeddings is not None:
+                assert layer_pooled_embeds is not None
+                all_layer_embeddings[
+                    idx : idx + batch_size,
+                    :,
+                    :,
+                ] = layer_pooled_embeds.cpu()
 
             # If the token embeddings are requested, prepare a ragged list
             if return_token_embeddings or token_embedding_writer is not None:
@@ -450,5 +623,11 @@ class Encoder(ABC):
         # Construct the encoder result
         return EncoderOutput(
             pool_embeddings=all_embeddings.numpy(),
+            layer_pool_embeddings=(
+                all_layer_embeddings.numpy()
+                if all_layer_embeddings is not None
+                else None
+            ),
+            layer_indices=layer_indices,
             token_embeddings=token_embeddings if token_embeddings else None,
         )

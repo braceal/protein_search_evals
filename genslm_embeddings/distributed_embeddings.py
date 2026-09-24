@@ -1,4 +1,5 @@
 """Distributed inference for generating embeddings."""
+# ruff: noqa: PLC0415
 
 from __future__ import annotations
 
@@ -77,15 +78,35 @@ def embedding_worker(
         dataset_dir = output_dir / dataset_name
         dataset_dir.mkdir(parents=True, exist_ok=True)
 
-        # Create the result dictionary
+        embeddings = (
+            output.layer_pool_embeddings
+            if output.layer_pool_embeddings is not None
+            else output.pool_embeddings
+        )
+
+        # Create the result dictionary. Sequences and tags are stored once,
+        # regardless of how many transformer layers were pooled.
         result = {
-            'embeddings': output.pool_embeddings,
+            'embeddings': embeddings,
             'sequences': sequences,
             'tags': [x.tag for x in fasta_contents],
         }
 
+        metadata = None
+        if output.layer_indices is not None:
+            metadata = {
+                'dtype': str(embeddings.dtype),
+                'hidden_dimension': encoder.embedding_size,
+                'layer_indices': list(output.layer_indices),
+                'model': encoder_kwargs.get(
+                    'pretrained_model_name_or_path',
+                ),
+                'normalized': encoder.normalize_pooled_embeddings,
+                'pooled_layers': encoder.pooled_layers,
+            }
+
         # Write the result to disk
-        HuggingFaceWriter().write(dataset_dir, result)
+        HuggingFaceWriter().write(dataset_dir, result, metadata=metadata)
 
     # Stop the timer to log the worker time
     timer.stop()

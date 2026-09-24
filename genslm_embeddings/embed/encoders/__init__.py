@@ -76,6 +76,10 @@ def get_encoder(
     # Create and register the instance
     if register:
         registry.register(_factory_fn)
-        return registry.get(_factory_fn, **kwargs)
+        registry_kwargs = dict(kwargs)
+        pooled_layers = registry_kwargs.get('pooled_layers')
+        if isinstance(pooled_layers, list):
+            registry_kwargs['pooled_layers'] = tuple(pooled_layers)
+        return registry.get(_factory_fn, **registry_kwargs)
 
     return _factory_fn(**kwargs)

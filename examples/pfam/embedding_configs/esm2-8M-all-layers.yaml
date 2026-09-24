@@ -1,0 +1,20 @@
+# Directory containing the input files to embed.
+input_dir: data/pfam/pfam20_seed-42
+
+# Directory to save the embeddings.
+output_dir: examples/pfam/embeddings/esm2-8M-all-layers_pfam20_seed-42
+
+glob_patterns:
+  - '*.fasta'
+
+encoder_config:
+  name: esm2
+  pretrained_model_name_or_path: facebook/esm2_t6_8M_UR50D
+  enable_faesm: false
+  normalize_pooled_embeddings: true
+  # Store pooled embeddings from every transformer block as (B, L, D).
+  pooled_layers: all
+
+compute_config:
+  name: workstation
+  available_accelerators: ['0']

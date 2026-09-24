@@ -24,6 +24,12 @@ The selected encoder processes FASTA sequences, a pooler produces one vector
 per sequence, and a writer stores each worker result as a Hugging Face dataset.
 The CLI can merge the resulting shards without recomputing embeddings.
 
+Encoders can optionally pool selected transformer blocks in a single forward
+pass. Multi-layer outputs use `(sequence, layer, hidden)` order while sequence
+and tag columns remain one-dimensional. Search resolves a transformer block
+through the stored layer metadata and passes its two-dimensional slice to
+FAISS.
+
 ## Search pipeline
 
 `FaissIndex` loads stored embeddings, optionally quantizes them, and constructs
