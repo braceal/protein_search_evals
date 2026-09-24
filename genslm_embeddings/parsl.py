@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 from abc import ABC
 from abc import abstractmethod
 from pathlib import Path
@@ -19,11 +20,32 @@ from parsl.addresses import address_by_hostname
 from parsl.config import Config
 from parsl.executors import HighThroughputExecutor
 from parsl.launchers import MpiExecLauncher
+from parsl.launchers import SingleNodeLauncher
 from parsl.launchers import WrappedLauncher
 from parsl.providers import LocalProvider
 from parsl.providers import PBSProProvider
 from pydantic import BaseModel
 from pydantic import Field
+from pydantic import model_validator
+
+_SWING_CPUS_PER_GPU = 16
+_SWING_MAX_RUNNING_JOBS = 4
+
+
+def _validate_swing_walltime(queue: str, walltime: str) -> None:
+    """Validate a walltime against Swing queue limits."""
+    match = re.fullmatch(r'(\d+):([0-5]\d):([0-5]\d)', walltime)
+    if match is None:
+        raise ValueError('walltime must use HH:MM:SS format')
+
+    hours, minutes, seconds = (int(value) for value in match.groups())
+    duration_seconds = hours * 3600 + minutes * 60 + seconds
+    max_hours = 4 if queue == 'backfill' else 24
+    if duration_seconds <= 0 or duration_seconds > max_hours * 3600:
+        raise ValueError(
+            f'walltime for the {queue} queue must be greater than zero '
+            f'and no more than {max_hours}:00:00',
+        )
 
 
 class BaseComputeConfig(BaseModel, ABC):
@@ -84,6 +106,127 @@ class WorkstationConfig(BaseComputeConfig):
                     available_accelerators=self.available_accelerators,
                     worker_port_range=self.worker_port_range,
                     provider=LocalProvider(init_blocks=1, max_blocks=1),
+                ),
+            ],
+        )
+
+
+class SwingConfig(BaseComputeConfig):
+    """Configuration for the Swing GPU cluster at Argonne LCRC."""
+
+    name: Literal['swing'] = 'swing'
+    account: str = Field(
+        min_length=1,
+        description='LCRC project to charge for the allocation.',
+    )
+    queue: Literal['gpu', 'gpu-large', 'backfill'] = Field(
+        default='gpu',
+        description='Swing PBS queue.',
+    )
+    walltime: str = Field(
+        default='01:00:00',
+        description='Requested PBS walltime in HH:MM:SS format.',
+    )
+    init_blocks: int = Field(
+        default=1,
+        ge=0,
+        description='Number of allocation blocks requested at startup.',
+    )
+    min_blocks: int = Field(
+        default=0,
+        ge=0,
+        description='Minimum number of active allocation blocks.',
+    )
+    max_blocks: int = Field(
+        default=4,
+        ge=1,
+        le=_SWING_MAX_RUNNING_JOBS,
+        description='Maximum number of active allocation blocks.',
+    )
+    parallelism: float = Field(
+        default=1.0,
+        gt=0,
+        le=1,
+        description='Ratio of provisioned worker slots to active tasks.',
+    )
+    worker_init: str = Field(
+        default='',
+        description='Shell commands that prepare the worker environment.',
+    )
+    scheduler_options: str = Field(
+        default='',
+        description='Additional PBS directives for the submission script.',
+    )
+    address: str | None = Field(
+        default=None,
+        description='Login-node address workers use for the interchange.',
+    )
+    worker_port_range: tuple[int, int] = Field(
+        default=(55000, 56000),
+        description='Port range used by workers.',
+    )
+    interchange_port_range: tuple[int, int] = Field(
+        default=(56001, 57000),
+        description='Port range used by the Parsl interchange.',
+    )
+    retries: int = Field(
+        default=1,
+        ge=0,
+        description='Number of retries for failed tasks.',
+    )
+    heartbeat_threshold: int = Field(
+        default=300,
+        gt=0,
+        description='Seconds to wait before considering a worker lost.',
+    )
+    label: str = Field(
+        default='swing-htex',
+        description='Label for the executor.',
+    )
+
+    @model_validator(mode='after')
+    def validate_scheduler_limits(self) -> SwingConfig:
+        """Validate block sizing and queue-specific walltime limits."""
+        _validate_swing_walltime(self.queue, self.walltime)
+
+        if self.min_blocks > self.max_blocks:
+            raise ValueError('min_blocks cannot exceed max_blocks')
+        if self.init_blocks > self.max_blocks:
+            raise ValueError('init_blocks cannot exceed max_blocks')
+
+        return self
+
+    def get_config(self, run_dir: str | Path) -> Config:
+        """Create a Parsl configuration that submits jobs to Swing."""
+        return Config(
+            run_dir=str(run_dir),
+            retries=self.retries,
+            executors=[
+                HighThroughputExecutor(
+                    label=self.label,
+                    address=self.address or address_by_hostname(),
+                    cpu_affinity='block',
+                    cores_per_worker=_SWING_CPUS_PER_GPU,
+                    max_workers_per_node=1,
+                    available_accelerators=1,
+                    worker_port_range=self.worker_port_range,
+                    interchange_port_range=self.interchange_port_range,
+                    heartbeat_threshold=self.heartbeat_threshold,
+                    provider=PBSProProvider(
+                        account=self.account,
+                        queue=self.queue,
+                        walltime=self.walltime,
+                        nodes_per_block=1,
+                        cpus_per_node=_SWING_CPUS_PER_GPU,
+                        init_blocks=self.init_blocks,
+                        min_blocks=self.min_blocks,
+                        max_blocks=self.max_blocks,
+                        parallelism=self.parallelism,
+                        worker_init=self.worker_init,
+                        scheduler_options=self.scheduler_options,
+                        select_options='ngpus=1',
+                        launcher=SingleNodeLauncher(),
+                    ),
                 ),
             ],
         )
@@ -262,4 +405,9 @@ class PolarisHeadlessConfig(BaseComputeConfig):
         )
 
 
-ComputeConfigs = Union[WorkstationConfig, PolarisConfig, PolarisHeadlessConfig]
+ComputeConfigs = Union[
+    WorkstationConfig,
+    SwingConfig,
+    PolarisConfig,
+    PolarisHeadlessConfig,
+]

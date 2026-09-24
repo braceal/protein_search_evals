@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/ramanathanlab/genslm-embeddings/compare/v0.2.0...v0.3.0) (2026-09-24)
+
+
+### Features
+
+* **parsl:** add Swing configuration ([#40](https://github.com/ramanathanlab/genslm-embeddings/issues/40)) ([a54e4c3](https://github.com/ramanathanlab/genslm-embeddings/commit/a54e4c3e084ad3f1e252f26de8e985881fb6588a))
+
 ## [0.2.0](https://github.com/ramanathanlab/genslm-embeddings/compare/v0.1.3...v0.2.0) (2026-09-24)
 
 

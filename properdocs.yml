@@ -62,4 +62,5 @@ nav:
   - Getting Started:
       - Installation: getting-started/installation.md
       - Quick Start: getting-started/quickstart.md
+      - Run on Swing: getting-started/swing.md
   - Architecture: architecture/overview.md
