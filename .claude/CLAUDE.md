@@ -77,6 +77,9 @@ even if its individual commits do not. Prefer Conventional Commit messages for
 individual commits as well so they remain clear outside the squash-merge
 history.
 
+The package follows Semantic Versioning (`MAJOR.MINOR.PATCH`), starting from
+`0.1.0`. Release Please derives version bumps from Conventional Commit types.
+
 ## Architecture
 
 ### Embedding pipeline
